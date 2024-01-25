@@ -1,11 +1,15 @@
-# Minerva REST API
+
+### lambda health
+
+GET https://ds-api.staging.sandbox.tubi.io/api/health
+X-Message: hello world!
 
 ### signin
 
 # User should use existing anonymous token to signin. Here just for demo purpose.
 
 # @name login
-POST http://localhost:3000/api/signin
+POST http://ds-api.staging.sandbox.tubi.io/api/signin
 Content-Type: application/json
 
 {
@@ -13,15 +17,11 @@ Content-Type: application/json
   "password": "abcd1234"
 }
 
-### echo
+### list datasets
 
 # retrieve token as echo service need it.
 
 @token = {{ login.response.body.token }}
 
-GET http://localhost:3000/api/health
-X-Message: hello world!
-
-{
-  "message": "hello world!"
-}
+GET http://ds-api.staging.sandbox.tubi.io/api/datasets
+Authorization: Bearer {{ token }}
