@@ -1,5 +1,5 @@
 use anyhow::Result;
-use echo_service::{get_router, AppConfig};
+use minerva_service::{get_router, AppConfig};
 use std::net::SocketAddr;
 use tracing::info;
 

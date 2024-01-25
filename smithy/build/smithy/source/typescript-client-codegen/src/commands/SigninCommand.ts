@@ -1,9 +1,9 @@
 // smithy-typescript generated code
 import {
-  EchoClientResolvedConfig,
+  DatasetServiceClientResolvedConfig,
   ServiceInputTypes,
   ServiceOutputTypes,
-} from "../EchoClient";
+} from "../DatasetServiceClient";
 import {
   SigninInput,
   SigninOutput,
@@ -39,9 +39,9 @@ export interface SigninCommandOutput extends SigninOutput, __MetadataBearer {}
  * @example
  * Use a bare-bones client and the command you need to make an API call.
  * ```javascript
- * import { EchoClient, SigninCommand } from "echo"; // ES Modules import
- * // const { EchoClient, SigninCommand } = require("echo"); // CommonJS import
- * const client = new EchoClient(config);
+ * import { DatasetServiceClient, SigninCommand } from "@minerva/dataset-client"; // ES Modules import
+ * // const { DatasetServiceClient, SigninCommand } = require("@minerva/dataset-client"); // CommonJS import
+ * const client = new DatasetServiceClient(config);
  * const input = { // SigninInput
  *   username: "STRING_VALUE", // required
  *   password: "STRING_VALUE", // required
@@ -58,7 +58,7 @@ export interface SigninCommandOutput extends SigninOutput, __MetadataBearer {}
  * @returns {@link SigninCommandOutput}
  * @see {@link SigninCommandInput} for command's `input` shape.
  * @see {@link SigninCommandOutput} for command's `response` shape.
- * @see {@link EchoClientResolvedConfig | config} for EchoClient's `config` shape.
+ * @see {@link DatasetServiceClientResolvedConfig | config} for DatasetServiceClient's `config` shape.
  *
  * @throws {@link ValidationException} (client fault)
  *  A standard error for input validation failures.
@@ -74,21 +74,21 @@ export interface SigninCommandOutput extends SigninOutput, __MetadataBearer {}
  * @throws {@link ThrottlingError} (client fault)
  *  Throttling error.
  *
- * @throws {@link EchoServiceException}
- * <p>Base exception class for all service exceptions from Echo service.</p>
+ * @throws {@link DatasetServiceServiceException}
+ * <p>Base exception class for all service exceptions from DatasetService service.</p>
  *
  */
-export class SigninCommand extends $Command.classBuilder<SigninCommandInput, SigninCommandOutput, EchoClientResolvedConfig, ServiceInputTypes, ServiceOutputTypes>()
-      .m(function (this: any, Command: any, cs: any, config: EchoClientResolvedConfig, o: any) {
+export class SigninCommand extends $Command.classBuilder<SigninCommandInput, SigninCommandOutput, DatasetServiceClientResolvedConfig, ServiceInputTypes, ServiceOutputTypes>()
+      .m(function (this: any, Command: any, cs: any, config: DatasetServiceClientResolvedConfig, o: any) {
           return [
 
   getSerdePlugin(config, this.serialize, this.deserialize),
       ];
   })
-  .s("EchoService", "Signin", {
+  .s("DatasetService", "Signin", {
 
   })
-  .n("EchoClient", "SigninCommand")
+  .n("DatasetServiceClient", "SigninCommand")
   .f(void 0, void 0)
   .ser(se_SigninCommand)
   .de(de_SigninCommand)

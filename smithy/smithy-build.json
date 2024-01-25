@@ -1,0 +1,61 @@
+{
+  "version": "1.0",
+  "sources": [
+    "model"
+  ],
+  "maven": {
+    "dependencies": [
+      "software.amazon.smithy:smithy-model:[1.43.0,2.0)",
+      "software.amazon.smithy:smithy-validation-model:[1.43.0,2.0)",
+      "software.amazon.smithy:smithy-aws-traits:[1.43.0,2.0)",
+      "software.amazon.smithy:smithy-openapi:1.42.0",
+      "software.amazon.smithy.python:smithy-python-codegen:0.1.0",
+      "software.amazon.smithy.typescript:smithy-typescript-codegen:0.19.0",
+      "software.amazon.smithy.typescript:smithy-aws-typescript-codegen:0.19.0",
+      "software.amazon.smithy.rust.codegen.server.smithy:codegen-server:0.1.0"
+    ]
+  },
+  "plugins": {
+    "openapi": {
+      "service": "com.minerva#DatasetService",
+      "protocol": "aws.protocols#restJson1",
+      "version": "3.1.0",
+      "tags": true,
+      "useIntegerType": true,
+      "jsonAdd": {
+        "/servers": [
+          {
+            "url": "http://localhost:3000/api",
+            "description": "Dataset server"
+          }
+        ]
+      }
+    },
+    "rust-server-codegen": {
+      "service": "com.minerva#DatasetService",
+      "module": "dataset-server-sdk",
+      "moduleDescription": "Rust server SDK for dataset server",
+      "moduleVersion": "0.1.0",
+      "moduleAuthors": [
+        "Tyr Chen <tchen@abc.xyz>"
+      ],
+      "runtimeConfig": {
+        "versions": {
+          "DEFAULT": "1.0.1",
+          "aws-smithy-http": "0.60.0",
+          "aws-smithy-json": "0.60.0",
+          "aws-smithy-http-server": "0.60.0"
+        }
+      }
+    },
+    "python-client-codegen": {
+      "service": "com.minerva#DatasetService",
+      "module": "dataset_service",
+      "moduleVersion": "0.1.0"
+    },
+    "typescript-client-codegen": {
+      "package": "@minerva/dataset-client",
+      "packageVersion": "0.1.0"
+    }
+  }
+}

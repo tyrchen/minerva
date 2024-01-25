@@ -1,15 +1,33 @@
 // smithy-typescript generated code
 import {
-  EchoMessageCommandInput,
-  EchoMessageCommandOutput,
-} from "../commands/EchoMessageCommand";
+  CreateDatasetCommandInput,
+  CreateDatasetCommandOutput,
+} from "../commands/CreateDatasetCommand";
+import {
+  GetDatasetCommandInput,
+  GetDatasetCommandOutput,
+} from "../commands/GetDatasetCommand";
+import {
+  HealthCheckCommandInput,
+  HealthCheckCommandOutput,
+} from "../commands/HealthCheckCommand";
+import {
+  ListDatasetCommandInput,
+  ListDatasetCommandOutput,
+} from "../commands/ListDatasetCommand";
+import {
+  QueryDatasetCommandInput,
+  QueryDatasetCommandOutput,
+} from "../commands/QueryDatasetCommand";
 import {
   SigninCommandInput,
   SigninCommandOutput,
 } from "../commands/SigninCommand";
-import { EchoServiceException as __BaseException } from "../models/EchoServiceException";
+import { DatasetServiceServiceException as __BaseException } from "../models/DatasetServiceServiceException";
 import {
   ForbiddenError,
+  NotFoundError,
+  ServerError,
   ThrottlingError,
   UnauthorizedError,
   ValidationException,
@@ -24,6 +42,8 @@ import {
   expectNonNull as __expectNonNull,
   expectObject as __expectObject,
   expectString as __expectString,
+  extendedEncodeURIComponent as __extendedEncodeURIComponent,
+  resolvedPath as __resolvedPath,
   _json,
   collectBody,
   map,
@@ -37,20 +57,105 @@ import {
 } from "@smithy/types";
 
 /**
- * serializeAws_restJson1EchoMessageCommand
+ * serializeAws_restJson1CreateDatasetCommand
  */
-export const se_EchoMessageCommand = async(
-  input: EchoMessageCommandInput,
+export const se_CreateDatasetCommand = async(
+  input: CreateDatasetCommandInput,
   context: __SerdeContext
 ): Promise<__HttpRequest> => {
   const b = rb(input, context);
   const headers: any = {
     'content-type': 'application/json',
   };
-  b.bp("/echo");
+  b.bp("/datasets");
   let body: any;
   body = JSON.stringify(take(input, {
-    'message': [],
+    'name': [],
+    'sql': [],
+  }));
+  b.m("POST")
+  .h(headers)
+  .b(body);
+  return b.build();
+}
+
+/**
+ * serializeAws_restJson1GetDatasetCommand
+ */
+export const se_GetDatasetCommand = async(
+  input: GetDatasetCommandInput,
+  context: __SerdeContext
+): Promise<__HttpRequest> => {
+  const b = rb(input, context);
+  const headers: any = {
+  };
+  b.bp("/datasets/{id}");
+  b.p('id', () => input.id!, '{id}', false)
+  let body: any;
+  b.m("GET")
+  .h(headers)
+  .b(body);
+  return b.build();
+}
+
+/**
+ * serializeAws_restJson1HealthCheckCommand
+ */
+export const se_HealthCheckCommand = async(
+  input: HealthCheckCommandInput,
+  context: __SerdeContext
+): Promise<__HttpRequest> => {
+  const b = rb(input, context);
+  const headers: any = map({}, isSerializableHeaderValue, {
+    [_xm]: input[_m]!,
+  });
+  b.bp("/health");
+  let body: any;
+  b.m("GET")
+  .h(headers)
+  .b(body);
+  return b.build();
+}
+
+/**
+ * serializeAws_restJson1ListDatasetCommand
+ */
+export const se_ListDatasetCommand = async(
+  input: ListDatasetCommandInput,
+  context: __SerdeContext
+): Promise<__HttpRequest> => {
+  const b = rb(input, context);
+  const headers: any = {
+  };
+  b.bp("/datasets");
+  const query: any = map({
+    [_l]: [() => input.size !== void 0, () => (input[_s]!.toString())],
+    [_nT]: [,input[_nT]!],
+  });
+  let body: any;
+  b.m("GET")
+  .h(headers)
+  .q(query)
+  .b(body);
+  return b.build();
+}
+
+/**
+ * serializeAws_restJson1QueryDatasetCommand
+ */
+export const se_QueryDatasetCommand = async(
+  input: QueryDatasetCommandInput,
+  context: __SerdeContext
+): Promise<__HttpRequest> => {
+  const b = rb(input, context);
+  const headers: any = {
+    'content-type': 'application/json',
+  };
+  b.bp("/datasets/{id}/query");
+  b.p('id', () => input.id!, '{id}', false)
+  let body: any;
+  body = JSON.stringify(take(input, {
+    'sql': [],
   }));
   b.m("POST")
   .h(headers)
@@ -82,39 +187,42 @@ export const se_SigninCommand = async(
 }
 
 /**
- * deserializeAws_restJson1EchoMessageCommand
+ * deserializeAws_restJson1CreateDatasetCommand
  */
-export const de_EchoMessageCommand = async(
+export const de_CreateDatasetCommand = async(
   output: __HttpResponse,
   context: __SerdeContext
-): Promise<EchoMessageCommandOutput> => {
-  if (output.statusCode !== 200 && output.statusCode >= 300) {
-    return de_EchoMessageCommandError(output, context);
+): Promise<CreateDatasetCommandOutput> => {
+  if (output.statusCode !== 201 && output.statusCode >= 300) {
+    return de_CreateDatasetCommandError(output, context);
   }
   const contents: any = map({
     $metadata: deserializeMetadata(output),
+    [_n]: [, output.headers[_xdn]],
   });
-  const data: Record<string, any> = __expectNonNull((__expectObject(await parseBody(output.body, context))), "body");
-  const doc = take(data, {
-    'message': __expectString,
-  });
-  Object.assign(contents, doc);
+  await collectBody(output.body, context);
   return contents;
 }
 
 /**
- * deserializeAws_restJson1EchoMessageCommandError
+ * deserializeAws_restJson1CreateDatasetCommandError
  */
-const de_EchoMessageCommandError = async(
+const de_CreateDatasetCommandError = async(
   output: __HttpResponse,
   context: __SerdeContext,
-): Promise<EchoMessageCommandOutput> => {
+): Promise<CreateDatasetCommandOutput> => {
   const parsedOutput: any = {
     ...output,
     body: await parseErrorBody(output.body, context)
   };
   const errorCode = loadRestJsonErrorCode(output, parsedOutput.body);
   switch (errorCode) {
+    case "ServerError":
+    case "com.minerva#ServerError":
+      throw await de_ServerErrorRes(parsedOutput, context);
+    case "ThrottlingError":
+    case "com.minerva#ThrottlingError":
+      throw await de_ThrottlingErrorRes(parsedOutput, context);
     case "ValidationException":
     case "smithy.framework#ValidationException":
       throw await de_ValidationExceptionRes(parsedOutput, context);
@@ -129,48 +237,49 @@ const de_EchoMessageCommandError = async(
   }
 
   /**
-   * deserializeAws_restJson1SigninCommand
+   * deserializeAws_restJson1GetDatasetCommand
    */
-  export const de_SigninCommand = async(
+  export const de_GetDatasetCommand = async(
     output: __HttpResponse,
     context: __SerdeContext
-  ): Promise<SigninCommandOutput> => {
+  ): Promise<GetDatasetCommandOutput> => {
     if (output.statusCode !== 200 && output.statusCode >= 300) {
-      return de_SigninCommandError(output, context);
+      return de_GetDatasetCommandError(output, context);
     }
     const contents: any = map({
       $metadata: deserializeMetadata(output),
     });
     const data: Record<string, any> = __expectNonNull((__expectObject(await parseBody(output.body, context))), "body");
     const doc = take(data, {
-      'token': __expectString,
+      'fields': _json,
+      'name': __expectString,
     });
     Object.assign(contents, doc);
     return contents;
   }
 
   /**
-   * deserializeAws_restJson1SigninCommandError
+   * deserializeAws_restJson1GetDatasetCommandError
    */
-  const de_SigninCommandError = async(
+  const de_GetDatasetCommandError = async(
     output: __HttpResponse,
     context: __SerdeContext,
-  ): Promise<SigninCommandOutput> => {
+  ): Promise<GetDatasetCommandOutput> => {
     const parsedOutput: any = {
       ...output,
       body: await parseErrorBody(output.body, context)
     };
     const errorCode = loadRestJsonErrorCode(output, parsedOutput.body);
     switch (errorCode) {
-      case "ForbiddenError":
-      case "com.example#ForbiddenError":
-        throw await de_ForbiddenErrorRes(parsedOutput, context);
+      case "NotFoundError":
+      case "com.minerva#NotFoundError":
+        throw await de_NotFoundErrorRes(parsedOutput, context);
+      case "ServerError":
+      case "com.minerva#ServerError":
+        throw await de_ServerErrorRes(parsedOutput, context);
       case "ThrottlingError":
-      case "com.example#ThrottlingError":
+      case "com.minerva#ThrottlingError":
         throw await de_ThrottlingErrorRes(parsedOutput, context);
-      case "UnauthorizedError":
-      case "com.example#UnauthorizedError":
-        throw await de_UnauthorizedErrorRes(parsedOutput, context);
       case "ValidationException":
       case "smithy.framework#ValidationException":
         throw await de_ValidationExceptionRes(parsedOutput, context);
@@ -184,160 +293,432 @@ const de_EchoMessageCommandError = async(
       }
     }
 
-    const throwDefaultError = withBaseException(__BaseException);
     /**
-     * deserializeAws_restJson1ForbiddenErrorRes
+     * deserializeAws_restJson1HealthCheckCommand
      */
-    const de_ForbiddenErrorRes = async (
-      parsedOutput: any,
+    export const de_HealthCheckCommand = async(
+      output: __HttpResponse,
       context: __SerdeContext
-    ): Promise<ForbiddenError> => {
-      const contents: any = map({
-      });
-      const data: any = parsedOutput.body;
-      const doc = take(data, {
-        'message': __expectString,
-      });
-      Object.assign(contents, doc);
-      const exception = new ForbiddenError({
-        $metadata: deserializeMetadata(parsedOutput),
-        ...contents
-      });
-      return __decorateServiceException(exception, parsedOutput.body);
-    };
-
-    /**
-     * deserializeAws_restJson1ThrottlingErrorRes
-     */
-    const de_ThrottlingErrorRes = async (
-      parsedOutput: any,
-      context: __SerdeContext
-    ): Promise<ThrottlingError> => {
-      const contents: any = map({
-      });
-      const data: any = parsedOutput.body;
-      const doc = take(data, {
-        'message': __expectString,
-      });
-      Object.assign(contents, doc);
-      const exception = new ThrottlingError({
-        $metadata: deserializeMetadata(parsedOutput),
-        ...contents
-      });
-      return __decorateServiceException(exception, parsedOutput.body);
-    };
-
-    /**
-     * deserializeAws_restJson1UnauthorizedErrorRes
-     */
-    const de_UnauthorizedErrorRes = async (
-      parsedOutput: any,
-      context: __SerdeContext
-    ): Promise<UnauthorizedError> => {
-      const contents: any = map({
-      });
-      const data: any = parsedOutput.body;
-      const doc = take(data, {
-        'message': __expectString,
-      });
-      Object.assign(contents, doc);
-      const exception = new UnauthorizedError({
-        $metadata: deserializeMetadata(parsedOutput),
-        ...contents
-      });
-      return __decorateServiceException(exception, parsedOutput.body);
-    };
-
-    /**
-     * deserializeAws_restJson1ValidationExceptionRes
-     */
-    const de_ValidationExceptionRes = async (
-      parsedOutput: any,
-      context: __SerdeContext
-    ): Promise<ValidationException> => {
-      const contents: any = map({
-      });
-      const data: any = parsedOutput.body;
-      const doc = take(data, {
-        'fieldList': _json,
-        'message': __expectString,
-      });
-      Object.assign(contents, doc);
-      const exception = new ValidationException({
-        $metadata: deserializeMetadata(parsedOutput),
-        ...contents
-      });
-      return __decorateServiceException(exception, parsedOutput.body);
-    };
-
-    // de_ValidationExceptionField omitted.
-
-    // de_ValidationExceptionFieldList omitted.
-
-    const deserializeMetadata = (output: __HttpResponse): __ResponseMetadata => ({
-      httpStatusCode: output.statusCode,
-      requestId: output.headers["x-amzn-requestid"] ?? output.headers["x-amzn-request-id"] ?? output.headers["x-amz-request-id"],
-      extendedRequestId: output.headers["x-amz-id-2"],
-      cfId: output.headers["x-amz-cf-id"],
-    });
-
-    // Encode Uint8Array data into string with utf-8.
-    const collectBodyString = (streamBody: any, context: __SerdeContext): Promise<string> => collectBody(streamBody, context).then(body => context.utf8Encoder(body))
-
-    const isSerializableHeaderValue = (value: any): boolean =>
-      value !== undefined &&
-      value !== null &&
-      value !== "" &&
-      (!Object.getOwnPropertyNames(value).includes("length") ||
-        value.length != 0) &&
-      (!Object.getOwnPropertyNames(value).includes("size") || value.size != 0);
-
-    const parseBody = (streamBody: any, context: __SerdeContext): any => collectBodyString(streamBody, context).then(encoded => {
-      if (encoded.length) {
-        return JSON.parse(encoded);
+    ): Promise<HealthCheckCommandOutput> => {
+      if (output.statusCode !== 200 && output.statusCode >= 300) {
+        return de_HealthCheckCommandError(output, context);
       }
-      return {};
-    });
-
-    const parseErrorBody = async (errorBody: any, context: __SerdeContext) => {
-      const value = await parseBody(errorBody, context);
-      value.message = value.message ?? value.Message;
-      return value;
+      const contents: any = map({
+        $metadata: deserializeMetadata(output),
+      });
+      const data: Record<string, any> = __expectNonNull((__expectObject(await parseBody(output.body, context))), "body");
+      const doc = take(data, {
+        'message': __expectString,
+      });
+      Object.assign(contents, doc);
+      return contents;
     }
 
     /**
-     * Load an error code for the aws.rest-json-1.1 protocol.
+     * deserializeAws_restJson1HealthCheckCommandError
      */
-    const loadRestJsonErrorCode = (output: __HttpResponse, data: any): string | undefined => {
-      const findKey = (object: any, key: string) => Object.keys(object).find((k) => k.toLowerCase() === key.toLowerCase());
-
-      const sanitizeErrorCode = (rawValue: string | number): string => {
-        let cleanValue = rawValue;
-        if (typeof cleanValue === "number") {
-          cleanValue = cleanValue.toString();
-        }
-        if (cleanValue.indexOf(",") >= 0) {
-          cleanValue = cleanValue.split(",")[0];
-        }
-        if (cleanValue.indexOf(":") >= 0) {
-          cleanValue = cleanValue.split(":")[0];
-        }
-        if (cleanValue.indexOf("#") >= 0) {
-          cleanValue = cleanValue.split("#")[1];
-        }
-        return cleanValue;
+    const de_HealthCheckCommandError = async(
+      output: __HttpResponse,
+      context: __SerdeContext,
+    ): Promise<HealthCheckCommandOutput> => {
+      const parsedOutput: any = {
+        ...output,
+        body: await parseErrorBody(output.body, context)
       };
-
-      const headerKey = findKey(output.headers, "x-amzn-errortype");
-      if (headerKey !== undefined) {
-        return sanitizeErrorCode(output.headers[headerKey]);
+      const errorCode = loadRestJsonErrorCode(output, parsedOutput.body);
+      switch (errorCode) {
+        case "ServerError":
+        case "com.minerva#ServerError":
+          throw await de_ServerErrorRes(parsedOutput, context);
+        case "ValidationException":
+        case "smithy.framework#ValidationException":
+          throw await de_ValidationExceptionRes(parsedOutput, context);
+        default:
+          const parsedBody = parsedOutput.body;
+          return throwDefaultError({
+            output,
+            parsedBody,
+            errorCode
+          })
+        }
       }
 
-      if (data.code !== undefined) {
-        return sanitizeErrorCode(data.code);
+      /**
+       * deserializeAws_restJson1ListDatasetCommand
+       */
+      export const de_ListDatasetCommand = async(
+        output: __HttpResponse,
+        context: __SerdeContext
+      ): Promise<ListDatasetCommandOutput> => {
+        if (output.statusCode !== 200 && output.statusCode >= 300) {
+          return de_ListDatasetCommandError(output, context);
+        }
+        const contents: any = map({
+          $metadata: deserializeMetadata(output),
+        });
+        const data: Record<string, any> = __expectNonNull((__expectObject(await parseBody(output.body, context))), "body");
+        const doc = take(data, {
+          'items': _json,
+          'nextToken': __expectString,
+        });
+        Object.assign(contents, doc);
+        return contents;
       }
 
-      if (data["__type"] !== undefined) {
-        return sanitizeErrorCode(data["__type"]);
-      }
-    };
+      /**
+       * deserializeAws_restJson1ListDatasetCommandError
+       */
+      const de_ListDatasetCommandError = async(
+        output: __HttpResponse,
+        context: __SerdeContext,
+      ): Promise<ListDatasetCommandOutput> => {
+        const parsedOutput: any = {
+          ...output,
+          body: await parseErrorBody(output.body, context)
+        };
+        const errorCode = loadRestJsonErrorCode(output, parsedOutput.body);
+        switch (errorCode) {
+          case "ServerError":
+          case "com.minerva#ServerError":
+            throw await de_ServerErrorRes(parsedOutput, context);
+          case "ThrottlingError":
+          case "com.minerva#ThrottlingError":
+            throw await de_ThrottlingErrorRes(parsedOutput, context);
+          case "ValidationException":
+          case "smithy.framework#ValidationException":
+            throw await de_ValidationExceptionRes(parsedOutput, context);
+          default:
+            const parsedBody = parsedOutput.body;
+            return throwDefaultError({
+              output,
+              parsedBody,
+              errorCode
+            })
+          }
+        }
+
+        /**
+         * deserializeAws_restJson1QueryDatasetCommand
+         */
+        export const de_QueryDatasetCommand = async(
+          output: __HttpResponse,
+          context: __SerdeContext
+        ): Promise<QueryDatasetCommandOutput> => {
+          if (output.statusCode !== 200 && output.statusCode >= 300) {
+            return de_QueryDatasetCommandError(output, context);
+          }
+          const contents: any = map({
+            $metadata: deserializeMetadata(output),
+          });
+          const data: Record<string, any> = __expectNonNull((__expectObject(await parseBody(output.body, context))), "body");
+          const doc = take(data, {
+            'data': context.base64Decoder,
+          });
+          Object.assign(contents, doc);
+          return contents;
+        }
+
+        /**
+         * deserializeAws_restJson1QueryDatasetCommandError
+         */
+        const de_QueryDatasetCommandError = async(
+          output: __HttpResponse,
+          context: __SerdeContext,
+        ): Promise<QueryDatasetCommandOutput> => {
+          const parsedOutput: any = {
+            ...output,
+            body: await parseErrorBody(output.body, context)
+          };
+          const errorCode = loadRestJsonErrorCode(output, parsedOutput.body);
+          switch (errorCode) {
+            case "ServerError":
+            case "com.minerva#ServerError":
+              throw await de_ServerErrorRes(parsedOutput, context);
+            case "ThrottlingError":
+            case "com.minerva#ThrottlingError":
+              throw await de_ThrottlingErrorRes(parsedOutput, context);
+            case "ValidationException":
+            case "smithy.framework#ValidationException":
+              throw await de_ValidationExceptionRes(parsedOutput, context);
+            default:
+              const parsedBody = parsedOutput.body;
+              return throwDefaultError({
+                output,
+                parsedBody,
+                errorCode
+              })
+            }
+          }
+
+          /**
+           * deserializeAws_restJson1SigninCommand
+           */
+          export const de_SigninCommand = async(
+            output: __HttpResponse,
+            context: __SerdeContext
+          ): Promise<SigninCommandOutput> => {
+            if (output.statusCode !== 200 && output.statusCode >= 300) {
+              return de_SigninCommandError(output, context);
+            }
+            const contents: any = map({
+              $metadata: deserializeMetadata(output),
+            });
+            const data: Record<string, any> = __expectNonNull((__expectObject(await parseBody(output.body, context))), "body");
+            const doc = take(data, {
+              'token': __expectString,
+            });
+            Object.assign(contents, doc);
+            return contents;
+          }
+
+          /**
+           * deserializeAws_restJson1SigninCommandError
+           */
+          const de_SigninCommandError = async(
+            output: __HttpResponse,
+            context: __SerdeContext,
+          ): Promise<SigninCommandOutput> => {
+            const parsedOutput: any = {
+              ...output,
+              body: await parseErrorBody(output.body, context)
+            };
+            const errorCode = loadRestJsonErrorCode(output, parsedOutput.body);
+            switch (errorCode) {
+              case "ForbiddenError":
+              case "com.minerva#ForbiddenError":
+                throw await de_ForbiddenErrorRes(parsedOutput, context);
+              case "ThrottlingError":
+              case "com.minerva#ThrottlingError":
+                throw await de_ThrottlingErrorRes(parsedOutput, context);
+              case "UnauthorizedError":
+              case "com.minerva#UnauthorizedError":
+                throw await de_UnauthorizedErrorRes(parsedOutput, context);
+              case "ValidationException":
+              case "smithy.framework#ValidationException":
+                throw await de_ValidationExceptionRes(parsedOutput, context);
+              default:
+                const parsedBody = parsedOutput.body;
+                return throwDefaultError({
+                  output,
+                  parsedBody,
+                  errorCode
+                })
+              }
+            }
+
+            const throwDefaultError = withBaseException(__BaseException);
+            /**
+             * deserializeAws_restJson1ForbiddenErrorRes
+             */
+            const de_ForbiddenErrorRes = async (
+              parsedOutput: any,
+              context: __SerdeContext
+            ): Promise<ForbiddenError> => {
+              const contents: any = map({
+              });
+              const data: any = parsedOutput.body;
+              const doc = take(data, {
+                'message': __expectString,
+              });
+              Object.assign(contents, doc);
+              const exception = new ForbiddenError({
+                $metadata: deserializeMetadata(parsedOutput),
+                ...contents
+              });
+              return __decorateServiceException(exception, parsedOutput.body);
+            };
+
+            /**
+             * deserializeAws_restJson1NotFoundErrorRes
+             */
+            const de_NotFoundErrorRes = async (
+              parsedOutput: any,
+              context: __SerdeContext
+            ): Promise<NotFoundError> => {
+              const contents: any = map({
+              });
+              const data: any = parsedOutput.body;
+              const doc = take(data, {
+                'message': __expectString,
+              });
+              Object.assign(contents, doc);
+              const exception = new NotFoundError({
+                $metadata: deserializeMetadata(parsedOutput),
+                ...contents
+              });
+              return __decorateServiceException(exception, parsedOutput.body);
+            };
+
+            /**
+             * deserializeAws_restJson1ServerErrorRes
+             */
+            const de_ServerErrorRes = async (
+              parsedOutput: any,
+              context: __SerdeContext
+            ): Promise<ServerError> => {
+              const contents: any = map({
+              });
+              const data: any = parsedOutput.body;
+              const doc = take(data, {
+                'code': __expectString,
+                'message': __expectString,
+              });
+              Object.assign(contents, doc);
+              const exception = new ServerError({
+                $metadata: deserializeMetadata(parsedOutput),
+                ...contents
+              });
+              return __decorateServiceException(exception, parsedOutput.body);
+            };
+
+            /**
+             * deserializeAws_restJson1ThrottlingErrorRes
+             */
+            const de_ThrottlingErrorRes = async (
+              parsedOutput: any,
+              context: __SerdeContext
+            ): Promise<ThrottlingError> => {
+              const contents: any = map({
+              });
+              const data: any = parsedOutput.body;
+              const doc = take(data, {
+                'message': __expectString,
+              });
+              Object.assign(contents, doc);
+              const exception = new ThrottlingError({
+                $metadata: deserializeMetadata(parsedOutput),
+                ...contents
+              });
+              return __decorateServiceException(exception, parsedOutput.body);
+            };
+
+            /**
+             * deserializeAws_restJson1UnauthorizedErrorRes
+             */
+            const de_UnauthorizedErrorRes = async (
+              parsedOutput: any,
+              context: __SerdeContext
+            ): Promise<UnauthorizedError> => {
+              const contents: any = map({
+              });
+              const data: any = parsedOutput.body;
+              const doc = take(data, {
+                'message': __expectString,
+              });
+              Object.assign(contents, doc);
+              const exception = new UnauthorizedError({
+                $metadata: deserializeMetadata(parsedOutput),
+                ...contents
+              });
+              return __decorateServiceException(exception, parsedOutput.body);
+            };
+
+            /**
+             * deserializeAws_restJson1ValidationExceptionRes
+             */
+            const de_ValidationExceptionRes = async (
+              parsedOutput: any,
+              context: __SerdeContext
+            ): Promise<ValidationException> => {
+              const contents: any = map({
+              });
+              const data: any = parsedOutput.body;
+              const doc = take(data, {
+                'fieldList': _json,
+                'message': __expectString,
+              });
+              Object.assign(contents, doc);
+              const exception = new ValidationException({
+                $metadata: deserializeMetadata(parsedOutput),
+                ...contents
+              });
+              return __decorateServiceException(exception, parsedOutput.body);
+            };
+
+            // de_DatasetField omitted.
+
+            // de_DatasetFieldList omitted.
+
+            // de_DatasetInfo omitted.
+
+            // de_DatasetList omitted.
+
+            // de_ValidationExceptionField omitted.
+
+            // de_ValidationExceptionFieldList omitted.
+
+            const deserializeMetadata = (output: __HttpResponse): __ResponseMetadata => ({
+              httpStatusCode: output.statusCode,
+              requestId: output.headers["x-amzn-requestid"] ?? output.headers["x-amzn-request-id"] ?? output.headers["x-amz-request-id"],
+              extendedRequestId: output.headers["x-amz-id-2"],
+              cfId: output.headers["x-amz-cf-id"],
+            });
+
+            // Encode Uint8Array data into string with utf-8.
+            const collectBodyString = (streamBody: any, context: __SerdeContext): Promise<string> => collectBody(streamBody, context).then(body => context.utf8Encoder(body))
+
+            const isSerializableHeaderValue = (value: any): boolean =>
+              value !== undefined &&
+              value !== null &&
+              value !== "" &&
+              (!Object.getOwnPropertyNames(value).includes("length") ||
+                value.length != 0) &&
+              (!Object.getOwnPropertyNames(value).includes("size") || value.size != 0);
+
+            const _l = "limit";
+            const _m = "message";
+            const _n = "name";
+            const _nT = "nextToken";
+            const _s = "size";
+            const _xdn = "x-dataset-name";
+            const _xm = "x-message";
+
+            const parseBody = (streamBody: any, context: __SerdeContext): any => collectBodyString(streamBody, context).then(encoded => {
+              if (encoded.length) {
+                return JSON.parse(encoded);
+              }
+              return {};
+            });
+
+            const parseErrorBody = async (errorBody: any, context: __SerdeContext) => {
+              const value = await parseBody(errorBody, context);
+              value.message = value.message ?? value.Message;
+              return value;
+            }
+
+            /**
+             * Load an error code for the aws.rest-json-1.1 protocol.
+             */
+            const loadRestJsonErrorCode = (output: __HttpResponse, data: any): string | undefined => {
+              const findKey = (object: any, key: string) => Object.keys(object).find((k) => k.toLowerCase() === key.toLowerCase());
+
+              const sanitizeErrorCode = (rawValue: string | number): string => {
+                let cleanValue = rawValue;
+                if (typeof cleanValue === "number") {
+                  cleanValue = cleanValue.toString();
+                }
+                if (cleanValue.indexOf(",") >= 0) {
+                  cleanValue = cleanValue.split(",")[0];
+                }
+                if (cleanValue.indexOf(":") >= 0) {
+                  cleanValue = cleanValue.split(":")[0];
+                }
+                if (cleanValue.indexOf("#") >= 0) {
+                  cleanValue = cleanValue.split("#")[1];
+                }
+                return cleanValue;
+              };
+
+              const headerKey = findKey(output.headers, "x-amzn-errortype");
+              if (headerKey !== undefined) {
+                return sanitizeErrorCode(output.headers[headerKey]);
+              }
+
+              if (data.code !== undefined) {
+                return sanitizeErrorCode(data.code);
+              }
+
+              if (data["__type"] !== undefined) {
+                return sanitizeErrorCode(data["__type"]);
+              }
+            };

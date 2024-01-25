@@ -1,5 +1,5 @@
 [package]
-name = "echo-server"
+name = "minerva-server"
 version = "0.1.0"
 edition = "2021"
 
@@ -9,7 +9,7 @@ edition = "2021"
 anyhow = { workspace = true }
 aws-smithy-http-server = { version = "0.60", features = ["request-id"] }
 axum = { workspace = true }
-echo-service = { workspace = true }
+minerva-service = { workspace = true }
 tokio = { workspace = true }
 tracing = { workspace = true }
 tracing-subscriber = { workspace = true }

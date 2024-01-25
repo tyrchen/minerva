@@ -590,6 +590,28 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f3b7eb4404b8195a9abb6356f4ac07d8ba267045c8d6d220ac4dc992e6cc75df"
 
 [[package]]
+name = "dataset-server-sdk"
+version = "0.1.0"
+dependencies = [
+ "aws-smithy-http",
+ "aws-smithy-http-server",
+ "aws-smithy-json",
+ "aws-smithy-runtime-api",
+ "aws-smithy-types",
+ "form_urlencoded",
+ "futures-util",
+ "http",
+ "hyper",
+ "mime",
+ "nom",
+ "percent-encoding",
+ "pin-project-lite",
+ "tokio",
+ "tower",
+ "tracing",
+]
+
+[[package]]
 name = "der"
 version = "0.7.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -655,61 +677,6 @@ dependencies = [
  "rfc6979",
  "signature",
  "spki",
-]
-
-[[package]]
-name = "echo-server"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "aws-smithy-http-server",
- "axum",
- "echo-service",
- "tokio",
- "tracing",
- "tracing-subscriber",
-]
-
-[[package]]
-name = "echo-server-sdk"
-version = "0.1.0"
-dependencies = [
- "aws-smithy-http",
- "aws-smithy-http-server",
- "aws-smithy-json",
- "aws-smithy-runtime-api",
- "aws-smithy-types",
- "futures-util",
- "http",
- "hyper",
- "mime",
- "pin-project-lite",
- "tokio",
- "tower",
- "tracing",
-]
-
-[[package]]
-name = "echo-service"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "aws-smithy-http-server",
- "axum",
- "axum-swagger-ui",
- "derive_more",
- "echo-server-sdk",
- "jwt-simple",
- "pin-project-lite",
- "reqwest",
- "serde",
- "serde_json",
- "thiserror",
- "tokio",
- "tower",
- "tower-http 0.4.4",
- "tracing",
- "uuid7",
 ]
 
 [[package]]
@@ -1292,6 +1259,42 @@ checksum = "4192263c238a5f0d0c6bfd21f336a313a4ce1c450542449ca191bb657b4642ef"
 dependencies = [
  "mime",
  "unicase",
+]
+
+[[package]]
+name = "minerva-server"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "aws-smithy-http-server",
+ "axum",
+ "minerva-service",
+ "tokio",
+ "tracing",
+ "tracing-subscriber",
+]
+
+[[package]]
+name = "minerva-service"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "aws-smithy-http-server",
+ "axum",
+ "axum-swagger-ui",
+ "dataset-server-sdk",
+ "derive_more",
+ "jwt-simple",
+ "pin-project-lite",
+ "reqwest",
+ "serde",
+ "serde_json",
+ "thiserror",
+ "tokio",
+ "tower",
+ "tower-http 0.4.4",
+ "tracing",
+ "uuid7",
 ]
 
 [[package]]

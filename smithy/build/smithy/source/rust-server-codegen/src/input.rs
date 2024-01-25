@@ -3,6 +3,124 @@
 #[derive(
     ::std::clone::Clone, ::std::cmp::Eq, ::std::cmp::PartialEq, ::std::fmt::Debug, ::std::hash::Hash,
 )]
+pub struct QueryDatasetInput {
+    #[allow(missing_docs)] // documentation missing in model
+    pub id: ::std::string::String,
+    #[allow(missing_docs)] // documentation missing in model
+    pub sql: ::std::option::Option<::std::string::String>,
+}
+impl QueryDatasetInput {
+    #[allow(missing_docs)] // documentation missing in model
+    pub fn id(&self) -> &str {
+        use std::ops::Deref;
+        self.id.deref()
+    }
+    #[allow(missing_docs)] // documentation missing in model
+    pub fn sql(&self) -> ::std::option::Option<&str> {
+        self.sql.as_deref()
+    }
+}
+impl QueryDatasetInput {
+    /// Creates a new builder-style object to manufacture [`QueryDatasetInput`](crate::input::QueryDatasetInput).
+    pub fn builder() -> crate::input::query_dataset_input::Builder {
+        crate::input::query_dataset_input::Builder::default()
+    }
+}
+impl crate::constrained::Constrained for crate::input::QueryDatasetInput {
+    type Unconstrained = crate::input::query_dataset_input::Builder;
+}
+
+#[allow(missing_docs)] // documentation missing in model
+#[derive(
+    ::std::clone::Clone, ::std::cmp::Eq, ::std::cmp::PartialEq, ::std::fmt::Debug, ::std::hash::Hash,
+)]
+pub struct GetDatasetInput {
+    #[allow(missing_docs)] // documentation missing in model
+    pub id: ::std::string::String,
+}
+impl GetDatasetInput {
+    #[allow(missing_docs)] // documentation missing in model
+    pub fn id(&self) -> &str {
+        use std::ops::Deref;
+        self.id.deref()
+    }
+}
+impl GetDatasetInput {
+    /// Creates a new builder-style object to manufacture [`GetDatasetInput`](crate::input::GetDatasetInput).
+    pub fn builder() -> crate::input::get_dataset_input::Builder {
+        crate::input::get_dataset_input::Builder::default()
+    }
+}
+impl crate::constrained::Constrained for crate::input::GetDatasetInput {
+    type Unconstrained = crate::input::get_dataset_input::Builder;
+}
+
+#[allow(missing_docs)] // documentation missing in model
+#[derive(
+    ::std::clone::Clone, ::std::cmp::Eq, ::std::cmp::PartialEq, ::std::fmt::Debug, ::std::hash::Hash,
+)]
+pub struct CreateDatasetInput {
+    #[allow(missing_docs)] // documentation missing in model
+    pub name: ::std::string::String,
+    #[allow(missing_docs)] // documentation missing in model
+    pub sql: ::std::string::String,
+}
+impl CreateDatasetInput {
+    #[allow(missing_docs)] // documentation missing in model
+    pub fn name(&self) -> &str {
+        use std::ops::Deref;
+        self.name.deref()
+    }
+    #[allow(missing_docs)] // documentation missing in model
+    pub fn sql(&self) -> &str {
+        use std::ops::Deref;
+        self.sql.deref()
+    }
+}
+impl CreateDatasetInput {
+    /// Creates a new builder-style object to manufacture [`CreateDatasetInput`](crate::input::CreateDatasetInput).
+    pub fn builder() -> crate::input::create_dataset_input::Builder {
+        crate::input::create_dataset_input::Builder::default()
+    }
+}
+impl crate::constrained::Constrained for crate::input::CreateDatasetInput {
+    type Unconstrained = crate::input::create_dataset_input::Builder;
+}
+
+#[allow(missing_docs)] // documentation missing in model
+#[derive(
+    ::std::clone::Clone, ::std::cmp::Eq, ::std::cmp::PartialEq, ::std::fmt::Debug, ::std::hash::Hash,
+)]
+pub struct ListDatasetInput {
+    #[allow(missing_docs)] // documentation missing in model
+    pub size: i32,
+    #[allow(missing_docs)] // documentation missing in model
+    pub next_token: ::std::option::Option<::std::string::String>,
+}
+impl ListDatasetInput {
+    #[allow(missing_docs)] // documentation missing in model
+    pub fn size(&self) -> i32 {
+        self.size
+    }
+    #[allow(missing_docs)] // documentation missing in model
+    pub fn next_token(&self) -> ::std::option::Option<&str> {
+        self.next_token.as_deref()
+    }
+}
+impl ListDatasetInput {
+    /// Creates a new builder-style object to manufacture [`ListDatasetInput`](crate::input::ListDatasetInput).
+    pub fn builder() -> crate::input::list_dataset_input::Builder {
+        crate::input::list_dataset_input::Builder::default()
+    }
+}
+impl crate::constrained::Constrained for crate::input::ListDatasetInput {
+    type Unconstrained = crate::input::list_dataset_input::Builder;
+}
+
+#[allow(missing_docs)] // documentation missing in model
+#[derive(
+    ::std::clone::Clone, ::std::cmp::Eq, ::std::cmp::PartialEq, ::std::fmt::Debug, ::std::hash::Hash,
+)]
 pub struct SigninInput {
     #[allow(missing_docs)] // documentation missing in model
     pub username: ::std::string::String,
@@ -35,25 +153,441 @@ impl crate::constrained::Constrained for crate::input::SigninInput {
 #[derive(
     ::std::clone::Clone, ::std::cmp::Eq, ::std::cmp::PartialEq, ::std::fmt::Debug, ::std::hash::Hash,
 )]
-pub struct EchoMessageInput {
+pub struct HealthCheckInput {
     #[allow(missing_docs)] // documentation missing in model
     pub message: ::std::string::String,
 }
-impl EchoMessageInput {
+impl HealthCheckInput {
     #[allow(missing_docs)] // documentation missing in model
     pub fn message(&self) -> &str {
         use std::ops::Deref;
         self.message.deref()
     }
 }
-impl EchoMessageInput {
-    /// Creates a new builder-style object to manufacture [`EchoMessageInput`](crate::input::EchoMessageInput).
-    pub fn builder() -> crate::input::echo_message_input::Builder {
-        crate::input::echo_message_input::Builder::default()
+impl HealthCheckInput {
+    /// Creates a new builder-style object to manufacture [`HealthCheckInput`](crate::input::HealthCheckInput).
+    pub fn builder() -> crate::input::health_check_input::Builder {
+        crate::input::health_check_input::Builder::default()
     }
 }
-impl crate::constrained::Constrained for crate::input::EchoMessageInput {
-    type Unconstrained = crate::input::echo_message_input::Builder;
+impl crate::constrained::Constrained for crate::input::HealthCheckInput {
+    type Unconstrained = crate::input::health_check_input::Builder;
+}
+/// See [`QueryDatasetInput`](crate::input::QueryDatasetInput).
+///
+pub mod query_dataset_input {
+
+    #[derive(::std::cmp::PartialEq, ::std::fmt::Debug)]
+    /// Holds one variant for each of the ways the builder can fail.
+    #[non_exhaustive]
+    #[allow(clippy::enum_variant_names)]
+    pub enum ConstraintViolation {
+        /// `id` was not provided but it is required when building `QueryDatasetInput`.
+        MissingId,
+    }
+    impl ::std::fmt::Display for ConstraintViolation {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            match self {
+                ConstraintViolation::MissingId => write!(
+                    f,
+                    "`id` was not provided but it is required when building `QueryDatasetInput`"
+                ),
+            }
+        }
+    }
+    impl ::std::error::Error for ConstraintViolation {}
+    impl ConstraintViolation {
+        pub(crate) fn as_validation_exception_field(
+            self,
+            path: ::std::string::String,
+        ) -> crate::model::ValidationExceptionField {
+            match self {
+                ConstraintViolation::MissingId => crate::model::ValidationExceptionField {
+                    message: format!(
+                        "Value at '{}/id' failed to satisfy constraint: Member must not be null",
+                        path
+                    ),
+                    path: path + "/id",
+                },
+            }
+        }
+    }
+    impl ::std::convert::From<ConstraintViolation>
+        for ::aws_smithy_http_server::protocol::rest_json_1::rejection::RequestRejection
+    {
+        fn from(constraint_violation: ConstraintViolation) -> Self {
+            let first_validation_exception_field =
+                constraint_violation.as_validation_exception_field("".to_owned());
+            let validation_exception = crate::error::ValidationException {
+                message: format!(
+                    "1 validation error detected. {}",
+                    &first_validation_exception_field.message
+                ),
+                field_list: Some(vec![first_validation_exception_field]),
+            };
+            Self::ConstraintViolation(
+                                crate::protocol_serde::shape_validation_exception::ser_validation_exception_error(&validation_exception)
+                                    .expect("validation exceptions should never fail to serialize; please file a bug report under https://github.com/smithy-lang/smithy-rs/issues")
+                            )
+        }
+    }
+    impl ::std::convert::From<Builder>
+        for crate::constrained::MaybeConstrained<crate::input::QueryDatasetInput>
+    {
+        fn from(builder: Builder) -> Self {
+            Self::Unconstrained(builder)
+        }
+    }
+    impl ::std::convert::TryFrom<Builder> for crate::input::QueryDatasetInput {
+        type Error = ConstraintViolation;
+
+        fn try_from(builder: Builder) -> Result<Self, Self::Error> {
+            builder.build()
+        }
+    }
+    /// A builder for [`QueryDatasetInput`](crate::input::QueryDatasetInput).
+    #[derive(::std::clone::Clone, ::std::default::Default, ::std::fmt::Debug)]
+    pub struct Builder {
+        pub(crate) id: ::std::option::Option<::std::string::String>,
+        pub(crate) sql: ::std::option::Option<::std::string::String>,
+    }
+    impl Builder {
+        #[allow(missing_docs)] // documentation missing in model
+        pub fn id(mut self, input: ::std::string::String) -> Self {
+            self.id = Some(input);
+            self
+        }
+        #[allow(missing_docs)] // documentation missing in model
+        pub(crate) fn set_id(
+            mut self,
+            input: impl ::std::convert::Into<::std::string::String>,
+        ) -> Self {
+            self.id = Some(input.into());
+            self
+        }
+        #[allow(missing_docs)] // documentation missing in model
+        pub fn sql(mut self, input: ::std::option::Option<::std::string::String>) -> Self {
+            self.sql = input;
+            self
+        }
+        #[allow(missing_docs)] // documentation missing in model
+        pub(crate) fn set_sql(
+            mut self,
+            input: Option<impl ::std::convert::Into<::std::string::String>>,
+        ) -> Self {
+            self.sql = input.map(|v| v.into());
+            self
+        }
+        /// Consumes the builder and constructs a [`QueryDatasetInput`](crate::input::QueryDatasetInput).
+        ///
+        /// The builder fails to construct a [`QueryDatasetInput`](crate::input::QueryDatasetInput) if a [`ConstraintViolation`] occurs.
+        ///
+        pub fn build(self) -> Result<crate::input::QueryDatasetInput, ConstraintViolation> {
+            self.build_enforcing_all_constraints()
+        }
+        fn build_enforcing_all_constraints(
+            self,
+        ) -> Result<crate::input::QueryDatasetInput, ConstraintViolation> {
+            Ok(crate::input::QueryDatasetInput {
+                id: self.id.ok_or(ConstraintViolation::MissingId)?,
+                sql: self.sql,
+            })
+        }
+    }
+}
+/// See [`GetDatasetInput`](crate::input::GetDatasetInput).
+///
+pub mod get_dataset_input {
+
+    #[derive(::std::cmp::PartialEq, ::std::fmt::Debug)]
+    /// Holds one variant for each of the ways the builder can fail.
+    #[non_exhaustive]
+    #[allow(clippy::enum_variant_names)]
+    pub enum ConstraintViolation {
+        /// `id` was not provided but it is required when building `GetDatasetInput`.
+        MissingId,
+    }
+    impl ::std::fmt::Display for ConstraintViolation {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            match self {
+                ConstraintViolation::MissingId => write!(
+                    f,
+                    "`id` was not provided but it is required when building `GetDatasetInput`"
+                ),
+            }
+        }
+    }
+    impl ::std::error::Error for ConstraintViolation {}
+    impl ConstraintViolation {
+        pub(crate) fn as_validation_exception_field(
+            self,
+            path: ::std::string::String,
+        ) -> crate::model::ValidationExceptionField {
+            match self {
+                ConstraintViolation::MissingId => crate::model::ValidationExceptionField {
+                    message: format!(
+                        "Value at '{}/id' failed to satisfy constraint: Member must not be null",
+                        path
+                    ),
+                    path: path + "/id",
+                },
+            }
+        }
+    }
+    impl ::std::convert::From<ConstraintViolation>
+        for ::aws_smithy_http_server::protocol::rest_json_1::rejection::RequestRejection
+    {
+        fn from(constraint_violation: ConstraintViolation) -> Self {
+            let first_validation_exception_field =
+                constraint_violation.as_validation_exception_field("".to_owned());
+            let validation_exception = crate::error::ValidationException {
+                message: format!(
+                    "1 validation error detected. {}",
+                    &first_validation_exception_field.message
+                ),
+                field_list: Some(vec![first_validation_exception_field]),
+            };
+            Self::ConstraintViolation(
+                                crate::protocol_serde::shape_validation_exception::ser_validation_exception_error(&validation_exception)
+                                    .expect("validation exceptions should never fail to serialize; please file a bug report under https://github.com/smithy-lang/smithy-rs/issues")
+                            )
+        }
+    }
+    impl ::std::convert::From<Builder>
+        for crate::constrained::MaybeConstrained<crate::input::GetDatasetInput>
+    {
+        fn from(builder: Builder) -> Self {
+            Self::Unconstrained(builder)
+        }
+    }
+    impl ::std::convert::TryFrom<Builder> for crate::input::GetDatasetInput {
+        type Error = ConstraintViolation;
+
+        fn try_from(builder: Builder) -> Result<Self, Self::Error> {
+            builder.build()
+        }
+    }
+    /// A builder for [`GetDatasetInput`](crate::input::GetDatasetInput).
+    #[derive(::std::clone::Clone, ::std::default::Default, ::std::fmt::Debug)]
+    pub struct Builder {
+        pub(crate) id: ::std::option::Option<::std::string::String>,
+    }
+    impl Builder {
+        #[allow(missing_docs)] // documentation missing in model
+        pub fn id(mut self, input: ::std::string::String) -> Self {
+            self.id = Some(input);
+            self
+        }
+        #[allow(missing_docs)] // documentation missing in model
+        pub(crate) fn set_id(
+            mut self,
+            input: impl ::std::convert::Into<::std::string::String>,
+        ) -> Self {
+            self.id = Some(input.into());
+            self
+        }
+        /// Consumes the builder and constructs a [`GetDatasetInput`](crate::input::GetDatasetInput).
+        ///
+        /// The builder fails to construct a [`GetDatasetInput`](crate::input::GetDatasetInput) if a [`ConstraintViolation`] occurs.
+        ///
+        pub fn build(self) -> Result<crate::input::GetDatasetInput, ConstraintViolation> {
+            self.build_enforcing_all_constraints()
+        }
+        fn build_enforcing_all_constraints(
+            self,
+        ) -> Result<crate::input::GetDatasetInput, ConstraintViolation> {
+            Ok(crate::input::GetDatasetInput {
+                id: self.id.ok_or(ConstraintViolation::MissingId)?,
+            })
+        }
+    }
+}
+/// See [`CreateDatasetInput`](crate::input::CreateDatasetInput).
+///
+pub mod create_dataset_input {
+
+    #[derive(::std::cmp::PartialEq, ::std::fmt::Debug)]
+    /// Holds one variant for each of the ways the builder can fail.
+    #[non_exhaustive]
+    #[allow(clippy::enum_variant_names)]
+    pub enum ConstraintViolation {
+        /// `name` was not provided but it is required when building `CreateDatasetInput`.
+        MissingName,
+        /// `sql` was not provided but it is required when building `CreateDatasetInput`.
+        MissingSql,
+    }
+    impl ::std::fmt::Display for ConstraintViolation {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            match self {
+                ConstraintViolation::MissingName => write!(
+                    f,
+                    "`name` was not provided but it is required when building `CreateDatasetInput`"
+                ),
+                ConstraintViolation::MissingSql => write!(
+                    f,
+                    "`sql` was not provided but it is required when building `CreateDatasetInput`"
+                ),
+            }
+        }
+    }
+    impl ::std::error::Error for ConstraintViolation {}
+    impl ConstraintViolation {
+        pub(crate) fn as_validation_exception_field(
+            self,
+            path: ::std::string::String,
+        ) -> crate::model::ValidationExceptionField {
+            match self {
+                ConstraintViolation::MissingName => crate::model::ValidationExceptionField {
+                    message: format!(
+                        "Value at '{}/name' failed to satisfy constraint: Member must not be null",
+                        path
+                    ),
+                    path: path + "/name",
+                },
+                ConstraintViolation::MissingSql => crate::model::ValidationExceptionField {
+                    message: format!(
+                        "Value at '{}/sql' failed to satisfy constraint: Member must not be null",
+                        path
+                    ),
+                    path: path + "/sql",
+                },
+            }
+        }
+    }
+    impl ::std::convert::From<ConstraintViolation>
+        for ::aws_smithy_http_server::protocol::rest_json_1::rejection::RequestRejection
+    {
+        fn from(constraint_violation: ConstraintViolation) -> Self {
+            let first_validation_exception_field =
+                constraint_violation.as_validation_exception_field("".to_owned());
+            let validation_exception = crate::error::ValidationException {
+                message: format!(
+                    "1 validation error detected. {}",
+                    &first_validation_exception_field.message
+                ),
+                field_list: Some(vec![first_validation_exception_field]),
+            };
+            Self::ConstraintViolation(
+                                crate::protocol_serde::shape_validation_exception::ser_validation_exception_error(&validation_exception)
+                                    .expect("validation exceptions should never fail to serialize; please file a bug report under https://github.com/smithy-lang/smithy-rs/issues")
+                            )
+        }
+    }
+    impl ::std::convert::From<Builder>
+        for crate::constrained::MaybeConstrained<crate::input::CreateDatasetInput>
+    {
+        fn from(builder: Builder) -> Self {
+            Self::Unconstrained(builder)
+        }
+    }
+    impl ::std::convert::TryFrom<Builder> for crate::input::CreateDatasetInput {
+        type Error = ConstraintViolation;
+
+        fn try_from(builder: Builder) -> Result<Self, Self::Error> {
+            builder.build()
+        }
+    }
+    /// A builder for [`CreateDatasetInput`](crate::input::CreateDatasetInput).
+    #[derive(::std::clone::Clone, ::std::default::Default, ::std::fmt::Debug)]
+    pub struct Builder {
+        pub(crate) name: ::std::option::Option<::std::string::String>,
+        pub(crate) sql: ::std::option::Option<::std::string::String>,
+    }
+    impl Builder {
+        #[allow(missing_docs)] // documentation missing in model
+        pub fn name(mut self, input: ::std::string::String) -> Self {
+            self.name = Some(input);
+            self
+        }
+        #[allow(missing_docs)] // documentation missing in model
+        pub(crate) fn set_name(
+            mut self,
+            input: impl ::std::convert::Into<::std::string::String>,
+        ) -> Self {
+            self.name = Some(input.into());
+            self
+        }
+        #[allow(missing_docs)] // documentation missing in model
+        pub fn sql(mut self, input: ::std::string::String) -> Self {
+            self.sql = Some(input);
+            self
+        }
+        #[allow(missing_docs)] // documentation missing in model
+        pub(crate) fn set_sql(
+            mut self,
+            input: impl ::std::convert::Into<::std::string::String>,
+        ) -> Self {
+            self.sql = Some(input.into());
+            self
+        }
+        /// Consumes the builder and constructs a [`CreateDatasetInput`](crate::input::CreateDatasetInput).
+        ///
+        /// The builder fails to construct a [`CreateDatasetInput`](crate::input::CreateDatasetInput) if a [`ConstraintViolation`] occurs.
+        ///
+        /// If the builder fails, it will return the _first_ encountered [`ConstraintViolation`].
+        pub fn build(self) -> Result<crate::input::CreateDatasetInput, ConstraintViolation> {
+            self.build_enforcing_all_constraints()
+        }
+        fn build_enforcing_all_constraints(
+            self,
+        ) -> Result<crate::input::CreateDatasetInput, ConstraintViolation> {
+            Ok(crate::input::CreateDatasetInput {
+                name: self.name.ok_or(ConstraintViolation::MissingName)?,
+                sql: self.sql.ok_or(ConstraintViolation::MissingSql)?,
+            })
+        }
+    }
+}
+/// See [`ListDatasetInput`](crate::input::ListDatasetInput).
+///
+pub mod list_dataset_input {
+
+    impl ::std::convert::From<Builder> for crate::input::ListDatasetInput {
+        fn from(builder: Builder) -> Self {
+            builder.build()
+        }
+    }
+    /// A builder for [`ListDatasetInput`](crate::input::ListDatasetInput).
+    #[derive(::std::clone::Clone, ::std::default::Default, ::std::fmt::Debug)]
+    pub struct Builder {
+        pub(crate) size: ::std::option::Option<i32>,
+        pub(crate) next_token: ::std::option::Option<::std::string::String>,
+    }
+    impl Builder {
+        #[allow(missing_docs)] // documentation missing in model
+        pub fn size(mut self, input: i32) -> Self {
+            self.size = Some(input);
+            self
+        }
+        #[allow(missing_docs)] // documentation missing in model
+        pub(crate) fn set_size(mut self, input: impl ::std::convert::Into<i32>) -> Self {
+            self.size = Some(input.into());
+            self
+        }
+        #[allow(missing_docs)] // documentation missing in model
+        pub fn next_token(mut self, input: ::std::option::Option<::std::string::String>) -> Self {
+            self.next_token = input;
+            self
+        }
+        #[allow(missing_docs)] // documentation missing in model
+        pub(crate) fn set_next_token(
+            mut self,
+            input: Option<impl ::std::convert::Into<::std::string::String>>,
+        ) -> Self {
+            self.next_token = input.map(|v| v.into());
+            self
+        }
+        /// Consumes the builder and constructs a [`ListDatasetInput`](crate::input::ListDatasetInput).
+        pub fn build(self) -> crate::input::ListDatasetInput {
+            self.build_enforcing_all_constraints()
+        }
+        fn build_enforcing_all_constraints(self) -> crate::input::ListDatasetInput {
+            crate::input::ListDatasetInput {
+                size: self.size.unwrap_or(50i32),
+                next_token: self.next_token,
+            }
+        }
+    }
 }
 /// See [`SigninInput`](crate::input::SigninInput).
 ///
@@ -185,22 +719,22 @@ pub mod signin_input {
         }
     }
 }
-/// See [`EchoMessageInput`](crate::input::EchoMessageInput).
+/// See [`HealthCheckInput`](crate::input::HealthCheckInput).
 ///
-pub mod echo_message_input {
+pub mod health_check_input {
 
     #[derive(::std::cmp::PartialEq, ::std::fmt::Debug)]
     /// Holds one variant for each of the ways the builder can fail.
     #[non_exhaustive]
     #[allow(clippy::enum_variant_names)]
     pub enum ConstraintViolation {
-        /// `message` was not provided but it is required when building `EchoMessageInput`.
+        /// `message` was not provided but it is required when building `HealthCheckInput`.
         MissingMessage,
     }
     impl ::std::fmt::Display for ConstraintViolation {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             match self {
-                ConstraintViolation::MissingMessage => write!(f, "`message` was not provided but it is required when building `EchoMessageInput`"),
+                ConstraintViolation::MissingMessage => write!(f, "`message` was not provided but it is required when building `HealthCheckInput`"),
             }
         }
     }
@@ -238,20 +772,20 @@ pub mod echo_message_input {
         }
     }
     impl ::std::convert::From<Builder>
-        for crate::constrained::MaybeConstrained<crate::input::EchoMessageInput>
+        for crate::constrained::MaybeConstrained<crate::input::HealthCheckInput>
     {
         fn from(builder: Builder) -> Self {
             Self::Unconstrained(builder)
         }
     }
-    impl ::std::convert::TryFrom<Builder> for crate::input::EchoMessageInput {
+    impl ::std::convert::TryFrom<Builder> for crate::input::HealthCheckInput {
         type Error = ConstraintViolation;
 
         fn try_from(builder: Builder) -> Result<Self, Self::Error> {
             builder.build()
         }
     }
-    /// A builder for [`EchoMessageInput`](crate::input::EchoMessageInput).
+    /// A builder for [`HealthCheckInput`](crate::input::HealthCheckInput).
     #[derive(::std::clone::Clone, ::std::default::Default, ::std::fmt::Debug)]
     pub struct Builder {
         pub(crate) message: ::std::option::Option<::std::string::String>,
@@ -270,17 +804,17 @@ pub mod echo_message_input {
             self.message = Some(input.into());
             self
         }
-        /// Consumes the builder and constructs a [`EchoMessageInput`](crate::input::EchoMessageInput).
+        /// Consumes the builder and constructs a [`HealthCheckInput`](crate::input::HealthCheckInput).
         ///
-        /// The builder fails to construct a [`EchoMessageInput`](crate::input::EchoMessageInput) if a [`ConstraintViolation`] occurs.
+        /// The builder fails to construct a [`HealthCheckInput`](crate::input::HealthCheckInput) if a [`ConstraintViolation`] occurs.
         ///
-        pub fn build(self) -> Result<crate::input::EchoMessageInput, ConstraintViolation> {
+        pub fn build(self) -> Result<crate::input::HealthCheckInput, ConstraintViolation> {
             self.build_enforcing_all_constraints()
         }
         fn build_enforcing_all_constraints(
             self,
-        ) -> Result<crate::input::EchoMessageInput, ConstraintViolation> {
-            Ok(crate::input::EchoMessageInput {
+        ) -> Result<crate::input::HealthCheckInput, ConstraintViolation> {
+            Ok(crate::input::HealthCheckInput {
                 message: self.message.ok_or(ConstraintViolation::MissingMessage)?,
             })
         }

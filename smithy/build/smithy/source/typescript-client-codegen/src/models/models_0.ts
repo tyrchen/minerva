@@ -1,19 +1,79 @@
 // smithy-typescript generated code
-import { EchoServiceException as __BaseException } from "./EchoServiceException";
+import { DatasetServiceServiceException as __BaseException } from "./DatasetServiceServiceException";
 import { ExceptionOptionType as __ExceptionOptionType } from "@smithy/smithy-client";
 
 /**
  * @public
  */
-export interface EchoMessageInput {
-  message: string | undefined;
+export interface CreateDatasetInput {
+  name: string | undefined;
+  sql: string | undefined;
 }
 
 /**
  * @public
  */
-export interface EchoMessageOutput {
-  message: string | undefined;
+export interface CreateDatasetOutput {
+  name: string | undefined;
+}
+
+/**
+ * @public
+ * @enum
+ */
+export const ErrorCode = {
+  DATABASE: "database",
+  INFER: "infer",
+  NETWORK: "network",
+  UNKNOWN: "unknown",
+} as const
+/**
+ * @public
+ */
+export type ErrorCode = typeof ErrorCode[keyof typeof ErrorCode]
+
+/**
+ * @public
+ * Server error.
+ */
+export class ServerError extends __BaseException {
+  readonly name: "ServerError" = "ServerError";
+  readonly $fault: "server" = "server";
+  code: ErrorCode | undefined;
+  /**
+   * @internal
+   */
+  constructor(opts: __ExceptionOptionType<ServerError, __BaseException>) {
+    super({
+      name: "ServerError",
+      $fault: "server",
+      ...opts
+    });
+    Object.setPrototypeOf(this, ServerError.prototype);
+    this.code = opts.code;
+  }
+}
+
+/**
+ * @public
+ * Throttling error.
+ */
+export class ThrottlingError extends __BaseException {
+  readonly name: "ThrottlingError" = "ThrottlingError";
+  readonly $fault: "client" = "client";
+  $retryable = {
+  };
+  /**
+   * @internal
+   */
+  constructor(opts: __ExceptionOptionType<ThrottlingError, __BaseException>) {
+    super({
+      name: "ThrottlingError",
+      $fault: "client",
+      ...opts
+    });
+    Object.setPrototypeOf(this, ThrottlingError.prototype);
+  }
 }
 
 /**
@@ -66,6 +126,94 @@ export class ValidationException extends __BaseException {
 
 /**
  * @public
+ */
+export interface DatasetField {
+  name: string | undefined;
+  type: string | undefined;
+}
+
+/**
+ * @public
+ */
+export interface DatasetInfo {
+  name: string | undefined;
+  fields: (DatasetField)[] | undefined;
+}
+
+/**
+ * @public
+ */
+export interface GetDatasetInput {
+  id: string | undefined;
+}
+
+/**
+ * @public
+ * Not found error.
+ */
+export class NotFoundError extends __BaseException {
+  readonly name: "NotFoundError" = "NotFoundError";
+  readonly $fault: "client" = "client";
+  /**
+   * @internal
+   */
+  constructor(opts: __ExceptionOptionType<NotFoundError, __BaseException>) {
+    super({
+      name: "NotFoundError",
+      $fault: "client",
+      ...opts
+    });
+    Object.setPrototypeOf(this, NotFoundError.prototype);
+  }
+}
+
+/**
+ * @public
+ */
+export interface ListDatasetInput {
+  size?: number;
+  nextToken?: string;
+}
+
+/**
+ * @public
+ */
+export interface ListDatasetOutput {
+  items: (DatasetInfo)[] | undefined;
+  nextToken?: string;
+}
+
+/**
+ * @public
+ */
+export interface QueryDatasetInput {
+  id: string | undefined;
+  sql?: string;
+}
+
+/**
+ * @public
+ */
+export interface QueryDatasetOutput {
+  data: Uint8Array | undefined;
+}
+
+/**
+ * @public
+ */
+export interface HealthCheckInput {
+  message: string | undefined;
+}
+
+/**
+ * @public
+ */
+export interface HealthCheckOutput {
+  message: string | undefined;
+}
+
+/**
+ * @public
  * Forbidden error.
  */
 export class ForbiddenError extends __BaseException {
@@ -97,28 +245,6 @@ export interface SigninInput {
  */
 export interface SigninOutput {
   token: string | undefined;
-}
-
-/**
- * @public
- * Throttling error.
- */
-export class ThrottlingError extends __BaseException {
-  readonly name: "ThrottlingError" = "ThrottlingError";
-  readonly $fault: "client" = "client";
-  $retryable = {
-  };
-  /**
-   * @internal
-   */
-  constructor(opts: __ExceptionOptionType<ThrottlingError, __BaseException>) {
-    super({
-      name: "ThrottlingError",
-      $fault: "client",
-      ...opts
-    });
-    Object.setPrototypeOf(this, ThrottlingError.prototype);
-  }
 }
 
 /**

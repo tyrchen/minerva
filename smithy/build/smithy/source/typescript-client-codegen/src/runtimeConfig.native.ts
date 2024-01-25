@@ -1,12 +1,12 @@
 // smithy-typescript generated code
 import { Sha256 } from "@aws-crypto/sha256-js";
-import { EchoClientConfig } from "./EchoClient";
+import { DatasetServiceClientConfig } from "./DatasetServiceClient";
 import { getRuntimeConfig as getBrowserRuntimeConfig } from "./runtimeConfig.browser";
 
 /**
  * @internal
  */
-export const getRuntimeConfig = (config: EchoClientConfig) => {
+export const getRuntimeConfig = (config: DatasetServiceClientConfig) => {
   const browserDefaults = getBrowserRuntimeConfig(config);
   return {
     ...browserDefaults,

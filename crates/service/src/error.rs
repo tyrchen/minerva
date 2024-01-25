@@ -1,14 +1,14 @@
 #[macro_export]
 macro_rules! err {
     ($ty:ident, $msg:expr) => {
-        Err(echo_server_sdk::error::ServerError {
-            code: echo_server_sdk::model::ErrorCode::$ty,
+        Err(dataset_server_sdk::error::ServerError {
+            code: dataset_server_sdk::model::ErrorCode::$ty,
             message: $msg.to_string(),
         }.into())
     };
     ($ty:ident, $msg:expr, $($param:expr),*) => {
-        Err(echo_server_sdk::error::ServerError {
-            code: echo_server_sdk::model::ErrorCode::$ty,
+        Err(dataset_server_sdk::error::ServerError {
+            code: dataset_server_sdk::model::ErrorCode::$ty,
             message: format!($msg, $($param),*),
         })
     };
@@ -43,12 +43,12 @@ macro_rules! try_err {
 #[macro_export]
 macro_rules! not_found {
     ( $msg:expr) => {
-        return Err(echo_server_sdk::error::NotFoundError {
+        return Err(dataset_server_sdk::error::NotFoundError {
             message: $msg.to_string(),
         }.into())
     };
     ($msg:expr, $($param:expr),*) => {
-        return Err(echo_server_sdk::error::NotFoundError {
+        return Err(dataset_server_sdk::error::NotFoundError {
             message: format!($msg, $($param),*),
         }.into())
     };
@@ -57,12 +57,12 @@ macro_rules! not_found {
 #[macro_export]
 macro_rules! conflict {
     ( $msg:expr) => {
-        return Err(echo_server_sdk::error::ConflictError {
+        return Err(dataset_server_sdk::error::ConflictError {
             message: $msg.to_string(),
         }.into())
     };
     ($msg:expr, $($param:expr),*) => {
-        return Err(echo_server_sdk::error::ConflictError {
+        return Err(dataset_server_sdk::error::ConflictError {
             message: format!($msg, $($param),*),
         }.into())
     };
@@ -71,12 +71,12 @@ macro_rules! conflict {
 #[macro_export]
 macro_rules! forbidden {
     ( $msg:expr) => {
-        return Err(echo_server_sdk::error::ForbiddenError {
+        return Err(dataset_server_sdk::error::ForbiddenError {
             message: $msg.to_string(),
         }.into())
     };
     ($msg:expr, $($param:expr),*) => {
-        return Err(echo_server_sdk::error::ForbiddenError {
+        return Err(dataset_server_sdk::error::ForbiddenError {
             message: format!($msg, $($param),*),
         }.into())
     };
@@ -85,12 +85,12 @@ macro_rules! forbidden {
 #[macro_export]
 macro_rules! unauthorized {
     ( $msg:expr) => {
-        return Err(echo_server_sdk::error::UnauthorizedError {
+        return Err(dataset_server_sdk::error::UnauthorizedError {
             message: $msg.to_string(),
         }.into())
     };
     ($msg:expr, $($param:expr),*) => {
-        return Err(echo_server_sdk::error::UnauthorizedError {
+        return Err(dataset_server_sdk::error::UnauthorizedError {
             message: format!($msg, $($param),*),
         }.into())
     };

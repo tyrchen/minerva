@@ -1,35 +1,33 @@
 $version: "2.0"
 
-namespace com.example
+namespace com.minerva
 
 use aws.protocols#restJson1
 use smithy.framework#ValidationException
-use aws.api#service
 
-
-/// Echoes input
-@service(sdkId: "echo")
 @restJson1
 @httpBearerAuth
-service EchoService {
+service DatasetService {
     version: "2023-12-03"
-    operations: [EchoMessage, Signin]
+    resources: [Dataset]
+    operations: [HealthCheck, Signin]
 }
 
-@http(uri: "/echo", method: "POST")
+@readonly
+@http(uri: "/health", method: "GET")
 @auth([])
-operation EchoMessage {
+operation HealthCheck {
     input := {
         @required
+        @httpHeader("x-message")
         message: String
     }
     output := {
         @required
         message: String
     }
-    errors: [ValidationException]
+    errors: [ValidationException, ServerError]
 }
-
 
 /// Signin to get a token.
 @http(uri: "/signin", method: "POST")

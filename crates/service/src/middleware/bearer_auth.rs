@@ -1,7 +1,7 @@
 use crate::AppState;
 use aws_smithy_http_server::body::BoxBody;
 use axum::http::{Request, Response, StatusCode};
-use echo_server_sdk::server::response::IntoResponse;
+use dataset_server_sdk::server::response::IntoResponse;
 use std::future::Future;
 use std::pin::Pin;
 use std::sync::Arc;
@@ -78,7 +78,7 @@ impl<S> BearerTokenProvider<S> {
     fn process<Body>(&self, mut req: Request<Body>) -> Result<Request<Body>, BearTokenError> {
         // TODO: how to read the smithy auth trait to see if the auth is required?
         let path = req.uri().path();
-        if path.starts_with("/signin") || path.starts_with("/echo") {
+        if path.starts_with("/signin") || path.starts_with("/health") {
             return Ok(req);
         }
 

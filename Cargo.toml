@@ -10,8 +10,8 @@ resolver = "2"
 [workspace.dependencies]
 anyhow = "1"
 axum = { version = "0.6", features = ["headers", "query", "tracing"] }
-echo-server-sdk = { path = "smithy/build/smithy/source/rust-server-codegen" }
-echo-service = { path = "crates/service" }
+dataset-server-sdk = { path = "smithy/build/smithy/source/rust-server-codegen" }
+minerva-service = { path = "crates/service" }
 serde = { version = "1", features = ["derive"] }
 serde_json = { version = "1" }
 tokio = { version = "1", features = [

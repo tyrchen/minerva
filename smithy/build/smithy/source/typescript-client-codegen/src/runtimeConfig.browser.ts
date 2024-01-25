@@ -5,10 +5,6 @@ import packageInfo from "../package.json"; // eslint-disable-line
 import { Sha256 } from "@aws-crypto/sha256-browser";
 import { defaultUserAgent } from "@aws-sdk/util-user-agent-browser";
 import {
-  DEFAULT_USE_DUALSTACK_ENDPOINT,
-  DEFAULT_USE_FIPS_ENDPOINT,
-} from "@smithy/config-resolver";
-import {
   FetchHttpHandler as RequestHandler,
   streamCollector,
 } from "@smithy/fetch-http-handler";
@@ -17,7 +13,7 @@ import {
   DEFAULT_MAX_ATTEMPTS,
   DEFAULT_RETRY_MODE,
 } from "@smithy/util-retry";
-import { EchoClientConfig } from "./EchoClient";
+import { DatasetServiceClientConfig } from "./DatasetServiceClient";
 import { getRuntimeConfig as getSharedRuntimeConfig } from "./runtimeConfig.shared";
 import { loadConfigsForDefaultMode } from "@smithy/smithy-client";
 import { resolveDefaultsModeConfig } from "@smithy/util-defaults-mode-browser";
@@ -25,7 +21,7 @@ import { resolveDefaultsModeConfig } from "@smithy/util-defaults-mode-browser";
 /**
  * @internal
  */
-export const getRuntimeConfig = (config: EchoClientConfig) => {
+export const getRuntimeConfig = (config: DatasetServiceClientConfig) => {
   const defaultsMode = resolveDefaultsModeConfig(config);
   const defaultConfigProvider = () => defaultsMode().then(loadConfigsForDefaultMode);
   const clientSharedValues = getSharedRuntimeConfig(config);
@@ -35,13 +31,11 @@ export const getRuntimeConfig = (config: EchoClientConfig) => {
     runtime: "browser",
     defaultsMode,
     bodyLengthChecker: config?.bodyLengthChecker ?? calculateBodyLength,
-    defaultUserAgentProvider: config?.defaultUserAgentProvider ?? defaultUserAgent({serviceId: clientSharedValues.serviceId, clientVersion: packageInfo.version}),
+    defaultUserAgentProvider: config?.defaultUserAgentProvider ?? defaultUserAgent({clientVersion: packageInfo.version}),
     maxAttempts: config?.maxAttempts ?? DEFAULT_MAX_ATTEMPTS,
     requestHandler: config?.requestHandler ?? new RequestHandler(defaultConfigProvider),
     retryMode: config?.retryMode ?? (async () => (await defaultConfigProvider()).retryMode || DEFAULT_RETRY_MODE),
     sha256: config?.sha256 ?? Sha256,
     streamCollector: config?.streamCollector ?? streamCollector,
-    useDualstackEndpoint: config?.useDualstackEndpoint ?? (() => Promise.resolve(DEFAULT_USE_DUALSTACK_ENDPOINT)),
-    useFipsEndpoint: config?.useFipsEndpoint ?? (() => Promise.resolve(DEFAULT_USE_FIPS_ENDPOINT)),
   };
 };

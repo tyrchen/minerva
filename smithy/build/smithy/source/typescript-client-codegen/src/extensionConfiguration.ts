@@ -5,4 +5,4 @@ import { DefaultExtensionConfiguration } from "@smithy/types";
 /**
  * @internal
  */
-export interface EchoExtensionConfiguration extends HttpHandlerExtensionConfiguration, DefaultExtensionConfiguration {}
+export interface DatasetServiceExtensionConfiguration extends HttpHandlerExtensionConfiguration, DefaultExtensionConfiguration {}

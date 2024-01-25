@@ -14,8 +14,8 @@ use axum::{
     Router,
 };
 use axum_swagger_ui::swagger_ui;
+use dataset_server_sdk::{DatasetService, DatasetServiceConfig};
 use derive_more::Debug;
-use echo_server_sdk::{EchoService, EchoServiceConfig};
 use middleware::{BearerTokenProviderLayer, ServerTimingLayer};
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
@@ -43,7 +43,7 @@ pub async fn get_router(conf: AppConfig) -> Router {
 
     let state = Arc::new(AppState::new(conf));
 
-    let config = EchoServiceConfig::builder()
+    let config = DatasetServiceConfig::builder()
         // IdentityPlugin is a plugin that adds a middleware to the service, it just shows how to use plugins
         .http_plugin(IdentityPlugin)
         .layer(AddExtensionLayer::new(state.clone()))
@@ -52,9 +52,13 @@ pub async fn get_router(conf: AppConfig) -> Router {
             HeaderName::from_static("x-request-id"),
         ))
         .build();
-    let api = EchoService::builder(config)
-        .echo_message(api::echo_message)
+    let api = DatasetService::builder(config)
+        .health_check(api::health_check)
         .signin(api::signin)
+        .create_dataset(api::create_dataset)
+        .list_dataset(api::list_dataset)
+        .get_dataset(api::get_dataset)
+        .query_dataset(api::query_dataset)
         .build()
         .expect("failed to build an instance of Echo Service");
 
