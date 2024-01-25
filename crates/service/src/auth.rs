@@ -1,6 +1,9 @@
+use std::time::{Duration, SystemTime};
+
 use dataset_server_sdk::error::{ForbiddenError, SigninError};
 use derive_more::Debug;
-use jwt_simple::prelude::*;
+use jsonwebtoken::{decode, encode, Algorithm, DecodingKey, EncodingKey, Header, Validation};
+use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -12,35 +15,39 @@ pub struct AuthConfig {
 #[derive(Debug, Error)]
 pub enum AuthError {
     #[error("jwt error: {0}")]
-    JWTError(#[from] jwt_simple::Error),
+    JWTError(#[from] jsonwebtoken::errors::Error),
 }
 
 type Result<T> = std::result::Result<T, AuthError>;
 
-const TOKEN_DURATION: u64 = 14;
+const TOKEN_DURATION: u64 = 14 * 24 * 60 * 60;
 
 #[derive(Serialize, Deserialize)]
-pub struct CustomClaims {
+pub struct Claims {
+    pub sub: String,
+    pub exp: u64,
     pub data: String,
 }
 
 #[derive(Debug, Clone)]
 pub struct AuthSigner {
+    #[allow(dead_code)]
     provider: String,
     #[debug(skip)]
-    key: Ed25519KeyPair,
+    key: EncodingKey,
 }
 
 #[allow(dead_code)]
 #[derive(Debug, Clone)]
 pub struct AuthVerifier {
     provider: String,
-    key: Ed25519PublicKey,
+    #[debug(skip)]
+    key: DecodingKey,
 }
 
 impl AuthSigner {
-    pub fn try_new(provider: impl Into<String>, key: impl AsRef<str>) -> Result<Self> {
-        let key = Ed25519KeyPair::from_pem(key.as_ref())?;
+    pub fn try_new(provider: impl Into<String>, key: impl AsRef<[u8]>) -> Result<Self> {
+        let key = EncodingKey::from_ed_pem(key.as_ref())?;
 
         Ok(Self {
             provider: provider.into(),
@@ -49,44 +56,44 @@ impl AuthSigner {
     }
 
     pub fn sign(&self, data: String) -> Result<String> {
-        let claims =
-            Claims::with_custom_claims(CustomClaims { data }, Duration::from_days(TOKEN_DURATION))
-                .with_issuer(&self.provider)
-                .with_subject("auth");
-        let token = self.key.sign(claims)?;
+        let claims = Claims {
+            sub: "auth".to_string(),
+            exp: SystemTime::now()
+                .checked_add(Duration::from_secs(TOKEN_DURATION))
+                .unwrap()
+                .duration_since(SystemTime::UNIX_EPOCH)
+                .unwrap()
+                .as_secs(),
+            data,
+        };
+        let token = encode(&Header::new(Algorithm::EdDSA), &claims, &self.key)?;
         Ok(token)
     }
 }
 
 impl AuthVerifier {
-    pub fn try_new(provider: impl Into<String>, key: impl AsRef<str>) -> Result<Self> {
-        let key = Ed25519PublicKey::from_pem(key.as_ref())?;
+    pub fn try_new(provider: impl Into<String>, key: impl AsRef<[u8]>) -> Result<Self> {
+        let key = DecodingKey::from_ed_pem(key.as_ref())?;
         Ok(Self {
             provider: provider.into(),
             key,
         })
     }
 
-    pub fn verify(&self, token: impl AsRef<str>) -> Result<JWTClaims<CustomClaims>> {
+    pub fn verify(&self, token: impl AsRef<str>) -> Result<Claims> {
         let token = token.as_ref();
-        let claims = self
-            .key
-            .verify_token::<CustomClaims>(token, Some(VerificationOptions::default()))?;
-        Ok(claims)
+        let validation = Validation::new(Algorithm::EdDSA);
+        let claims = decode::<Claims>(token, &self.key, &validation)?;
+
+        Ok(claims.claims)
     }
 }
 
 impl Default for AuthConfig {
     fn default() -> Self {
-        let sk = Ed25519KeyPair::generate();
         Self {
-            sk: sk
-                .to_pem()
-                .split("-----BEGIN PUBLIC KEY-----")
-                .next()
-                .unwrap()
-                .to_string(),
-            pk: sk.public_key().to_pem(),
+            sk: include_str!("../fixtures/sk.pem").to_string(),
+            pk: include_str!("../fixtures/pk.pem").to_string(),
         }
     }
 }
