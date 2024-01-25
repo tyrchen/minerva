@@ -1,0 +1,5 @@
+build/smithy/classpath.json
+build/smithy/source/build-info
+build/smithy/source/model
+build/smithy/source/sources
+build/smithy/source/python-client-codegen

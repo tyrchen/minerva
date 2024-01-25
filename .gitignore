@@ -1,5 +1,4 @@
-build/
-smithy/build/
+/build
 .idea
 .vscode
 target

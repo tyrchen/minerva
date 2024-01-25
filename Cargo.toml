@@ -1,19 +1,15 @@
 [workspace]
 members = [
-  "smithy/build/smithy/source/rust-client-codegen",
   "smithy/build/smithy/source/rust-server-codegen",
   "crates/server",
   "crates/service",
-  "crates/client",
   "crates/common",
-  "crates/df",
 ]
 resolver = "2"
 
 [workspace.dependencies]
 anyhow = "1"
 axum = { version = "0.6", features = ["headers", "query", "tracing"] }
-echo-client-sdk = { path = "smithy/build/smithy/source/rust-client-codegen" }
 echo-server-sdk = { path = "smithy/build/smithy/source/rust-server-codegen" }
 echo-service = { path = "crates/service" }
 serde = { version = "1", features = ["derive"] }
