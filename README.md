@@ -37,7 +37,8 @@ Day 1:
 - [ ] tchen: init the project layout (considering using smithy for APIs)
 - [ ] xinwei: data fusion related work
 - [ ] tchen: prepare the environment (deployment scripts)
-- [ ] tchen/xinwei: web frontend
+- [ ] tchen: web frontend
+- [ ] tchen/xinwei: API
 - [ ] tchen/xinwei: make a minimal working example
 
 Day 2:
