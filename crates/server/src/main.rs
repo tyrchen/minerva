@@ -9,7 +9,7 @@ pub async fn main() -> Result<()> {
 
     let app = get_router(AppConfig::default()).await;
     let addr = SocketAddr::from(([0, 0, 0, 0], 3000));
-    info!("Listening on {}", addr);
+    info!("Listening on: {}", addr);
     axum::Server::bind(&addr)
         .serve(app.into_make_service())
         .await?;
