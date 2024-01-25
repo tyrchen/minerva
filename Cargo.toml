@@ -6,6 +6,7 @@ members = [
   "crates/service",
   "crates/client",
   "crates/common",
+  "crates/df",
 ]
 resolver = "2"
 

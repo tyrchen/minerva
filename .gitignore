@@ -1,2 +1,5 @@
 build/
 smithy/build/
+.idea
+.vscode
+target
