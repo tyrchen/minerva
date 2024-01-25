@@ -8,6 +8,7 @@ edition = "2021"
 [dependencies]
 datafusion = "34.0.0"
 datafusion-common = "34.0.0"
-object_store = { version = "0.9.0", default-features = false, features = ["aws"] }
+object_store = { version = "0.8.0", default-features = false, features = ["aws", "http"]}
 common = {path = "../common"}
 url = "2.5.0"
+anyhow = { workspace = true }

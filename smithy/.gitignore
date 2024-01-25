@@ -3,3 +3,5 @@ build/smithy/source/build-info
 build/smithy/source/model
 build/smithy/source/sources
 build/smithy/source/python-client-codegen
+build/smithy/source/rust-client-codegen
+build/smithy/source/swift-codegen
