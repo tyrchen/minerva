@@ -11,6 +11,7 @@ use aws_smithy_http_server::{
 };
 use axum::{
     http::{HeaderName, Method},
+    middleware::from_fn,
     response::Html,
     routing::get,
     Router,
@@ -91,6 +92,7 @@ pub async fn get_router(conf: AppConfig) -> Router {
         .nest_service("/api/", api)
         .layer(ServerTimingLayer::new(name))
         .layer(cors)
+        .layer(from_fn(middleware::check_secret))
         .with_state(state)
 }
 

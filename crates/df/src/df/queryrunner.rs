@@ -17,13 +17,13 @@ pub struct DFQueryRunner {
 
 impl DFQueryRunner {
     pub fn new_s3(dataset_name: impl Into<String>) -> Self {
-        let src_str: String = dataset_name.into();
-        let table_name = src_str.split(".").collect::<Vec<_>>()[0];
+        let src: String = dataset_name.into();
+        let table_name = src.split('.').collect::<Vec<_>>()[0];
         Self {
             region: "us-west-2".to_owned(),
             bucket: "ds-data-438be5a".to_owned(),
             table: table_name.to_owned(),
-            src: src_str.into(),
+            src,
         }
     }
 }

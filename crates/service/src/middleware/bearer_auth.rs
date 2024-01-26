@@ -8,6 +8,7 @@ use std::sync::Arc;
 use std::task::{Context, Poll};
 use thiserror::Error;
 use tower::{Layer, Service};
+use tracing::info;
 
 /// The server request ID has not been added to the [`Request`](http::Request) or has been previously removed.
 #[non_exhaustive]
@@ -81,6 +82,8 @@ impl<S> BearerTokenProvider<S> {
         if path.starts_with("/signin") || path.starts_with("/health") {
             return Ok(req);
         }
+
+        info!("headers: {:?}", req.headers());
 
         let v = req
             .headers_mut()
