@@ -203,7 +203,8 @@
                                 "$ref": "#/components/schemas/QueryDatasetRequestContent"
                             }
                         }
-                    }
+                    },
+                    "required": true
                 },
                 "parameters": [
                     {
@@ -601,7 +602,10 @@
                     "sql": {
                         "type": "string"
                     }
-                }
+                },
+                "required": [
+                    "sql"
+                ]
             },
             "QueryDatasetResponseContent": {
                 "type": "object",

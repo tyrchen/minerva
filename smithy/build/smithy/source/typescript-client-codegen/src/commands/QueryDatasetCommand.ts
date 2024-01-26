@@ -44,7 +44,7 @@ export interface QueryDatasetCommandOutput extends QueryDatasetOutput, __Metadat
  * const client = new DatasetServiceClient(config);
  * const input = { // QueryDatasetInput
  *   id: "STRING_VALUE", // required
- *   sql: "STRING_VALUE",
+ *   sql: "STRING_VALUE", // required
  * };
  * const command = new QueryDatasetCommand(input);
  * const response = await client.send(command);

@@ -1,7 +1,7 @@
 
 ### lambda health
 
-GET https://ds-api.staging.sandbox.tubi.io/api/health
+GET httpss://ds-api.staging.sandbox.tubi.io/api/health
 X-Message: hello world!
 
 ### signin
@@ -9,7 +9,7 @@ X-Message: hello world!
 # User should use existing anonymous token to signin. Here just for demo purpose.
 
 # @name login
-POST http://ds-api.staging.sandbox.tubi.io/api/signin
+POST https://ds-api.staging.sandbox.tubi.io/api/signin
 Content-Type: application/json
 
 {
@@ -23,10 +23,19 @@ Content-Type: application/json
 
 @token = {{ login.response.body.token }}
 
-GET http://ds-api.staging.sandbox.tubi.io/api/datasets
+GET https://ds-api.staging.sandbox.tubi.io/api/datasets
 Authorization: Bearer {{ token }}
 
 ### get dataset
 
-GET http://ds-api.staging.sandbox.tubi.io/api/datasets/youtube.parquet
+GET https://ds-api.staging.sandbox.tubi.io/api/datasets/youtube.parquet
 Authorization: Bearer {{ token }}
+
+### query dataset
+
+POST https://ds-api.staging.sandbox.tubi.io/api/datasets/youtube.parquet/query
+Authorization: Bearer {{ token }}
+
+{
+  "sql": "select * from youtube limit 10"
+}

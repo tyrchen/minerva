@@ -65,6 +65,7 @@ operation QueryDataset {
     @httpLabel
     @required
     id: String,
+    @required
     sql: String,
   },
   output := {

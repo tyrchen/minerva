@@ -31,3 +31,12 @@ Authorization: Bearer {{ token }}
 
 GET http://localhost:3000/api/datasets/youtube.parquet
 Authorization: Bearer {{ token }}
+
+### query dataset
+
+POST http://localhost:3000/api/datasets/youtube.parquet/query
+Authorization: Bearer {{ token }}
+
+{
+  "sql": "select * from youtube limit 10"
+}

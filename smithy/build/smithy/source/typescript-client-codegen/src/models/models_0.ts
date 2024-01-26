@@ -192,7 +192,7 @@ export interface ListDatasetOutput {
  */
 export interface QueryDatasetInput {
   id: string | undefined;
-  sql?: string;
+  sql: string | undefined;
 }
 
 /**

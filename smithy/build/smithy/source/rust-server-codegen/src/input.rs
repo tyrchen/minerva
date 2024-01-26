@@ -32,7 +32,7 @@ pub struct QueryDatasetInput {
     #[allow(missing_docs)] // documentation missing in model
     pub id: ::std::string::String,
     #[allow(missing_docs)] // documentation missing in model
-    pub sql: ::std::option::Option<::std::string::String>,
+    pub sql: ::std::string::String,
 }
 impl QueryDatasetInput {
     #[allow(missing_docs)] // documentation missing in model
@@ -41,8 +41,9 @@ impl QueryDatasetInput {
         self.id.deref()
     }
     #[allow(missing_docs)] // documentation missing in model
-    pub fn sql(&self) -> ::std::option::Option<&str> {
-        self.sql.as_deref()
+    pub fn sql(&self) -> &str {
+        use std::ops::Deref;
+        self.sql.deref()
     }
 }
 impl QueryDatasetInput {
@@ -316,6 +317,8 @@ pub mod query_dataset_input {
     pub enum ConstraintViolation {
         /// `id` was not provided but it is required when building `QueryDatasetInput`.
         MissingId,
+        /// `sql` was not provided but it is required when building `QueryDatasetInput`.
+        MissingSql,
     }
     impl ::std::fmt::Display for ConstraintViolation {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -323,6 +326,10 @@ pub mod query_dataset_input {
                 ConstraintViolation::MissingId => write!(
                     f,
                     "`id` was not provided but it is required when building `QueryDatasetInput`"
+                ),
+                ConstraintViolation::MissingSql => write!(
+                    f,
+                    "`sql` was not provided but it is required when building `QueryDatasetInput`"
                 ),
             }
         }
@@ -340,6 +347,13 @@ pub mod query_dataset_input {
                         path
                     ),
                     path: path + "/id",
+                },
+                ConstraintViolation::MissingSql => crate::model::ValidationExceptionField {
+                    message: format!(
+                        "Value at '{}/sql' failed to satisfy constraint: Member must not be null",
+                        path
+                    ),
+                    path: path + "/sql",
                 },
             }
         }
@@ -398,22 +412,23 @@ pub mod query_dataset_input {
             self
         }
         #[allow(missing_docs)] // documentation missing in model
-        pub fn sql(mut self, input: ::std::option::Option<::std::string::String>) -> Self {
-            self.sql = input;
+        pub fn sql(mut self, input: ::std::string::String) -> Self {
+            self.sql = Some(input);
             self
         }
         #[allow(missing_docs)] // documentation missing in model
         pub(crate) fn set_sql(
             mut self,
-            input: Option<impl ::std::convert::Into<::std::string::String>>,
+            input: impl ::std::convert::Into<::std::string::String>,
         ) -> Self {
-            self.sql = input.map(|v| v.into());
+            self.sql = Some(input.into());
             self
         }
         /// Consumes the builder and constructs a [`QueryDatasetInput`](crate::input::QueryDatasetInput).
         ///
         /// The builder fails to construct a [`QueryDatasetInput`](crate::input::QueryDatasetInput) if a [`ConstraintViolation`] occurs.
         ///
+        /// If the builder fails, it will return the _first_ encountered [`ConstraintViolation`].
         pub fn build(self) -> Result<crate::input::QueryDatasetInput, ConstraintViolation> {
             self.build_enforcing_all_constraints()
         }
@@ -422,7 +437,7 @@ pub mod query_dataset_input {
         ) -> Result<crate::input::QueryDatasetInput, ConstraintViolation> {
             Ok(crate::input::QueryDatasetInput {
                 id: self.id.ok_or(ConstraintViolation::MissingId)?,
-                sql: self.sql,
+                sql: self.sql.ok_or(ConstraintViolation::MissingSql)?,
             })
         }
     }

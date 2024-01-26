@@ -9,7 +9,7 @@ use dataset_server_sdk::{
     types::Blob,
 };
 use minerva_clickhouse::ClickHouseRunner;
-use minerva_common::DatasetDescriber;
+use minerva_common::{DatasetDescriber, QueryRunner};
 use std::sync::Arc;
 use tracing::info;
 
@@ -62,8 +62,10 @@ pub async fn query_dataset(
     Extension(_state): Extension<Arc<AppState>>,
 ) -> Result<output::QueryDatasetOutput, error::QueryDatasetError> {
     info!("query_dataset: {:?}", input);
+    let runner = ClickHouseRunner::new_s3(input.id);
+    let data = runner.query(&input.sql).await.unwrap();
     let output = output::QueryDatasetOutput {
-        data: Blob::new(vec![]),
+        data: Blob::new(data),
     };
     Ok(output)
 }
@@ -73,8 +75,10 @@ pub async fn sample_dataset(
     Extension(_state): Extension<Arc<AppState>>,
 ) -> Result<output::SampleDatasetOutput, error::SampleDatasetError> {
     info!("sample_dataset: {:?}", input);
+    let runner = ClickHouseRunner::new_s3(input.id);
+    let data = runner.sample().await.unwrap();
     let output = output::SampleDatasetOutput {
-        data: Blob::new(vec![]),
+        data: Blob::new(data),
     };
     Ok(output)
 }
