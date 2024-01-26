@@ -3,6 +3,27 @@
 #[derive(
     ::std::clone::Clone, ::std::cmp::Eq, ::std::cmp::PartialEq, ::std::fmt::Debug, ::std::hash::Hash,
 )]
+pub struct SampleDatasetOutput {
+    #[allow(missing_docs)] // documentation missing in model
+    pub data: ::aws_smithy_types::Blob,
+}
+impl SampleDatasetOutput {
+    #[allow(missing_docs)] // documentation missing in model
+    pub fn data(&self) -> &::aws_smithy_types::Blob {
+        &self.data
+    }
+}
+impl SampleDatasetOutput {
+    /// Creates a new builder-style object to manufacture [`SampleDatasetOutput`](crate::output::SampleDatasetOutput).
+    pub fn builder() -> crate::output::sample_dataset_output::Builder {
+        crate::output::sample_dataset_output::Builder::default()
+    }
+}
+
+#[allow(missing_docs)] // documentation missing in model
+#[derive(
+    ::std::clone::Clone, ::std::cmp::Eq, ::std::cmp::PartialEq, ::std::fmt::Debug, ::std::hash::Hash,
+)]
 pub struct QueryDatasetOutput {
     #[allow(missing_docs)] // documentation missing in model
     pub data: ::aws_smithy_types::Blob,
@@ -140,6 +161,60 @@ impl HealthCheckOutput {
     /// Creates a new builder-style object to manufacture [`HealthCheckOutput`](crate::output::HealthCheckOutput).
     pub fn builder() -> crate::output::health_check_output::Builder {
         crate::output::health_check_output::Builder::default()
+    }
+}
+/// See [`SampleDatasetOutput`](crate::output::SampleDatasetOutput).
+///
+pub mod sample_dataset_output {
+
+    #[derive(::std::cmp::PartialEq, ::std::fmt::Debug)]
+    /// Holds one variant for each of the ways the builder can fail.
+    #[non_exhaustive]
+    #[allow(clippy::enum_variant_names)]
+    pub enum ConstraintViolation {
+        /// `data` was not provided but it is required when building `SampleDatasetOutput`.
+        MissingData,
+    }
+    impl ::std::fmt::Display for ConstraintViolation {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            match self {
+                ConstraintViolation::MissingData => write!(f, "`data` was not provided but it is required when building `SampleDatasetOutput`"),
+            }
+        }
+    }
+    impl ::std::error::Error for ConstraintViolation {}
+    impl ::std::convert::TryFrom<Builder> for crate::output::SampleDatasetOutput {
+        type Error = ConstraintViolation;
+
+        fn try_from(builder: Builder) -> Result<Self, Self::Error> {
+            builder.build()
+        }
+    }
+    /// A builder for [`SampleDatasetOutput`](crate::output::SampleDatasetOutput).
+    #[derive(::std::clone::Clone, ::std::default::Default, ::std::fmt::Debug)]
+    pub struct Builder {
+        pub(crate) data: ::std::option::Option<::aws_smithy_types::Blob>,
+    }
+    impl Builder {
+        #[allow(missing_docs)] // documentation missing in model
+        pub fn data(mut self, input: ::aws_smithy_types::Blob) -> Self {
+            self.data = Some(input);
+            self
+        }
+        /// Consumes the builder and constructs a [`SampleDatasetOutput`](crate::output::SampleDatasetOutput).
+        ///
+        /// The builder fails to construct a [`SampleDatasetOutput`](crate::output::SampleDatasetOutput) if a [`ConstraintViolation`] occurs.
+        ///
+        pub fn build(self) -> Result<crate::output::SampleDatasetOutput, ConstraintViolation> {
+            self.build_enforcing_all_constraints()
+        }
+        fn build_enforcing_all_constraints(
+            self,
+        ) -> Result<crate::output::SampleDatasetOutput, ConstraintViolation> {
+            Ok(crate::output::SampleDatasetOutput {
+                data: self.data.ok_or(ConstraintViolation::MissingData)?,
+            })
+        }
     }
 }
 /// See [`QueryDatasetOutput`](crate::output::QueryDatasetOutput).

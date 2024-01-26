@@ -20,6 +20,10 @@ import {
   QueryDatasetCommandOutput,
 } from "./commands/QueryDatasetCommand";
 import {
+  SampleDatasetCommandInput,
+  SampleDatasetCommandOutput,
+} from "./commands/SampleDatasetCommand";
+import {
   SigninCommandInput,
   SigninCommandOutput,
 } from "./commands/SigninCommand";
@@ -95,6 +99,7 @@ export type ServiceInputTypes =
   | HealthCheckCommandInput
   | ListDatasetCommandInput
   | QueryDatasetCommandInput
+  | SampleDatasetCommandInput
   | SigninCommandInput;
 
 /**
@@ -106,6 +111,7 @@ export type ServiceOutputTypes =
   | HealthCheckCommandOutput
   | ListDatasetCommandOutput
   | QueryDatasetCommandOutput
+  | SampleDatasetCommandOutput
   | SigninCommandOutput;
 
 /**

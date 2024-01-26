@@ -59,6 +59,7 @@ pub async fn get_router(conf: AppConfig) -> Router {
         .list_dataset(api::list_dataset)
         .get_dataset(api::get_dataset)
         .query_dataset(api::query_dataset)
+        .sample_dataset(api::sample_dataset)
         .build()
         .expect("failed to build an instance of Echo Service");
 

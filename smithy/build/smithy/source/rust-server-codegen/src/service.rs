@@ -8,6 +8,7 @@ pub struct DatasetServiceBuilder<Body, L, HttpPl, ModelPl> {
     health_check: Option<::aws_smithy_http_server::routing::Route<Body>>,
     list_dataset: Option<::aws_smithy_http_server::routing::Route<Body>>,
     query_dataset: Option<::aws_smithy_http_server::routing::Route<Body>>,
+    sample_dataset: Option<::aws_smithy_http_server::routing::Route<Body>>,
     signin: Option<::aws_smithy_http_server::routing::Route<Body>>,
     layer: L,
     http_plugin: HttpPl,
@@ -765,6 +766,156 @@ impl<Body, L, HttpPl, ModelPl> DatasetServiceBuilder<Body, L, HttpPl, ModelPl> {
         self
     }
 
+    /// Sets the [`SampleDataset`](crate::operation_shape::SampleDataset) operation.
+    ///
+    /// This should be an async function satisfying the [`Handler`](::aws_smithy_http_server::operation::Handler) trait.
+    /// See the [operation module documentation](::aws_smithy_http_server::operation) for more information.
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// use dataset_server_sdk::{DatasetService, DatasetServiceConfig};
+    ///
+    /// use dataset_server_sdk::{input, output, error};
+    ///
+    /// async fn handler(input: input::SampleDatasetInput) -> Result<output::SampleDatasetOutput, error::SampleDatasetError> {
+    ///     todo!()
+    /// }
+    ///
+    /// let config = DatasetServiceConfig::builder().build();
+    /// let app = DatasetService::builder(config)
+    ///     .sample_dataset(handler)
+    ///     /* Set other handlers */
+    ///     .build()
+    ///     .unwrap();
+    /// # let app: DatasetService<::aws_smithy_http_server::routing::RoutingService<::aws_smithy_http_server::protocol::rest::router::RestRouter<::aws_smithy_http_server::routing::Route>, ::aws_smithy_http_server::protocol::rest_json_1::RestJson1>> = app;
+    /// ```
+    ///
+                    pub fn sample_dataset<HandlerType, HandlerExtractors, UpgradeExtractors>(self, handler: HandlerType) -> Self
+                    where
+                        HandlerType: ::aws_smithy_http_server::operation::Handler<crate::operation_shape::SampleDataset, HandlerExtractors>,
+
+                        ModelPl: ::aws_smithy_http_server::plugin::Plugin<
+                            DatasetService<L>,
+                            crate::operation_shape::SampleDataset,
+                            ::aws_smithy_http_server::operation::IntoService<crate::operation_shape::SampleDataset, HandlerType>
+                        >,
+                        ::aws_smithy_http_server::operation::UpgradePlugin::<UpgradeExtractors>: ::aws_smithy_http_server::plugin::Plugin<
+                            DatasetService<L>,
+                            crate::operation_shape::SampleDataset,
+                            ModelPl::Output
+                        >,
+                        HttpPl: ::aws_smithy_http_server::plugin::Plugin<
+                            DatasetService<L>,
+                            crate::operation_shape::SampleDataset,
+                            <
+                                ::aws_smithy_http_server::operation::UpgradePlugin::<UpgradeExtractors>
+                                as ::aws_smithy_http_server::plugin::Plugin<
+                                    DatasetService<L>,
+                                    crate::operation_shape::SampleDataset,
+                                    ModelPl::Output
+                                >
+                            >::Output
+                        >,
+
+                        HttpPl::Output: ::tower::Service<::http::Request<Body>, Response = ::http::Response<::aws_smithy_http_server::body::BoxBody>, Error = ::std::convert::Infallible> + Clone + Send + 'static,
+                        <HttpPl::Output as ::tower::Service<::http::Request<Body>>>::Future: Send + 'static,
+
+                    {
+        use ::aws_smithy_http_server::operation::OperationShapeExt;
+        use ::aws_smithy_http_server::plugin::Plugin;
+        let svc = crate::operation_shape::SampleDataset::from_handler(handler);
+        let svc = self.model_plugin.apply(svc);
+        let svc = ::aws_smithy_http_server::operation::UpgradePlugin::<UpgradeExtractors>::new()
+            .apply(svc);
+        let svc = self.http_plugin.apply(svc);
+        self.sample_dataset_custom(svc)
+    }
+
+    /// Sets the [`SampleDataset`](crate::operation_shape::SampleDataset) operation.
+    ///
+    /// This should be an async function satisfying the [`Handler`](::aws_smithy_http_server::operation::Handler) trait.
+    /// See the [operation module documentation](::aws_smithy_http_server::operation) for more information.
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// use dataset_server_sdk::{DatasetService, DatasetServiceConfig};
+    ///
+    /// use dataset_server_sdk::{input, output, error};
+    ///
+    /// async fn handler(input: input::SampleDatasetInput) -> Result<output::SampleDatasetOutput, error::SampleDatasetError> {
+    ///     todo!()
+    /// }
+    ///
+    /// let config = DatasetServiceConfig::builder().build();
+    /// let svc = ::tower::util::service_fn(handler);
+    /// let app = DatasetService::builder(config)
+    ///     .sample_dataset_service(svc)
+    ///     /* Set other handlers */
+    ///     .build()
+    ///     .unwrap();
+    /// # let app: DatasetService<::aws_smithy_http_server::routing::RoutingService<::aws_smithy_http_server::protocol::rest::router::RestRouter<::aws_smithy_http_server::routing::Route>, ::aws_smithy_http_server::protocol::rest_json_1::RestJson1>> = app;
+    /// ```
+    ///
+                    pub fn sample_dataset_service<S, ServiceExtractors, UpgradeExtractors>(self, service: S) -> Self
+                    where
+                        S: ::aws_smithy_http_server::operation::OperationService<crate::operation_shape::SampleDataset, ServiceExtractors>,
+
+                        ModelPl: ::aws_smithy_http_server::plugin::Plugin<
+                            DatasetService<L>,
+                            crate::operation_shape::SampleDataset,
+                            ::aws_smithy_http_server::operation::Normalize<crate::operation_shape::SampleDataset, S>
+                        >,
+                        ::aws_smithy_http_server::operation::UpgradePlugin::<UpgradeExtractors>: ::aws_smithy_http_server::plugin::Plugin<
+                            DatasetService<L>,
+                            crate::operation_shape::SampleDataset,
+                            ModelPl::Output
+                        >,
+                        HttpPl: ::aws_smithy_http_server::plugin::Plugin<
+                            DatasetService<L>,
+                            crate::operation_shape::SampleDataset,
+                            <
+                                ::aws_smithy_http_server::operation::UpgradePlugin::<UpgradeExtractors>
+                                as ::aws_smithy_http_server::plugin::Plugin<
+                                    DatasetService<L>,
+                                    crate::operation_shape::SampleDataset,
+                                    ModelPl::Output
+                                >
+                            >::Output
+                        >,
+
+                        HttpPl::Output: ::tower::Service<::http::Request<Body>, Response = ::http::Response<::aws_smithy_http_server::body::BoxBody>, Error = ::std::convert::Infallible> + Clone + Send + 'static,
+                        <HttpPl::Output as ::tower::Service<::http::Request<Body>>>::Future: Send + 'static,
+
+                    {
+        use ::aws_smithy_http_server::operation::OperationShapeExt;
+        use ::aws_smithy_http_server::plugin::Plugin;
+        let svc = crate::operation_shape::SampleDataset::from_service(service);
+        let svc = self.model_plugin.apply(svc);
+        let svc = ::aws_smithy_http_server::operation::UpgradePlugin::<UpgradeExtractors>::new()
+            .apply(svc);
+        let svc = self.http_plugin.apply(svc);
+        self.sample_dataset_custom(svc)
+    }
+
+    /// Sets the [`SampleDataset`](crate::operation_shape::SampleDataset) to a custom [`Service`](tower::Service).
+    /// not constrained by the Smithy contract.
+    fn sample_dataset_custom<S>(mut self, svc: S) -> Self
+    where
+        S: ::tower::Service<
+                ::http::Request<Body>,
+                Response = ::http::Response<::aws_smithy_http_server::body::BoxBody>,
+                Error = ::std::convert::Infallible,
+            > + Clone
+            + Send
+            + 'static,
+        S::Future: Send + 'static,
+    {
+        self.sample_dataset = Some(::aws_smithy_http_server::routing::Route::new(svc));
+        self
+    }
+
     /// Sets the [`Signin`](crate::operation_shape::Signin) operation.
     ///
     /// This should be an async function satisfying the [`Handler`](::aws_smithy_http_server::operation::Handler) trait.
@@ -962,6 +1113,12 @@ impl<Body, L, HttpPl, ModelPl> DatasetServiceBuilder<Body, L, HttpPl, ModelPl> {
                 missing_operation_names
                     .insert(crate::operation_shape::QueryDataset::ID, ".query_dataset()");
             }
+            if self.sample_dataset.is_none() {
+                missing_operation_names.insert(
+                    crate::operation_shape::SampleDataset::ID,
+                    ".sample_dataset()",
+                );
+            }
             if self.signin.is_none() {
                 missing_operation_names.insert(crate::operation_shape::Signin::ID, ".signin()");
             }
@@ -992,6 +1149,10 @@ impl<Body, L, HttpPl, ModelPl> DatasetServiceBuilder<Body, L, HttpPl, ModelPl> {
                 (
                     request_specs::query_dataset(),
                     self.query_dataset.expect(unexpected_error_msg),
+                ),
+                (
+                    request_specs::sample_dataset(),
+                    self.sample_dataset.expect(unexpected_error_msg),
                 ),
                 (
                     request_specs::signin(),
@@ -1061,6 +1222,15 @@ impl<Body, L, HttpPl, ModelPl> DatasetServiceBuilder<Body, L, HttpPl, ModelPl> {
             (
                 request_specs::query_dataset(),
                 self.query_dataset.unwrap_or_else(|| {
+                    let svc = ::aws_smithy_http_server::operation::MissingFailure::<
+                        ::aws_smithy_http_server::protocol::rest_json_1::RestJson1,
+                    >::default();
+                    ::aws_smithy_http_server::routing::Route::new(svc)
+                }),
+            ),
+            (
+                request_specs::sample_dataset(),
+                self.sample_dataset.unwrap_or_else(|| {
                     let svc = ::aws_smithy_http_server::operation::MissingFailure::<
                         ::aws_smithy_http_server::protocol::rest_json_1::RestJson1,
                     >::default();
@@ -1189,6 +1359,22 @@ mod request_specs {
                     ),
                 )
     }
+    pub(super) fn sample_dataset() -> ::aws_smithy_http_server::routing::request_spec::RequestSpec {
+        ::aws_smithy_http_server::routing::request_spec::RequestSpec::new(
+                    ::http::Method::GET,
+                    ::aws_smithy_http_server::routing::request_spec::UriSpec::new(
+                        ::aws_smithy_http_server::routing::request_spec::PathAndQuerySpec::new(
+                            ::aws_smithy_http_server::routing::request_spec::PathSpec::from_vector_unchecked(vec![
+    ::aws_smithy_http_server::routing::request_spec::PathSegment::Literal(String::from("datasets")),
+    ::aws_smithy_http_server::routing::request_spec::PathSegment::Label,
+    ::aws_smithy_http_server::routing::request_spec::PathSegment::Literal(String::from("sample")),
+]),
+                            ::aws_smithy_http_server::routing::request_spec::QuerySpec::from_vector_unchecked(vec![
+])
+                        )
+                    ),
+                )
+    }
     pub(super) fn signin() -> ::aws_smithy_http_server::routing::request_spec::RequestSpec {
         ::aws_smithy_http_server::routing::request_spec::RequestSpec::new(
                     ::http::Method::POST,
@@ -1239,6 +1425,7 @@ impl DatasetService<()> {
             health_check: None,
             list_dataset: None,
             query_dataset: None,
+            sample_dataset: None,
             signin: None,
             layer: config.layers,
             http_plugin: config.http_plugins,
@@ -1272,6 +1459,7 @@ impl DatasetService<()> {
             health_check: None,
             list_dataset: None,
             query_dataset: None,
+            sample_dataset: None,
             signin: None,
             layer: ::tower::layer::util::Identity::new(),
             http_plugin,
@@ -1399,6 +1587,7 @@ pub enum Operation {
     HealthCheck,
     ListDataset,
     QueryDataset,
+    SampleDataset,
     Signin,
 }
 
@@ -1430,6 +1619,11 @@ impl Operation {
                 "com.minerva#QueryDataset",
                 "com.minerva",
                 "QueryDataset",
+            ),
+            Operation::SampleDataset => ::aws_smithy_http_server::shape_id::ShapeId::new(
+                "com.minerva#SampleDataset",
+                "com.minerva",
+                "SampleDataset",
             ),
             Operation::Signin => ::aws_smithy_http_server::shape_id::ShapeId::new(
                 "com.minerva#Signin",
@@ -1463,6 +1657,11 @@ impl<L> ::aws_smithy_http_server::service::ContainsOperation<crate::operation_sh
     for DatasetService<L>
 {
     const VALUE: Operation = Operation::QueryDataset;
+}
+impl<L> ::aws_smithy_http_server::service::ContainsOperation<crate::operation_shape::SampleDataset>
+    for DatasetService<L>
+{
+    const VALUE: Operation = Operation::SampleDataset;
 }
 impl<L> ::aws_smithy_http_server::service::ContainsOperation<crate::operation_shape::Signin>
     for DatasetService<L>
@@ -1703,6 +1902,15 @@ macro_rules! scope {
                             scope! { @ $ name, $ contains (QueryDataset $($ member)*) ($ other $($ temp)*) ($($ not_member)*) }
                         };
 
+                        // SampleDataset match found, pop from both `member` and `not_member`
+                        (@ $ name: ident, $ contains: ident (SampleDataset $($ member: ident)*) ($($ temp: ident)*) (SampleDataset $($ not_member: ident)*)) => {
+                            scope! { @ $ name, $ contains ($($ member)*) ($($ temp)*) ($($ not_member)*) }
+                        };
+                        // SampleDataset match not found, pop from `not_member` into `temp` stack
+                        (@ $ name: ident, $ contains: ident (SampleDataset $($ member: ident)*) ($($ temp: ident)*) ($ other: ident $($ not_member: ident)*)) => {
+                            scope! { @ $ name, $ contains (SampleDataset $($ member)*) ($ other $($ temp)*) ($($ not_member)*) }
+                        };
+
                         // Signin match found, pop from both `member` and `not_member`
                         (@ $ name: ident, $ contains: ident (Signin $($ member: ident)*) ($($ temp: ident)*) (Signin $($ not_member: ident)*)) => {
                             scope! { @ $ name, $ contains ($($ member)*) ($($ temp)*) ($($ not_member)*) }
@@ -1726,7 +1934,7 @@ macro_rules! scope {
                                 excludes: []
                             }
                         }
-                        scope! { @ $ name, False ($($ include)*) () (CreateDataset GetDataset HealthCheck ListDataset QueryDataset Signin) }
+                        scope! { @ $ name, False ($($ include)*) () (CreateDataset GetDataset HealthCheck ListDataset QueryDataset SampleDataset Signin) }
                     };
                     (
                         $(#[$ attrs:meta])*
@@ -1743,6 +1951,6 @@ macro_rules! scope {
                                 excludes: [$($ exclude),*]
                             }
                         }
-                        scope! { @ $ name, True ($($ exclude)*) () (CreateDataset GetDataset HealthCheck ListDataset QueryDataset Signin) }
+                        scope! { @ $ name, True ($($ exclude)*) () (CreateDataset GetDataset HealthCheck ListDataset QueryDataset SampleDataset Signin) }
                     };
                 }

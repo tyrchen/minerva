@@ -201,6 +201,20 @@ export interface QueryDatasetOutput {
 /**
  * @public
  */
+export interface SampleDatasetInput {
+  id: string | undefined;
+}
+
+/**
+ * @public
+ */
+export interface SampleDatasetOutput {
+  data: Uint8Array | undefined;
+}
+
+/**
+ * @public
+ */
 export interface HealthCheckInput {
   message: string | undefined;
 }

@@ -9,6 +9,8 @@ pub(crate) mod shape_list_dataset;
 
 pub(crate) mod shape_query_dataset;
 
+pub(crate) mod shape_sample_dataset;
+
 pub(crate) mod shape_signin;
 
 pub(crate) fn or_empty_doc(data: &[u8]) -> &[u8] {
@@ -40,6 +42,10 @@ pub(crate) mod shape_not_found_error;
 pub(crate) mod shape_query_dataset_input;
 
 pub(crate) mod shape_query_dataset_output;
+
+pub(crate) mod shape_sample_dataset_input;
+
+pub(crate) mod shape_sample_dataset_output;
 
 pub(crate) mod shape_server_error;
 

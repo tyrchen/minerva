@@ -1,4 +1,5 @@
 use crate::AppState;
+// use aws_sdk_s3 as s3;
 use aws_smithy_http_server::Extension;
 use dataset_server_sdk::{error, input, model::DatasetInfo, output, types::Blob};
 use std::sync::Arc;
@@ -20,6 +21,9 @@ pub async fn list_dataset(
     Extension(_state): Extension<Arc<AppState>>,
 ) -> Result<output::ListDatasetOutput, error::ListDatasetError> {
     info!("list_dataset: {:?}", input);
+    let config = aws_config::load_from_env().await;
+    let _client = aws_sdk_s3::Client::new(&config);
+
     let output = output::ListDatasetOutput {
         items: vec![DatasetInfo {
             name: "test".to_string(),
@@ -48,6 +52,17 @@ pub async fn query_dataset(
 ) -> Result<output::QueryDatasetOutput, error::QueryDatasetError> {
     info!("query_dataset: {:?}", input);
     let output = output::QueryDatasetOutput {
+        data: Blob::new(vec![]),
+    };
+    Ok(output)
+}
+
+pub async fn sample_dataset(
+    input: input::SampleDatasetInput,
+    Extension(_state): Extension<Arc<AppState>>,
+) -> Result<output::SampleDatasetOutput, error::SampleDatasetError> {
+    info!("sample_dataset: {:?}", input);
+    let output = output::SampleDatasetOutput {
         data: Blob::new(vec![]),
     };
     Ok(output)

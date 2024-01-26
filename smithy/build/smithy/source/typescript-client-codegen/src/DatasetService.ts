@@ -29,6 +29,11 @@ import {
   QueryDatasetCommandOutput,
 } from "./commands/QueryDatasetCommand";
 import {
+  SampleDatasetCommand,
+  SampleDatasetCommandInput,
+  SampleDatasetCommandOutput,
+} from "./commands/SampleDatasetCommand";
+import {
   SigninCommand,
   SigninCommandInput,
   SigninCommandOutput,
@@ -42,6 +47,7 @@ const commands = {
   HealthCheckCommand,
   ListDatasetCommand,
   QueryDatasetCommand,
+  SampleDatasetCommand,
   SigninCommand,
 }
 
@@ -129,6 +135,23 @@ export interface DatasetService {
     args: QueryDatasetCommandInput,
     options: __HttpHandlerOptions,
     cb: (err: any, data?: QueryDatasetCommandOutput) => void
+  ): void;
+
+  /**
+   * @see {@link SampleDatasetCommand}
+   */
+  sampleDataset(
+    args: SampleDatasetCommandInput,
+    options?: __HttpHandlerOptions,
+  ): Promise<SampleDatasetCommandOutput>;
+  sampleDataset(
+    args: SampleDatasetCommandInput,
+    cb: (err: any, data?: SampleDatasetCommandOutput) => void
+  ): void;
+  sampleDataset(
+    args: SampleDatasetCommandInput,
+    options: __HttpHandlerOptions,
+    cb: (err: any, data?: SampleDatasetCommandOutput) => void
   ): void;
 
   /**

@@ -9,7 +9,7 @@ resource Dataset {
   create: CreateDataset,
   list: ListDataset,
   read: GetDataset,
-  operations: [QueryDataset]
+  operations: [QueryDataset, SampleDataset]
 }
 
 @http(uri: "/datasets", method: "POST", code: 201)
@@ -66,6 +66,21 @@ operation QueryDataset {
     @required
     id: String,
     sql: String,
+  },
+  output := {
+      @required
+      data: Blob,
+  }
+  errors: [ValidationException, ThrottlingError, ServerError]
+}
+
+@readonly
+@http(method: "GET", uri: "/datasets/{id}/sample")
+operation SampleDataset {
+  input := {
+    @httpLabel
+    @required
+    id: String,
   },
   output := {
       @required

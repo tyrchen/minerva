@@ -160,6 +160,7 @@
 //!        .health_check(health_check)
 //!        .list_dataset(list_dataset)
 //!        .query_dataset(query_dataset)
+//!        .sample_dataset(sample_dataset)
 //!        .signin(signin)
 //!        .build()
 //!        .expect("failed to build an instance of DatasetService");
@@ -194,6 +195,10 @@
 //! }
 //!
 //! async fn query_dataset(input: input::QueryDatasetInput) -> Result<output::QueryDatasetOutput, error::QueryDatasetError> {
+//!     todo!()
+//! }
+//!
+//! async fn sample_dataset(input: input::SampleDatasetInput) -> Result<output::SampleDatasetOutput, error::SampleDatasetError> {
 //!     todo!()
 //! }
 //!

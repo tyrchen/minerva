@@ -259,6 +259,63 @@
                 }
             }
         },
+        "/datasets/{id}/sample": {
+            "get": {
+                "operationId": "SampleDataset",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "SampleDataset 200 response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SampleDatasetResponseContent"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "ValidationException 400 response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationExceptionResponseContent"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "ThrottlingError 429 response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ThrottlingErrorResponseContent"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "ServerError 500 response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ServerErrorResponseContent"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/health": {
             "get": {
                 "operationId": "HealthCheck",
@@ -515,6 +572,18 @@
                 }
             },
             "QueryDatasetResponseContent": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "type": "string",
+                        "contentEncoding": "byte"
+                    }
+                },
+                "required": [
+                    "data"
+                ]
+            },
+            "SampleDatasetResponseContent": {
                 "type": "object",
                 "properties": {
                     "data": {
