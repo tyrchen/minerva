@@ -52,6 +52,8 @@ export interface ListDatasetCommandOutput extends ListDatasetOutput, __MetadataB
  * //   items: [ // DatasetList // required
  * //     { // DatasetInfo
  * //       name: "STRING_VALUE", // required
+ * //       lastModified: new Date("TIMESTAMP"), // required
+ * //       size: Number("long"), // required
  * //       fields: [ // DatasetFieldList // required
  * //         { // DatasetField
  * //           name: "STRING_VALUE", // required

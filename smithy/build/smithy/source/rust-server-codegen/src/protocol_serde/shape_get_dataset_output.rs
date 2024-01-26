@@ -32,7 +32,19 @@ pub fn ser_get_dataset_output_output(
         array_1.finish();
     }
     {
+        object.key("lastModified").date_time(
+            &input.last_modified,
+            ::aws_smithy_types::date_time::Format::EpochSeconds,
+        )?;
+    }
+    {
         object.key("name").string(input.name.as_str());
+    }
+    {
+        object.key("size").number(
+            #[allow(clippy::useless_conversion)]
+            ::aws_smithy_types::Number::NegInt((input.size).into()),
+        );
     }
     Ok(())
 }

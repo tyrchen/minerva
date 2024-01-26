@@ -6,9 +6,8 @@ use serde::{Deserialize, Serialize};
 
 #[allow(async_fn_in_trait)]
 pub trait QueryRunner {
-    type Response;
     type Error;
-    async fn query(&self, sql: &str) -> Result<Self::Response, Self::Error>;
+    async fn query(&self, sql: &str) -> Result<Vec<u8>, Self::Error>;
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

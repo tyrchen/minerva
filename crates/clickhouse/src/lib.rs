@@ -28,10 +28,9 @@ pub struct LocalFile {
 }
 
 impl QueryRunner for ClickHouseRunner {
-    type Response = Vec<u8>;
     type Error = anyhow::Error;
 
-    async fn query(&self, sql: &str) -> Result<Self::Response, Self::Error> {
+    async fn query(&self, sql: &str) -> Result<Vec<u8>, Self::Error> {
         self.run(sql, None)
     }
 }

@@ -19,10 +19,9 @@ pub struct DFQueryRunner<'a> {
 }
 
 impl<'a> QueryRunner for DFQueryRunner<'a> {
-    type Response = ();
     type Error = anyhow::Error;
 
-    async fn query(&self, sql: &str) -> std::result::Result<Self::Response, Self::Error> {
+    async fn query(&self, sql: &str) -> std::result::Result<Vec<u8>, Self::Error> {
         // create local execution context
         let ctx = SessionContext::new();
 
@@ -81,6 +80,6 @@ impl<'a> QueryRunner for DFQueryRunner<'a> {
 
         df.show_limit(20).await?;
 
-        Ok(())
+        Ok(vec![])
     }
 }

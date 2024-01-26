@@ -7,6 +7,10 @@ structure DatasetInfo {
     @required
     name: String,
     @required
+    lastModified: Timestamp,
+    @required
+    size: Long,
+    @required
     fields: DatasetFieldList,
 }
 

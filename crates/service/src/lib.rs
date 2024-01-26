@@ -3,6 +3,8 @@ mod auth;
 mod error;
 mod middleware;
 
+pub use api::get_aws_config;
+
 use auth::{AuthConfig, AuthSigner, AuthVerifier};
 use aws_smithy_http_server::{
     plugin::IdentityPlugin, request::request_id::ServerRequestIdProviderLayer, AddExtensionLayer,
@@ -18,7 +20,7 @@ use dataset_server_sdk::{DatasetService, DatasetServiceConfig};
 use derive_more::Debug;
 use middleware::{BearerTokenProviderLayer, ServerTimingLayer};
 use serde::{Deserialize, Serialize};
-use std::sync::Arc;
+use std::{env, sync::Arc};
 use tower_http::cors::{Any, CorsLayer};
 
 #[derive(Debug)]
@@ -33,6 +35,7 @@ pub struct AppState {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AppConfig {
     pub server_name: String,
+    pub data_bucket: String,
     pub port: u16,
     pub auth: AuthConfig,
 }
@@ -96,6 +99,7 @@ impl Default for AppConfig {
     fn default() -> Self {
         Self {
             server_name: "echo-service".to_string(),
+            data_bucket: env::var("DATA_BUCKET").unwrap(),
             port: 3000,
             auth: AuthConfig::default(),
         }

@@ -472,6 +472,14 @@
                     "name": {
                         "type": "string"
                     },
+                    "lastModified": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "size": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
                     "fields": {
                         "type": "array",
                         "items": {
@@ -481,7 +489,9 @@
                 },
                 "required": [
                     "fields",
-                    "name"
+                    "lastModified",
+                    "name",
+                    "size"
                 ]
             },
             "ErrorCode": {
@@ -511,6 +521,14 @@
                     "name": {
                         "type": "string"
                     },
+                    "lastModified": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "size": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
                     "fields": {
                         "type": "array",
                         "items": {
@@ -520,7 +538,9 @@
                 },
                 "required": [
                     "fields",
-                    "name"
+                    "lastModified",
+                    "name",
+                    "size"
                 ]
             },
             "HealthCheckResponseContent": {

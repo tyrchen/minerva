@@ -137,6 +137,8 @@ export interface DatasetField {
  */
 export interface DatasetInfo {
   name: string | undefined;
+  lastModified: Date | undefined;
+  size: number | undefined;
   fields: (DatasetField)[] | undefined;
 }
 

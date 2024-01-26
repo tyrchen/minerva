@@ -29,6 +29,7 @@ import {
 } from "../commands/SigninCommand";
 import { DatasetServiceServiceException as __BaseException } from "../models/DatasetServiceServiceException";
 import {
+  DatasetInfo,
   ForbiddenError,
   NotFoundError,
   ServerError,
@@ -43,10 +44,13 @@ import {
 } from "@smithy/protocol-http";
 import {
   decorateServiceException as __decorateServiceException,
+  expectLong as __expectLong,
   expectNonNull as __expectNonNull,
+  expectNumber as __expectNumber,
   expectObject as __expectObject,
   expectString as __expectString,
   extendedEncodeURIComponent as __extendedEncodeURIComponent,
+  parseEpochTimestamp as __parseEpochTimestamp,
   resolvedPath as __resolvedPath,
   _json,
   collectBody,
@@ -275,7 +279,9 @@ const de_CreateDatasetCommandError = async(
     const data: Record<string, any> = __expectNonNull((__expectObject(await parseBody(output.body, context))), "body");
     const doc = take(data, {
       'fields': _json,
+      'lastModified': _ => __expectNonNull(__parseEpochTimestamp(__expectNumber(_))),
       'name': __expectString,
+      'size': __expectLong,
     });
     Object.assign(contents, doc);
     return contents;
@@ -381,7 +387,7 @@ const de_CreateDatasetCommandError = async(
         });
         const data: Record<string, any> = __expectNonNull((__expectObject(await parseBody(output.body, context))), "body");
         const doc = take(data, {
-          'items': _json,
+          'items': _ => de_DatasetList(_, context),
           'nextToken': __expectString,
         });
         Object.assign(contents, doc);
@@ -715,9 +721,33 @@ const de_CreateDatasetCommandError = async(
 
               // de_DatasetFieldList omitted.
 
-              // de_DatasetInfo omitted.
+              /**
+               * deserializeAws_restJson1DatasetInfo
+               */
+              const de_DatasetInfo = (
+                output: any,
+                context: __SerdeContext
+              ): DatasetInfo => {
+                return take(output, {
+                  'fields': _json,
+                  'lastModified': (_: any) => __expectNonNull(__parseEpochTimestamp(__expectNumber(_))),
+                  'name': __expectString,
+                  'size': __expectLong,
+                }) as any;
+              }
 
-              // de_DatasetList omitted.
+              /**
+               * deserializeAws_restJson1DatasetList
+               */
+              const de_DatasetList = (
+                output: any,
+                context: __SerdeContext
+              ): (DatasetInfo)[] => {
+                const retVal = (output || []).filter((e: any) => e != null).map((entry: any) => {
+                  return de_DatasetInfo(entry, context);
+                });
+                return retVal;
+              }
 
               // de_ValidationExceptionField omitted.
 

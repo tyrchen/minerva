@@ -151,6 +151,10 @@ pub struct DatasetInfo {
     #[allow(missing_docs)] // documentation missing in model
     pub name: ::std::string::String,
     #[allow(missing_docs)] // documentation missing in model
+    pub last_modified: ::aws_smithy_types::DateTime,
+    #[allow(missing_docs)] // documentation missing in model
+    pub size: i64,
+    #[allow(missing_docs)] // documentation missing in model
     pub fields: ::std::vec::Vec<crate::model::DatasetField>,
 }
 impl DatasetInfo {
@@ -158,6 +162,14 @@ impl DatasetInfo {
     pub fn name(&self) -> &str {
         use std::ops::Deref;
         self.name.deref()
+    }
+    #[allow(missing_docs)] // documentation missing in model
+    pub fn last_modified(&self) -> &::aws_smithy_types::DateTime {
+        &self.last_modified
+    }
+    #[allow(missing_docs)] // documentation missing in model
+    pub fn size(&self) -> i64 {
+        self.size
     }
     #[allow(missing_docs)] // documentation missing in model
     pub fn fields(&self) -> &[crate::model::DatasetField] {
@@ -318,20 +330,20 @@ pub mod dataset_info {
     pub enum ConstraintViolation {
         /// `name` was not provided but it is required when building `DatasetInfo`.
         MissingName,
+        /// `last_modified` was not provided but it is required when building `DatasetInfo`.
+        MissingLastModified,
+        /// `size` was not provided but it is required when building `DatasetInfo`.
+        MissingSize,
         /// `fields` was not provided but it is required when building `DatasetInfo`.
         MissingFields,
     }
     impl ::std::fmt::Display for ConstraintViolation {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             match self {
-                ConstraintViolation::MissingName => write!(
-                    f,
-                    "`name` was not provided but it is required when building `DatasetInfo`"
-                ),
-                ConstraintViolation::MissingFields => write!(
-                    f,
-                    "`fields` was not provided but it is required when building `DatasetInfo`"
-                ),
+                ConstraintViolation::MissingName => write!(f, "`name` was not provided but it is required when building `DatasetInfo`"),
+                ConstraintViolation::MissingLastModified => write!(f, "`last_modified` was not provided but it is required when building `DatasetInfo`"),
+                ConstraintViolation::MissingSize => write!(f, "`size` was not provided but it is required when building `DatasetInfo`"),
+                ConstraintViolation::MissingFields => write!(f, "`fields` was not provided but it is required when building `DatasetInfo`"),
             }
         }
     }
@@ -347,12 +359,24 @@ pub mod dataset_info {
     #[derive(::std::clone::Clone, ::std::default::Default, ::std::fmt::Debug)]
     pub struct Builder {
         pub(crate) name: ::std::option::Option<::std::string::String>,
+        pub(crate) last_modified: ::std::option::Option<::aws_smithy_types::DateTime>,
+        pub(crate) size: ::std::option::Option<i64>,
         pub(crate) fields: ::std::option::Option<::std::vec::Vec<crate::model::DatasetField>>,
     }
     impl Builder {
         #[allow(missing_docs)] // documentation missing in model
         pub fn name(mut self, input: ::std::string::String) -> Self {
             self.name = Some(input);
+            self
+        }
+        #[allow(missing_docs)] // documentation missing in model
+        pub fn last_modified(mut self, input: ::aws_smithy_types::DateTime) -> Self {
+            self.last_modified = Some(input);
+            self
+        }
+        #[allow(missing_docs)] // documentation missing in model
+        pub fn size(mut self, input: i64) -> Self {
+            self.size = Some(input);
             self
         }
         #[allow(missing_docs)] // documentation missing in model
@@ -373,6 +397,10 @@ pub mod dataset_info {
         ) -> Result<crate::model::DatasetInfo, ConstraintViolation> {
             Ok(crate::model::DatasetInfo {
                 name: self.name.ok_or(ConstraintViolation::MissingName)?,
+                last_modified: self
+                    .last_modified
+                    .ok_or(ConstraintViolation::MissingLastModified)?,
+                size: self.size.ok_or(ConstraintViolation::MissingSize)?,
                 fields: self.fields.ok_or(ConstraintViolation::MissingFields)?,
             })
         }

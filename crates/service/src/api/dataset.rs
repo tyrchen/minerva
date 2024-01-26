@@ -1,7 +1,12 @@
-use crate::AppState;
+use crate::{api::get_aws_config, AppState};
 // use aws_sdk_s3 as s3;
 use aws_smithy_http_server::Extension;
-use dataset_server_sdk::{error, input, model::DatasetInfo, output, types::Blob};
+use dataset_server_sdk::{
+    error, input,
+    model::{DatasetField, DatasetInfo},
+    output,
+    types::Blob,
+};
 use std::sync::Arc;
 use tracing::info;
 
@@ -18,17 +23,39 @@ pub async fn create_dataset(
 
 pub async fn list_dataset(
     input: input::ListDatasetInput,
-    Extension(_state): Extension<Arc<AppState>>,
+    Extension(state): Extension<Arc<AppState>>,
 ) -> Result<output::ListDatasetOutput, error::ListDatasetError> {
     info!("list_dataset: {:?}", input);
-    let config = aws_config::load_from_env().await;
-    let _client = aws_sdk_s3::Client::new(&config);
+    let config = get_aws_config().await;
+    let client = aws_sdk_s3::Client::new(&config);
+    let bucket = &state.config.data_bucket;
+    let objects = client
+        .list_objects()
+        .bucket(bucket)
+        .send()
+        .await
+        .unwrap()
+        .contents
+        .unwrap();
+
+    let mut items = vec![];
+
+    for object in objects {
+        let name = object.key.unwrap();
+        let size = object.size.unwrap();
+        let last_modified = object.last_modified.unwrap();
+        let fields = vec![];
+        let item = DatasetInfo {
+            name,
+            size,
+            last_modified: aws_smithy_types::DateTime::from_secs(last_modified.secs()),
+            fields,
+        };
+        items.push(item);
+    }
 
     let output = output::ListDatasetOutput {
-        items: vec![DatasetInfo {
-            name: "test".to_string(),
-            fields: vec![],
-        }],
+        items: vec![],
         next_token: None,
     };
     Ok(output)
@@ -41,6 +68,8 @@ pub async fn get_dataset(
     info!("get_dataset: {:?}", input);
     let output = output::GetDatasetOutput {
         name: "test".to_string(),
+        last_modified: aws_smithy_types::DateTime::from_secs(1),
+        size: 0,
         fields: vec![],
     };
     Ok(output)
@@ -66,4 +95,9 @@ pub async fn sample_dataset(
         data: Blob::new(vec![]),
     };
     Ok(output)
+}
+
+#[allow(dead_code)]
+fn get_asset_info(_key: &str) -> anyhow::Result<Vec<DatasetField>> {
+    todo!()
 }

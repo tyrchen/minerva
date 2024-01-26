@@ -7,6 +7,18 @@ pub fn ser_dataset_info(
         object.key("name").string(input.name.as_str());
     }
     {
+        object.key("lastModified").date_time(
+            &input.last_modified,
+            ::aws_smithy_types::date_time::Format::EpochSeconds,
+        )?;
+    }
+    {
+        object.key("size").number(
+            #[allow(clippy::useless_conversion)]
+            ::aws_smithy_types::Number::NegInt((input.size).into()),
+        );
+    }
+    {
         let mut array_1 = object.key("fields").start_array();
         for item_2 in &input.fields {
             {
