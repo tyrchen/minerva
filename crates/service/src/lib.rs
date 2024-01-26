@@ -63,7 +63,8 @@ pub async fn get_router(conf: AppConfig) -> Router {
         .expect("failed to build an instance of Echo Service");
 
     let doc_url = "/swagger/openapi.json";
-    let doc = include_str!("../../../smithy/build/smithy/source/openapi/EchoService.openapi.json");
+    let doc =
+        include_str!("../../../smithy/build/smithy/source/openapi/DatasetService.openapi.json");
 
     let cors = CorsLayer::new()
         // allow `GET` and `POST` when accessing the resource

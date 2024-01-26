@@ -2,7 +2,7 @@ mod dataset;
 
 pub(crate) use dataset::*;
 
-use crate::{forbidden, AppState};
+use crate::AppState;
 use aws_smithy_http_server::Extension;
 use dataset_server_sdk::{error, input, output};
 use std::sync::Arc;
@@ -22,12 +22,9 @@ pub async fn signin(
     input: input::SigninInput,
     Extension(state): Extension<Arc<AppState>>,
 ) -> Result<output::SigninOutput, error::SigninError> {
-    info!("signin: {:?}", input);
     let signer = &state.signer;
     let username = input.username;
-    if input.password.len() < 8 {
-        forbidden!("invalid password");
-    }
+    info!("signin user: {}", username);
     let token = signer.sign(username)?;
     Ok(output::SigninOutput { token })
 }

@@ -25,7 +25,7 @@ pub async fn main() -> Result<()> {
     // release build
     #[cfg(not(debug_assertions))]
     {
-        setup_tracing(true);
+        setup_tracing(false);
 
         let app = tower::ServiceBuilder::new()
             .layer(LambdaLayer::default())

@@ -5,13 +5,17 @@ members = [
   "crates/service",
   "crates/common",
   "crates/df",
+  "crates/clickhouse",
 ]
 resolver = "2"
 
 [workspace.dependencies]
 anyhow = "1"
+bytes = "1"
 axum = { version = "0.6", features = ["headers", "query", "tracing"] }
 dataset-server-sdk = { path = "smithy/build/smithy/source/rust-server-codegen" }
+minerva-clickhouse = { path = "crates/clickhouse" }
+minerva-common = { path = "crates/common" }
 minerva-service = { path = "crates/service" }
 serde = { version = "1", features = ["derive"] }
 serde_json = { version = "1" }

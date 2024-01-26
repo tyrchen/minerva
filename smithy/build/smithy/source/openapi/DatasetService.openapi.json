@@ -647,6 +647,10 @@
     "servers": [
         {
             "url": "http://localhost:3000/api",
+            "description": "Dataset local server"
+        },
+        {
+            "url": "https://ds-api.staging.sandbox.tubi.io/api",
             "description": "Dataset server"
         }
     ]
