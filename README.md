@@ -34,15 +34,15 @@ We'd like to try different query backends, including:
 Day 1:
 
 - [x] tchen: init the repo with the initial doc
-- [ ] tchen: init the project layout (considering using smithy for APIs)
+- [x] tchen: init the project layout (considering using smithy for APIs)
 - [ ] xinwei: data fusion related work
-- [ ] tchen: prepare the environment (deployment scripts)
-- [ ] tchen: web frontend
-- [ ] tchen/xinwei: API
-- [ ] tchen/xinwei: make a minimal working example
+- [x] tchen: prepare the environment (deployment scripts)
+- [x] tchen: API
 
 Day 2:
 
+- [ ] tchen: web frontend
+- [ ] tchen/xinwei: make a minimal working example
 - [ ] xinwei: databend related work
 - [ ] tchen: clickhouse phase 1 related work
 - [ ] tchen/xinwei: clickhouse phase 2 related work

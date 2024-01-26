@@ -52,6 +52,7 @@ impl DatasetDescriber for ClickHouseRunner {
             }
             let item: ColumnInfo = serde_json::from_slice(item)
                 .with_context(|| format!("failed to parse as json: {:?}", item))?;
+
             if item.r#type.starts_with("Nullable(") {
                 let r#type = item
                     .r#type
@@ -111,8 +112,13 @@ impl ClickHouseRunner {
             .build_command(query, format)
             .context("failed to build command")?;
 
+        info!("command: {:?}", cmd);
         thread::spawn(move || {
             let output = cmd.output().context("failed to run command")?;
+            if !output.status.success() {
+                warn!("stderr: {:?}", String::from_utf8_lossy(&output.stderr));
+                return Err(anyhow::anyhow!("failed to execute query"));
+            }
             if let Err(e) = tx.send(output.stdout) {
                 warn!("failed to send execution result: {:?}", e);
             }
@@ -157,11 +163,14 @@ impl ClickHouseRunner {
 
         info!("query: {}", query);
         let mut cmd = Command::new(&self.binary_path);
-        cmd.stdout(Stdio::piped()).arg("local").arg(format!(
-            "--query={} format {}",
-            query,
-            format.unwrap_or("Arrow")
-        ));
+        cmd.stdout(Stdio::piped())
+            .stderr(Stdio::piped())
+            .arg("local")
+            .arg(format!(
+                "--query={} format {}",
+                query,
+                format.unwrap_or("Arrow")
+            ));
         Ok(cmd)
     }
 

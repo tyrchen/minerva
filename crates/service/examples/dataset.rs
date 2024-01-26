@@ -1,7 +1,6 @@
-use std::env;
-
 use anyhow::Result;
 use minerva_service::get_aws_config;
+use std::env;
 
 #[tokio::main]
 async fn main() -> Result<()> {

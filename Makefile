@@ -1,5 +1,6 @@
 ASSETS = assets.tar.gz
-LOG_GROUP_NAME = /aws/lambda/ds-api-f801bed
+LOG_GROUP_NAME = /aws/lambda/ds-api-e1b8926
+CH_VERSION=23.11.4.24
 
 validate:
 	@cd smithy && smithy validate
@@ -28,7 +29,7 @@ build-lambda:
 	@cp ~/.target/lambda/minerva-server/bootstrap.zip ../minerva-infra/lambda/ds-api.zip
 
 download-clickhouse:
-	@wget https://github.com/ClickHouse/ClickHouse/releases/download/v23.11.4.24-stable/clickhouse-macos-aarch64
+	@wget https://github.com/ClickHouse/ClickHouse/releases/download/v$(CH_VERSION)-stable/clickhouse-macos-aarch64
 	@mv clickhouse-macos-aarch64 clickhouse && chmod +x clickhouse
 
 lambda-log:

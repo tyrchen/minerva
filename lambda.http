@@ -25,3 +25,8 @@ Content-Type: application/json
 
 GET http://ds-api.staging.sandbox.tubi.io/api/datasets
 Authorization: Bearer {{ token }}
+
+### get dataset
+
+GET http://ds-api.staging.sandbox.tubi.io/api/datasets/youtube.parquet
+Authorization: Bearer {{ token }}
