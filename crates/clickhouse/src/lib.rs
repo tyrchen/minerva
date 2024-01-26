@@ -172,7 +172,7 @@ impl ClickHouseRunner {
 
 impl S3Bucket {
     pub fn new(key: impl Into<String>) -> Self {
-        let name = env::var("DATA_BUCKET").unwrap_or_else(|_| "ds-data-438be5a".to_string());
+        let name = env::var("DATA_BUCKET").unwrap();
         let region = env::var("DATA_BUCKET_REGION").unwrap_or_else(|_| "us-west-2".to_string());
         Self {
             name,

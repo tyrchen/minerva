@@ -6,7 +6,7 @@ pub(crate) use dataset::*;
 use crate::AppState;
 use aws_smithy_http_server::Extension;
 use dataset_server_sdk::{error, input, output};
-use std::{env, sync::Arc};
+use std::sync::Arc;
 use tracing::info;
 
 pub async fn health_check(
@@ -33,8 +33,8 @@ pub async fn signin(
 // debug build
 #[cfg(debug_assertions)]
 pub async fn get_aws_config() -> SdkConfig {
-    let role = env::var("SANDBOX_ROLE").unwrap();
-    let name = env::var("SANDBOX_NAME").unwrap_or_else(|_| "tchen".to_string());
+    let role = std::env::var("SANDBOX_ROLE").unwrap();
+    let name = std::env::var("SANDBOX_NAME").unwrap_or_else(|_| "tchen".to_string());
     let config = aws_config::load_from_env().await;
     let provider = aws_config::sts::AssumeRoleProvider::builder(role)
         .session_name(name)
