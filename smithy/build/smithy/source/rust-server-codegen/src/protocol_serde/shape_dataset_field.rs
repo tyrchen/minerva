@@ -9,5 +9,8 @@ pub fn ser_dataset_field(
     {
         object.key("type").string(input.r#type.as_str());
     }
+    {
+        object.key("nullable").boolean(input.nullable);
+    }
     Ok(())
 }

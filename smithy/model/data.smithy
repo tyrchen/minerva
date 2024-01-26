@@ -7,6 +7,8 @@ structure DatasetInfo {
     @required
     name: String,
     @required
+    table_name: String,
+    @required
     lastModified: Timestamp,
     @required
     size: Long,
@@ -23,6 +25,8 @@ structure DatasetField {
     name: String,
     @required
     type: String,
+    @required
+    nullable: Boolean,
 }
 
 list DatasetFieldList {

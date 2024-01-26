@@ -20,6 +20,8 @@ pub struct TableInfo {
 pub struct ColumnInfo {
     pub name: String,
     pub r#type: String,
+    #[serde(default)]
+    pub nullable: bool,
 }
 
 #[allow(async_fn_in_trait)]

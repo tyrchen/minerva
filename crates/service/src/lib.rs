@@ -25,10 +25,9 @@ use tower_http::cors::{Any, CorsLayer};
 
 #[derive(Debug)]
 pub struct AppState {
-    #[allow(dead_code)]
-    config: AppConfig,
+    pub(crate) config: AppConfig,
+    pub(crate) s3: aws_sdk_s3::Client,
     pub(crate) verifier: AuthVerifier,
-    #[allow(dead_code)]
     pub(crate) signer: AuthSigner,
 }
 
@@ -44,7 +43,7 @@ pub async fn get_router(conf: AppConfig) -> Router {
     // make name with static lifetime
     let name = Box::leak(Box::new(conf.server_name.clone()));
 
-    let state = Arc::new(AppState::new(conf));
+    let state = Arc::new(AppState::new(conf).await);
 
     let config = DatasetServiceConfig::builder()
         // IdentityPlugin is a plugin that adds a middleware to the service, it just shows how to use plugins
@@ -98,7 +97,7 @@ pub async fn get_router(conf: AppConfig) -> Router {
 impl Default for AppConfig {
     fn default() -> Self {
         Self {
-            server_name: "echo-service".to_string(),
+            server_name: "minerva".to_string(),
             data_bucket: env::var("DATA_BUCKET").unwrap(),
             port: 3000,
             auth: AuthConfig::default(),
@@ -107,11 +106,16 @@ impl Default for AppConfig {
 }
 
 impl AppState {
-    pub fn new(config: AppConfig) -> Self {
+    pub async fn new(config: AppConfig) -> Self {
         let signer = AuthSigner::try_new(&config.server_name, &config.auth.sk).unwrap();
         let verifier = AuthVerifier::try_new(&config.server_name, &config.auth.pk).unwrap();
+
+        let aws_config = get_aws_config().await;
+        let s3 = aws_sdk_s3::Client::new(&aws_config);
+
         Self {
             config,
+            s3,
             verifier,
             signer,
         }

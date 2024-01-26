@@ -52,12 +52,14 @@ export interface ListDatasetCommandOutput extends ListDatasetOutput, __MetadataB
  * //   items: [ // DatasetList // required
  * //     { // DatasetInfo
  * //       name: "STRING_VALUE", // required
+ * //       table_name: "STRING_VALUE", // required
  * //       lastModified: new Date("TIMESTAMP"), // required
  * //       size: Number("long"), // required
  * //       fields: [ // DatasetFieldList // required
  * //         { // DatasetField
  * //           name: "STRING_VALUE", // required
  * //           type: "STRING_VALUE", // required
+ * //           nullable: true || false, // required
  * //         },
  * //       ],
  * //     },

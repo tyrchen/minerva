@@ -1,4 +1,5 @@
-use crate::{api::get_aws_config, AppState};
+use crate::AppState;
+use aws_sdk_s3::types::ObjectAttributes;
 // use aws_sdk_s3 as s3;
 use aws_smithy_http_server::Extension;
 use dataset_server_sdk::{
@@ -7,6 +8,8 @@ use dataset_server_sdk::{
     output,
     types::Blob,
 };
+use minerva_clickhouse::ClickHouseRunner;
+use minerva_common::DatasetDescriber;
 use std::sync::Arc;
 use tracing::info;
 
@@ -26,36 +29,11 @@ pub async fn list_dataset(
     Extension(state): Extension<Arc<AppState>>,
 ) -> Result<output::ListDatasetOutput, error::ListDatasetError> {
     info!("list_dataset: {:?}", input);
-    let config = get_aws_config().await;
-    let client = aws_sdk_s3::Client::new(&config);
-    let bucket = &state.config.data_bucket;
-    let objects = client
-        .list_objects()
-        .bucket(bucket)
-        .send()
+    let items = get_assets(&state.config.data_bucket, &state.s3)
         .await
-        .unwrap()
-        .contents
         .unwrap();
-
-    let mut items = vec![];
-
-    for object in objects {
-        let name = object.key.unwrap();
-        let size = object.size.unwrap();
-        let last_modified = object.last_modified.unwrap();
-        let fields = vec![];
-        let item = DatasetInfo {
-            name,
-            size,
-            last_modified: aws_smithy_types::DateTime::from_secs(last_modified.secs()),
-            fields,
-        };
-        items.push(item);
-    }
-
     let output = output::ListDatasetOutput {
-        items: vec![],
+        items,
         next_token: None,
     };
     Ok(output)
@@ -63,14 +41,18 @@ pub async fn list_dataset(
 
 pub async fn get_dataset(
     input: input::GetDatasetInput,
-    Extension(_state): Extension<Arc<AppState>>,
+    Extension(state): Extension<Arc<AppState>>,
 ) -> Result<output::GetDatasetOutput, error::GetDatasetError> {
     info!("get_dataset: {:?}", input);
+    let asset = get_asset(&state.config.data_bucket, &input.id, &state.s3)
+        .await
+        .unwrap();
     let output = output::GetDatasetOutput {
-        name: "test".to_string(),
-        last_modified: aws_smithy_types::DateTime::from_secs(1),
-        size: 0,
-        fields: vec![],
+        name: asset.name,
+        table_name: asset.table_name,
+        last_modified: asset.last_modified,
+        size: asset.size,
+        fields: asset.fields,
     };
     Ok(output)
 }
@@ -97,7 +79,76 @@ pub async fn sample_dataset(
     Ok(output)
 }
 
-#[allow(dead_code)]
-fn get_asset_info(_key: &str) -> anyhow::Result<Vec<DatasetField>> {
-    todo!()
+async fn get_assets(bucket: &str, client: &aws_sdk_s3::Client) -> anyhow::Result<Vec<DatasetInfo>> {
+    let objects = client
+        .list_objects()
+        .bucket(bucket)
+        .send()
+        .await?
+        .contents
+        .unwrap();
+
+    let mut items = vec![];
+    let mut tasks = vec![];
+
+    for object in objects {
+        let task = tokio::spawn(async move {
+            get_asset_by_object(object.key().unwrap(), object.last_modified, object.size).await
+        });
+
+        tasks.push(task);
+    }
+
+    for task in tasks {
+        let item = task.await??;
+        items.push(item);
+    }
+
+    Ok(items)
+}
+
+async fn get_asset(
+    bucket: &str,
+    key: &str,
+    client: &aws_sdk_s3::Client,
+) -> anyhow::Result<DatasetInfo> {
+    let object = client
+        .get_object_attributes()
+        .bucket(bucket)
+        .key(key)
+        .object_attributes(ObjectAttributes::ObjectSize)
+        .send()
+        .await?;
+    get_asset_by_object(key, object.last_modified, object.object_size).await
+}
+
+async fn get_asset_by_object(
+    name: &str,
+    last_modified: Option<::aws_smithy_types::DateTime>,
+    size: Option<i64>,
+) -> anyhow::Result<DatasetInfo> {
+    let runner = ClickHouseRunner::new_s3(name);
+    let table_name = runner.table_name();
+    let info = runner.describe().await?;
+    let fields = info
+        .columns
+        .into_iter()
+        .map(|v| DatasetField {
+            name: v.name,
+            r#type: v.r#type,
+            nullable: v.nullable,
+        })
+        .collect();
+
+    let size = size.unwrap();
+    let last_modified = last_modified.unwrap();
+    let item = DatasetInfo {
+        name: name.to_string(),
+        table_name,
+        size,
+        last_modified,
+        fields,
+    };
+
+    Ok(item)
 }

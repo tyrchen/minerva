@@ -123,6 +123,8 @@ pub struct DatasetField {
     pub name: ::std::string::String,
     #[allow(missing_docs)] // documentation missing in model
     pub r#type: ::std::string::String,
+    #[allow(missing_docs)] // documentation missing in model
+    pub nullable: bool,
 }
 impl DatasetField {
     #[allow(missing_docs)] // documentation missing in model
@@ -134,6 +136,10 @@ impl DatasetField {
     pub fn r#type(&self) -> &str {
         use std::ops::Deref;
         self.r#type.deref()
+    }
+    #[allow(missing_docs)] // documentation missing in model
+    pub fn nullable(&self) -> bool {
+        self.nullable
     }
 }
 impl DatasetField {
@@ -151,6 +157,8 @@ pub struct DatasetInfo {
     #[allow(missing_docs)] // documentation missing in model
     pub name: ::std::string::String,
     #[allow(missing_docs)] // documentation missing in model
+    pub table_name: ::std::string::String,
+    #[allow(missing_docs)] // documentation missing in model
     pub last_modified: ::aws_smithy_types::DateTime,
     #[allow(missing_docs)] // documentation missing in model
     pub size: i64,
@@ -162,6 +170,11 @@ impl DatasetInfo {
     pub fn name(&self) -> &str {
         use std::ops::Deref;
         self.name.deref()
+    }
+    #[allow(missing_docs)] // documentation missing in model
+    pub fn table_name(&self) -> &str {
+        use std::ops::Deref;
+        self.table_name.deref()
     }
     #[allow(missing_docs)] // documentation missing in model
     pub fn last_modified(&self) -> &::aws_smithy_types::DateTime {
@@ -261,6 +274,8 @@ pub mod dataset_field {
         MissingName,
         /// `r#type` was not provided but it is required when building `DatasetField`.
         MissingType,
+        /// `nullable` was not provided but it is required when building `DatasetField`.
+        MissingNullable,
     }
     impl ::std::fmt::Display for ConstraintViolation {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -272,6 +287,10 @@ pub mod dataset_field {
                 ConstraintViolation::MissingType => write!(
                     f,
                     "`r#type` was not provided but it is required when building `DatasetField`"
+                ),
+                ConstraintViolation::MissingNullable => write!(
+                    f,
+                    "`nullable` was not provided but it is required when building `DatasetField`"
                 ),
             }
         }
@@ -289,6 +308,7 @@ pub mod dataset_field {
     pub struct Builder {
         pub(crate) name: ::std::option::Option<::std::string::String>,
         pub(crate) r#type: ::std::option::Option<::std::string::String>,
+        pub(crate) nullable: ::std::option::Option<bool>,
     }
     impl Builder {
         #[allow(missing_docs)] // documentation missing in model
@@ -299,6 +319,11 @@ pub mod dataset_field {
         #[allow(missing_docs)] // documentation missing in model
         pub fn r#type(mut self, input: ::std::string::String) -> Self {
             self.r#type = Some(input);
+            self
+        }
+        #[allow(missing_docs)] // documentation missing in model
+        pub fn nullable(mut self, input: bool) -> Self {
+            self.nullable = Some(input);
             self
         }
         /// Consumes the builder and constructs a [`DatasetField`](crate::model::DatasetField).
@@ -315,6 +340,7 @@ pub mod dataset_field {
             Ok(crate::model::DatasetField {
                 name: self.name.ok_or(ConstraintViolation::MissingName)?,
                 r#type: self.r#type.ok_or(ConstraintViolation::MissingType)?,
+                nullable: self.nullable.ok_or(ConstraintViolation::MissingNullable)?,
             })
         }
     }
@@ -330,6 +356,8 @@ pub mod dataset_info {
     pub enum ConstraintViolation {
         /// `name` was not provided but it is required when building `DatasetInfo`.
         MissingName,
+        /// `table_name` was not provided but it is required when building `DatasetInfo`.
+        MissingTableName,
         /// `last_modified` was not provided but it is required when building `DatasetInfo`.
         MissingLastModified,
         /// `size` was not provided but it is required when building `DatasetInfo`.
@@ -341,6 +369,7 @@ pub mod dataset_info {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             match self {
                 ConstraintViolation::MissingName => write!(f, "`name` was not provided but it is required when building `DatasetInfo`"),
+                ConstraintViolation::MissingTableName => write!(f, "`table_name` was not provided but it is required when building `DatasetInfo`"),
                 ConstraintViolation::MissingLastModified => write!(f, "`last_modified` was not provided but it is required when building `DatasetInfo`"),
                 ConstraintViolation::MissingSize => write!(f, "`size` was not provided but it is required when building `DatasetInfo`"),
                 ConstraintViolation::MissingFields => write!(f, "`fields` was not provided but it is required when building `DatasetInfo`"),
@@ -359,6 +388,7 @@ pub mod dataset_info {
     #[derive(::std::clone::Clone, ::std::default::Default, ::std::fmt::Debug)]
     pub struct Builder {
         pub(crate) name: ::std::option::Option<::std::string::String>,
+        pub(crate) table_name: ::std::option::Option<::std::string::String>,
         pub(crate) last_modified: ::std::option::Option<::aws_smithy_types::DateTime>,
         pub(crate) size: ::std::option::Option<i64>,
         pub(crate) fields: ::std::option::Option<::std::vec::Vec<crate::model::DatasetField>>,
@@ -367,6 +397,11 @@ pub mod dataset_info {
         #[allow(missing_docs)] // documentation missing in model
         pub fn name(mut self, input: ::std::string::String) -> Self {
             self.name = Some(input);
+            self
+        }
+        #[allow(missing_docs)] // documentation missing in model
+        pub fn table_name(mut self, input: ::std::string::String) -> Self {
+            self.table_name = Some(input);
             self
         }
         #[allow(missing_docs)] // documentation missing in model
@@ -397,6 +432,9 @@ pub mod dataset_info {
         ) -> Result<crate::model::DatasetInfo, ConstraintViolation> {
             Ok(crate::model::DatasetInfo {
                 name: self.name.ok_or(ConstraintViolation::MissingName)?,
+                table_name: self
+                    .table_name
+                    .ok_or(ConstraintViolation::MissingTableName)?,
                 last_modified: self
                     .last_modified
                     .ok_or(ConstraintViolation::MissingLastModified)?,

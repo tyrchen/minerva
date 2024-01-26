@@ -22,6 +22,12 @@ Content-Type: application/json
 GET http://localhost:3000/api/health
 X-Message: hello world!
 
-{
-  "message": "hello world!"
-}
+### list datasets
+
+GET http://localhost:3000/api/datasets
+Authorization: Bearer {{ token }}
+
+### show one dataset
+
+GET http://localhost:3000/api/datasets/youtube.parquet
+Authorization: Bearer {{ token }}

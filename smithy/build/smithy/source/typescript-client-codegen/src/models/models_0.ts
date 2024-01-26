@@ -130,6 +130,7 @@ export class ValidationException extends __BaseException {
 export interface DatasetField {
   name: string | undefined;
   type: string | undefined;
+  nullable: boolean | undefined;
 }
 
 /**
@@ -137,6 +138,7 @@ export interface DatasetField {
  */
 export interface DatasetInfo {
   name: string | undefined;
+  table_name: string | undefined;
   lastModified: Date | undefined;
   size: number | undefined;
   fields: (DatasetField)[] | undefined;

@@ -459,10 +459,14 @@
                     },
                     "type": {
                         "type": "string"
+                    },
+                    "nullable": {
+                        "type": "boolean"
                     }
                 },
                 "required": [
                     "name",
+                    "nullable",
                     "type"
                 ]
             },
@@ -470,6 +474,9 @@
                 "type": "object",
                 "properties": {
                     "name": {
+                        "type": "string"
+                    },
+                    "table_name": {
                         "type": "string"
                     },
                     "lastModified": {
@@ -491,7 +498,8 @@
                     "fields",
                     "lastModified",
                     "name",
-                    "size"
+                    "size",
+                    "table_name"
                 ]
             },
             "ErrorCode": {
@@ -521,6 +529,9 @@
                     "name": {
                         "type": "string"
                     },
+                    "table_name": {
+                        "type": "string"
+                    },
                     "lastModified": {
                         "type": "number",
                         "format": "double"
@@ -540,7 +551,8 @@
                     "fields",
                     "lastModified",
                     "name",
-                    "size"
+                    "size",
+                    "table_name"
                 ]
             },
             "HealthCheckResponseContent": {

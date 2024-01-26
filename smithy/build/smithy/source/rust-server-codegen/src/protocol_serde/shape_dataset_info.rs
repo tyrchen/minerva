@@ -7,6 +7,9 @@ pub fn ser_dataset_info(
         object.key("name").string(input.name.as_str());
     }
     {
+        object.key("table_name").string(input.table_name.as_str());
+    }
+    {
         object.key("lastModified").date_time(
             &input.last_modified,
             ::aws_smithy_types::date_time::Format::EpochSeconds,

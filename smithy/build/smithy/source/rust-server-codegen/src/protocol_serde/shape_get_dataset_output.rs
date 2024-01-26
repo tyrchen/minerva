@@ -46,5 +46,8 @@ pub fn ser_get_dataset_output_output(
             ::aws_smithy_types::Number::NegInt((input.size).into()),
         );
     }
+    {
+        object.key("table_name").string(input.table_name.as_str());
+    }
     Ok(())
 }

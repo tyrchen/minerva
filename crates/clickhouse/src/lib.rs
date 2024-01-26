@@ -4,8 +4,10 @@ use std::{
     env,
     path::Path,
     process::{Command, Stdio},
+    thread,
 };
-use tracing::info;
+use tokio::sync::oneshot;
+use tracing::{info, warn};
 pub struct ClickHouseRunner {
     pub data_source: DataSource,
     pub log_level: String,
@@ -31,7 +33,8 @@ impl QueryRunner for ClickHouseRunner {
     type Error = anyhow::Error;
 
     async fn query(&self, sql: &str) -> Result<Vec<u8>, Self::Error> {
-        self.run(sql, None)
+        let rx = self.run(sql, None)?;
+        Ok(rx.await?)
     }
 }
 
@@ -40,7 +43,8 @@ impl DatasetDescriber for ClickHouseRunner {
 
     async fn describe(&self) -> Result<TableInfo, Self::Error> {
         let table_name = self.table_name();
-        let ret = self.run(format!("describe {}", table_name), Some("JSONEachRow"))?;
+        let rx = self.run(format!("describe {}", table_name), Some("JSONEachRow"))?;
+        let ret = rx.await?;
         let mut columns = Vec::new();
         for item in ret.split(|c| *c == b'\n') {
             if item.is_empty() {
@@ -48,7 +52,19 @@ impl DatasetDescriber for ClickHouseRunner {
             }
             let item: ColumnInfo = serde_json::from_slice(item)
                 .with_context(|| format!("failed to parse as json: {:?}", item))?;
-            columns.push(item);
+            if item.r#type.starts_with("Nullable(") {
+                let r#type = item
+                    .r#type
+                    .trim_start_matches("Nullable(")
+                    .trim_end_matches(')');
+                columns.push(ColumnInfo {
+                    name: item.name,
+                    r#type: r#type.to_string(),
+                    nullable: true,
+                });
+            } else {
+                columns.push(item);
+            }
         }
         Ok(TableInfo {
             name: table_name,
@@ -58,7 +74,8 @@ impl DatasetDescriber for ClickHouseRunner {
 
     async fn sample(&self) -> Result<Vec<u8>, Self::Error> {
         let table_name = self.table_name();
-        self.run(format!("SELECT * FROM {} LIMIT 10", table_name), None)
+        let rx = self.run(format!("SELECT * FROM {} LIMIT 10", table_name), None)?;
+        Ok(rx.await?)
     }
 }
 
@@ -87,12 +104,35 @@ impl ClickHouseRunner {
         &self,
         query: impl AsRef<str>,
         format: Option<&'static str>,
-    ) -> anyhow::Result<Vec<u8>> {
+    ) -> anyhow::Result<oneshot::Receiver<Vec<u8>>> {
+        let (tx, rx) = oneshot::channel();
+
         let mut cmd = self
             .build_command(query, format)
             .context("failed to build command")?;
-        let output = cmd.output().context("failed to run command")?;
-        Ok(output.stdout)
+
+        thread::spawn(move || {
+            let output = cmd.output().context("failed to run command")?;
+            if let Err(e) = tx.send(output.stdout) {
+                warn!("failed to send execution result: {:?}", e);
+            }
+            Ok::<(), anyhow::Error>(())
+        });
+
+        Ok(rx)
+    }
+
+    pub fn table_name(&self) -> String {
+        let name = match self.data_source {
+            DataSource::S3(ref bucket) => &bucket.key,
+            DataSource::Local(ref local_file) => &local_file.path,
+        };
+        Path::new(name)
+            .file_stem()
+            .unwrap()
+            .to_str()
+            .unwrap()
+            .to_string()
     }
 
     fn build_command(
@@ -122,21 +162,7 @@ impl ClickHouseRunner {
             query,
             format.unwrap_or("Arrow")
         ));
-        info!("cmd: {:?}", cmd);
         Ok(cmd)
-    }
-
-    fn table_name(&self) -> String {
-        let name = match self.data_source {
-            DataSource::S3(ref bucket) => &bucket.key,
-            DataSource::Local(ref local_file) => &local_file.path,
-        };
-        Path::new(name)
-            .file_stem()
-            .unwrap()
-            .to_str()
-            .unwrap()
-            .to_string()
     }
 
     fn clickhouse_path() -> String {
@@ -192,9 +218,11 @@ mod tests {
         assert_eq!(table_info.name, "test");
         assert_eq!(table_info.columns.len(), 4);
         assert_eq!(table_info.columns[0].name, "DEPARTURE_DELAY");
-        assert_eq!(table_info.columns[0].r#type, "Nullable(Float64)");
+        assert_eq!(table_info.columns[0].r#type, "Float64");
+        assert!(table_info.columns[0].nullable);
         assert_eq!(table_info.columns[1].name, "ARRIVAL_DELAY");
-        assert_eq!(table_info.columns[1].r#type, "Nullable(Float64)");
+        assert_eq!(table_info.columns[1].r#type, "Float64");
+        assert!(table_info.columns[1].nullable);
 
         Ok(())
     }
