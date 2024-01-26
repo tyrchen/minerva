@@ -1,24 +1,34 @@
-use datafusion::dataframe::DataFrameWriteOptions;
-use datafusion::datasource::file_format::parquet::ParquetFormat;
-use datafusion::datasource::listing::ListingOptions;
+use anyhow::Ok;
 use datafusion::prelude::*;
-use datafusion_common::{FileType, GetExt};
+use datafusion_common::arrow::record_batch::RecordBatch;
 use minerva_common::QueryRunner;
 
 use object_store::aws::AmazonS3Builder;
-use std::env;
+
 use std::sync::Arc;
 use url::Url;
 
-pub struct DFQueryRunner<'a> {
-    region: &'a str,
-    bucket: &'a str,
-    table: &'a str,
-    src: &'a str,
-    dst: &'a str,
+pub struct DFQueryRunner {
+    region: String,
+    bucket: String,
+    table: String,
+    src: String,
 }
 
-impl<'a> QueryRunner for DFQueryRunner<'a> {
+impl DFQueryRunner {
+    pub fn new_s3(dataset_name: impl Into<String>) -> Self {
+        let src_str: String = dataset_name.into();
+        let table_name = src_str.split(".").collect::<Vec<_>>()[0];
+        Self {
+            region: "us-west-2".to_owned(),
+            bucket: "ds-data-438be5a".to_owned(),
+            table: table_name.to_owned(),
+            src: src_str.into(),
+        }
+    }
+}
+
+impl QueryRunner for DFQueryRunner {
     type Error = anyhow::Error;
 
     async fn query(&self, sql: &str) -> std::result::Result<Vec<u8>, Self::Error> {
@@ -26,10 +36,10 @@ impl<'a> QueryRunner for DFQueryRunner<'a> {
         let ctx = SessionContext::new();
 
         let s3 = AmazonS3Builder::new()
-            .with_bucket_name(self.bucket)
-            .with_region(self.region)
-            .with_access_key_id(env::var("AWS_ACCESS_KEY_ID").unwrap())
-            .with_secret_access_key(env::var("AWS_SECRET_ACCESS_KEY").unwrap())
+            .with_bucket_name(&self.bucket)
+            .with_region(&self.region)
+            .with_access_key_id("your-access-key")
+            .with_secret_access_key("your-secret-key")
             .build()?;
 
         let path = format!("s3://{}", self.bucket);
@@ -38,48 +48,36 @@ impl<'a> QueryRunner for DFQueryRunner<'a> {
         ctx.runtime_env()
             .register_object_store(&s3_url, arc_s3.clone());
 
-        let path = format!("s3://{}/{}/", self.bucket, self.src);
-        let file_format = ParquetFormat::default().with_enable_pruning(Some(true));
-        let listing_options = ListingOptions::new(Arc::new(file_format))
-            .with_file_extension(FileType::PARQUET.get_ext());
-        ctx.register_listing_table(self.table, &path, listing_options, None, None)
+        let path = format!("s3://{}/{}", self.bucket, self.src);
+        ctx.register_parquet(&self.table, &path, ParquetReadOptions::default())
             .await?;
 
         // execute the query
         let df = ctx.sql(sql).await?;
+        // let schema = df.schema();
+        // print!("{}", schema.to_string());
 
-        let out_path = format!("s3://{}/{}/", self.bucket, self.dst);
-        df.clone()
-            .write_parquet(&out_path, DataFrameWriteOptions::new(), None)
-            .await?;
+        df.clone().show().await?;
 
-        //write as JSON to s3
-        let json_out = format!("s3://{}/json_out", self.bucket);
-        df.clone()
-            .write_json(&json_out, DataFrameWriteOptions::new())
-            .await?;
+        let record_batches = df.collect().await?;
+        // Failed try to convert arrow format
+        // let cur = Cursor::new(Vec::<u8>::new());
+        // let mut arrow_writer = StreamWriter::try_new(cur, &record_batches[0].schema())?;
 
-        //write as csv to s3
-        let csv_out = format!("s3://{}/csv_out", self.bucket);
-        df.write_csv(&csv_out, DataFrameWriteOptions::new(), None)
-            .await?;
+        // for record in record_batches {
+        //     arrow_writer.write(&record);
+        // }
+        // arrow_writer.finish()?;
 
-        let file_format = ParquetFormat::default().with_enable_pruning(Some(true));
-        let listing_options = ListingOptions::new(Arc::new(file_format))
-            .with_file_extension(FileType::PARQUET.get_ext());
-        ctx.register_listing_table("test2", &out_path, listing_options, None, None)
-            .await?;
+        // let result = arrow_writer.into_inner()?;
+        // Ok(result.into_inner())
 
-        let df = ctx
-            .sql(
-                "SELECT * \
-        FROM test2 \
-        ",
-            )
-            .await?;
+        let record_batches_refs: Vec<&RecordBatch> = record_batches.iter().collect();
 
-        df.show_limit(20).await?;
-
-        Ok(vec![])
+        let json_rows =
+            datafusion::arrow::json::writer::record_batches_to_json_rows(&record_batches_refs[..])
+                .unwrap();
+        let result = serde_json::to_vec(&json_rows).unwrap();
+        Ok(result)
     }
 }
