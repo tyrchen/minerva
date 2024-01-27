@@ -7,7 +7,7 @@ structure DatasetInfo {
     @required
     name: String,
     @required
-    table_name: String,
+    tableName: String,
     @required
     lastModified: Timestamp,
     @required

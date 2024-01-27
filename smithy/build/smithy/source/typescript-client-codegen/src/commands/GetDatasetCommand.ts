@@ -49,7 +49,7 @@ export interface GetDatasetCommandOutput extends DatasetInfo, __MetadataBearer {
  * const response = await client.send(command);
  * // { // DatasetInfo
  * //   name: "STRING_VALUE", // required
- * //   table_name: "STRING_VALUE", // required
+ * //   tableName: "STRING_VALUE", // required
  * //   lastModified: new Date("TIMESTAMP"), // required
  * //   size: Number("long"), // required
  * //   fields: [ // DatasetFieldList // required

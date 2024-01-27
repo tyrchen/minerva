@@ -1,0 +1,31 @@
+---
+import Layout from '~/layouts/Layout.astro';
+import SigninForm from '~/components/vue/SigninForm.vue';
+
+const title = `Error 404`;
+---
+
+<Layout metadata={{ title }}>
+  <section class="flex items-center h-full p-16">
+    <div class="container flex flex-col items-center justify-center px-5 mx-auto my-8">
+      <div class="max-w-md">
+        <div class="items-center justify-center p-2 mx-auto mt-2 max-w-7xl">
+          <h1 class="text-2xl text-center">Sign In</h1>
+          <p>Once you signed in, you could access all functionalities.</p>
+          <div class="mt-10">
+            <div class="relative">
+              <div class="absolute inset-0 flex items-center" aria-hidden="true">
+                <div class="w-full border-t border-gray-200"></div>
+              </div>
+              <div class="relative flex justify-center text-sm font-medium leading-6">
+                <span class="px-6 text-gray-900 bg-white">Continue with</span>
+              </div>
+            </div>
+            <div class="flex flex-1 flex-col gap-4 mx-auto items-center justify-center mt-4 text-center"></div>
+            <SigninForm client:load />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

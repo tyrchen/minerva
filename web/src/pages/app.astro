@@ -1,0 +1,27 @@
+---
+import MidNav from '~/components/vue/LeftNav.vue';
+import QueryPanel from '~/components/vue/QueryPanel.vue';
+import Layout from '~/layouts/Layout.astro';
+
+const title = `Minerva App`;
+---
+
+<Layout metadata={{ title }}>
+  <div class="flex flex-col h-screen">
+    <div class="flex flex-1 overflow-hidden">
+      <div class="flex flex-col flex-1">
+        <div class="flex flex-1 overflow-y-auto">
+          <!-- Middle column area -->
+          <MidNav client:only />
+          <main class="flex flex-1 overflow-y-auto">
+            <!-- Main area -->
+
+            <div class="flex flex-col flex-1 p-2 overflow-y-auto">
+              <QueryPanel client:only />
+            </div>
+          </main>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>

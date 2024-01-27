@@ -1,21 +1,16 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
-
 import { defineConfig, squooshImageService } from 'astro/config';
-
 import sitemap from '@astrojs/sitemap';
 import tailwind from '@astrojs/tailwind';
 import mdx from '@astrojs/mdx';
 import partytown from '@astrojs/partytown';
 import icon from 'astro-icon';
 import tasks from './src/utils/tasks';
-
 import { readingTimeRemarkPlugin, responsiveTablesRehypePlugin } from './src/utils/frontmatter.mjs';
-
 import { ANALYTICS, SITE } from './src/utils/config.ts';
-
+import vue from '@astrojs/vue';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
 const whenExternalScripts = (items = []) =>
   ANALYTICS.vendors.googleAnalytics.id && ANALYTICS.vendors.googleAnalytics.partytown
     ? Array.isArray(items)
@@ -23,13 +18,12 @@ const whenExternalScripts = (items = []) =>
       : [items()]
     : [];
 
+// https://astro.build/config
 export default defineConfig({
   site: SITE.site,
   base: SITE.base,
   trailingSlash: SITE.trailingSlash ? 'always' : 'never',
-
   output: 'static',
-
   integrations: [
     tailwind({
       applyBaseStyles: false,
@@ -52,25 +46,23 @@ export default defineConfig({
         ],
       },
     }),
-
     ...whenExternalScripts(() =>
       partytown({
-        config: { forward: ['dataLayer.push'] },
+        config: {
+          forward: ['dataLayer.push'],
+        },
       })
     ),
-
     tasks(),
+    vue({ appEntrypoint: '/src/pages/_app' }),
   ],
-
   image: {
     service: squooshImageService(),
   },
-
   markdown: {
     remarkPlugins: [readingTimeRemarkPlugin],
     rehypePlugins: [responsiveTablesRehypePlugin],
   },
-
   vite: {
     resolve: {
       alias: {

@@ -7,6 +7,7 @@ import type { MetaData } from '~/types';
 export interface SiteConfig {
   name: string;
   site?: string;
+  api?: string;
   base?: string;
   trailingSlash?: boolean;
   googleSiteVerificationId?: string;

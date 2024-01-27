@@ -477,7 +477,7 @@
                     "name": {
                         "type": "string"
                     },
-                    "table_name": {
+                    "tableName": {
                         "type": "string"
                     },
                     "lastModified": {
@@ -500,7 +500,7 @@
                     "lastModified",
                     "name",
                     "size",
-                    "table_name"
+                    "tableName"
                 ]
             },
             "ErrorCode": {
@@ -530,7 +530,7 @@
                     "name": {
                         "type": "string"
                     },
-                    "table_name": {
+                    "tableName": {
                         "type": "string"
                     },
                     "lastModified": {
@@ -553,7 +553,7 @@
                     "lastModified",
                     "name",
                     "size",
-                    "table_name"
+                    "tableName"
                 ]
             },
             "HealthCheckResponseContent": {

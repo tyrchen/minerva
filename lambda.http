@@ -33,9 +33,9 @@ Authorization: Bearer {{ token }}
 
 ### query dataset
 
-POST https://ds-api.staging.sandbox.tubi.io/api/datasets/youtube.parquet/query
+POST https://ds-api.staging.sandbox.tubi.io/api/datasets/flights.parquet/query
 Authorization: Bearer {{ token }}
 
 {
-  "sql": "select * from youtube limit 10"
+  "sql": "select * from flights limit 10"
 }

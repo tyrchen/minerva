@@ -1,6 +1,10 @@
 ASSETS = assets.tar.gz
 LOG_GROUP_NAME = /aws/lambda/ds-api-e1b8926
 CH_VERSION=23.11.4.24
+SMITHY_TS=smithy/build/smithy/source/typescript-client-codegen
+
+ui:
+	@cd web && yarn dev
 
 validate:
 	@cd smithy && smithy validate
@@ -34,5 +38,9 @@ download-clickhouse:
 
 lambda-log:
 	@aws logs get-log-events --profile $(SANDBOX_PROFILE) --log-group-name $(LOG_GROUP_NAME) --log-stream-name '$(shell aws logs describe-log-streams --profile $(SANDBOX_PROFILE) --log-group-name $(LOG_GROUP_NAME) | jq -r '.logStreams | sort_by(.creationTime) | .[-1].logStreamName')' | jq -r '.events[] | select(has("message")) | ((.timestamp/1000 | strflocaltime("%Y-%m-%dT%H:%M:%S %Z")) + ": " + .message)'
+
+build-ui-smithy-js:
+	@cd $(SMITHY_TS); yarn && yarn build
+	@cd web; yarn add ../$(SMITHY_TS) && yarn
 
 .PHONY: validate update-smithy build-smithy watch client gen-key build-lambda

@@ -163,11 +163,12 @@ impl ClickHouseRunner {
 
         info!("query: {}", query);
         let mut cmd = Command::new(&self.binary_path);
+        // TODO: compressed arrow is not supported in arrow js
         cmd.stdout(Stdio::piped())
             .stderr(Stdio::piped())
             .arg("local")
             .arg(format!(
-                "--query={} format {}",
+                "--query={} format {} settings output_format_arrow_compression_method='none'",
                 query,
                 format.unwrap_or("Arrow")
             ));

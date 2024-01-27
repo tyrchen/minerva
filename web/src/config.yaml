@@ -1,6 +1,7 @@
 site:
   name: Minerva
   site: 'https://ds.staging.sandbox.tubi.io'
+  api: 'https://ds-api.staging.sandbox.tubi.io/api'
   base: '/'
   trailingSlash: false
 

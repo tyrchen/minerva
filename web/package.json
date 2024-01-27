@@ -1,7 +1,7 @@
 {
-  "name": "@onwidget/astrowind",
-  "description": "AstroWind: A free template using Astro 4.0 and Tailwind CSS. Astro starter theme.",
-  "version": "1.0.0-beta.15",
+  "name": "@minerva/web",
+  "description": "Minerva: serverless analytics",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "astro dev",
@@ -15,15 +15,25 @@
   "dependencies": {
     "@astrojs/rss": "^4.0.2",
     "@astrojs/sitemap": "^3.0.5",
+    "@astrojs/vue": "^4.0.8",
     "@astrolib/analytics": "^0.5.0",
     "@astrolib/seo": "^1.0.0-beta.5",
     "@fontsource-variable/inter": "^5.0.16",
+    "@minerva/dataset-client": "../smithy/build/smithy/source/typescript-client-codegen",
+    "@tabler/icons-vue": "^2.46.0",
+    "apache-arrow": "^15.0.0",
     "astro": "^4.2.1",
     "astro-icon": "^1.0.2",
+    "dexie": "^3.2.4",
+    "js-cookie": "^3.0.5",
     "limax": "4.1.0",
     "lodash.merge": "^4.6.2",
+    "numcodecs": "^0.3.1",
+    "primeicons": "^6.0.1",
+    "primevue": "^3.47.2",
     "typescript-esbuild": "^0.3.6",
-    "unpic": "^3.16.0"
+    "unpic": "^3.16.0",
+    "vue": "^3.4.15"
   },
   "devDependencies": {
     "@astrojs/mdx": "^2.0.5",
@@ -31,6 +41,7 @@
     "@astrojs/tailwind": "5.1.0",
     "@iconify-json/flat-color-icons": "^1.1.10",
     "@iconify-json/tabler": "^1.1.104",
+    "@tailwindcss/forms": "^0.5.7",
     "@tailwindcss/typography": "^0.5.10",
     "@types/lodash.merge": "^4.6.9",
     "@typescript-eslint/eslint-plugin": "^6.19.0",

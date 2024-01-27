@@ -282,7 +282,7 @@ const de_CreateDatasetCommandError = async(
       'lastModified': _ => __expectNonNull(__parseEpochTimestamp(__expectNumber(_))),
       'name': __expectString,
       'size': __expectLong,
-      'table_name': __expectString,
+      'tableName': __expectString,
     });
     Object.assign(contents, doc);
     return contents;
@@ -734,7 +734,7 @@ const de_CreateDatasetCommandError = async(
                   'lastModified': (_: any) => __expectNonNull(__parseEpochTimestamp(__expectNumber(_))),
                   'name': __expectString,
                   'size': __expectLong,
-                  'table_name': __expectString,
+                  'tableName': __expectString,
                 }) as any;
               }
 
