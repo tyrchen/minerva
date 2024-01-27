@@ -24,6 +24,9 @@ export default defineConfig({
   base: SITE.base,
   trailingSlash: SITE.trailingSlash ? 'always' : 'never',
   output: 'static',
+  server: {
+    port: 9527,
+  },
   integrations: [
     tailwind({
       applyBaseStyles: false,

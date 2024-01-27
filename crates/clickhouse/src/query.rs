@@ -116,19 +116,7 @@ fn append_format(
 fn replace_data_source(query: impl AsRef<str>, ds: &DataSource) -> String {
     let query = query.as_ref();
     let table_name = ds.table_name();
-    match ds {
-        DataSource::S3(ref bucket) => {
-            let s3_table = format!(
-                "s3('https://{}.s3.{}.amazonaws.com/{}')",
-                bucket.name, bucket.region, bucket.key
-            );
-            query.replace(&table_name, &s3_table)
-        }
-        DataSource::Local(ref local_file) => {
-            let file_table = format!("file('{}')", local_file.path);
-            query.replace(&table_name, &file_table)
-        }
-    }
+    query.replace(&table_name, &ds.as_source())
 }
 
 impl<'a> TryFrom<Source<'a>> for &'a str {

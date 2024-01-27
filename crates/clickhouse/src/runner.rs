@@ -66,7 +66,7 @@ impl DatasetDescriber for ClickHouseRunner {
     async fn sample(&self) -> Result<Vec<u8>, Self::Error> {
         let table_name = self.table_name();
         let rx = self.run(
-            format!("SELECT * FROM {} LIMIT 10", table_name),
+            format!("SELECT * FROM {} LIMIT 100", table_name),
             false,
             None,
         )?;

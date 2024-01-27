@@ -28,6 +28,13 @@ impl DataSource {
             .map(|s| s.to_string())
             .unwrap()
     }
+
+    pub fn as_source(&self) -> String {
+        match self {
+            DataSource::S3(ref v) => format!("s3('{}')", v.s3url()),
+            DataSource::Local(ref v) => format!("file('{}')", v.path),
+        }
+    }
 }
 
 impl S3Bucket {
@@ -39,6 +46,17 @@ impl S3Bucket {
             region,
             key: key.into(),
         }
+    }
+
+    pub fn s3url(&self) -> String {
+        format!("s3://{}/{}", self.name, self.key)
+    }
+
+    pub fn http_url(&self) -> String {
+        format!(
+            "https://{}.s3.{}.amazonaws.com/{}",
+            self.name, self.region, self.key
+        )
     }
 }
 

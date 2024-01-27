@@ -8,45 +8,38 @@
         selection-keys="name"
         :metaKeySelection="false"
         class="w-full md:w-30rem"
+        :pt="{
+          content: ({ props, state, context }) => ({
+            class: props.node.children ? 'p-0 m-0' : 'p-0 m-0 text-xs text-slate-700',
+          }),
+        }"
         @nodeSelect="onNodeSelect"
-      />
+      >
+      </Tree>
     </div>
   </aside>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { db } from '../../db';
-import { loadDatasets, setCurrentDataset } from '../../api';
 import Tree from 'primevue/tree';
+import { setCurrentDataset } from '../../api';
+import { onMounted, ref, defineProps } from 'vue';
 import type { TreeNode } from 'primevue/treenode';
+import type { PropType } from 'vue';
 
-const nodes = ref([] as TreeNode[]);
-
-onMounted(async () => {
-  let items = await db.datasets.toArray();
-  if (items.length === 0) {
-    items = await loadDatasets();
-  }
-
-  const ret = items.map((item) => {
-    const node = {
-      key: item.name,
-      label: item.tableName,
-      children: item.fields.map((field) => ({
-        key: field.name,
-        label: `${field.name.trim().toLowerCase()} (${field.type})`,
-        selectable: false,
-      })),
-    };
-    return node;
-  });
-
-  nodes.value = ret;
+defineProps({
+  nodes: {
+    type: Array as PropType<TreeNode[]>,
+    required: true,
+  },
 });
+const selectedDataset = defineModel('dataset');
+
+onMounted(() => {});
 
 const onNodeSelect = (node: TreeNode) => {
   setCurrentDataset(node.key);
-  console.log('selected:', node);
+  console.log('selected:', node.data);
+  selectedDataset.value = node.data;
 };
 </script>
