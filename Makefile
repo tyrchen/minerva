@@ -43,4 +43,10 @@ build-ui-smithy-js:
 	@cd $(SMITHY_TS); yarn && yarn build
 	@cd web; yarn add ../$(SMITHY_TS) && yarn
 
-.PHONY: validate update-smithy build-smithy watch client gen-key build-lambda
+build-ui:
+	@cd web && yarn build
+
+upload-ui:
+	@aws s3 sync --profile $(SANDBOX_PROFILE) web/dist s3://$(MINERVA_WEB_BUCKET)
+
+.PHONY: validate update-smithy build-smithy watch client gen-key build-lambda download-clickhouse lambda-log build-ui-smithy-js build-ui upload-ui
