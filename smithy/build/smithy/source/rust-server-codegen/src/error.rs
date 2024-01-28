@@ -5,6 +5,8 @@
 pub enum SampleDatasetError {
     /// A standard error for input validation failures. This should be thrown by services when a member of the input structure falls outside of the modeled or documented constraints.
     ValidationException(crate::error::ValidationException),
+    /// Not found error.
+    NotFoundError(crate::error::NotFoundError),
     /// Throttling error.
     ThrottlingError(crate::error::ThrottlingError),
     /// Server error.
@@ -14,6 +16,7 @@ impl ::std::fmt::Display for SampleDatasetError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match &self {
             SampleDatasetError::ValidationException(_inner) => _inner.fmt(f),
+            SampleDatasetError::NotFoundError(_inner) => _inner.fmt(f),
             SampleDatasetError::ThrottlingError(_inner) => _inner.fmt(f),
             SampleDatasetError::ServerError(_inner) => _inner.fmt(f),
         }
@@ -23,6 +26,10 @@ impl SampleDatasetError {
     /// Returns `true` if the error kind is `SampleDatasetError::ValidationException`.
     pub fn is_validation_exception(&self) -> bool {
         matches!(&self, SampleDatasetError::ValidationException(_))
+    }
+    /// Returns `true` if the error kind is `SampleDatasetError::NotFoundError`.
+    pub fn is_not_found_error(&self) -> bool {
+        matches!(&self, SampleDatasetError::NotFoundError(_))
     }
     /// Returns `true` if the error kind is `SampleDatasetError::ThrottlingError`.
     pub fn is_throttling_error(&self) -> bool {
@@ -36,6 +43,7 @@ impl SampleDatasetError {
     pub fn name(&self) -> &'static str {
         match &self {
             SampleDatasetError::ValidationException(_inner) => _inner.name(),
+            SampleDatasetError::NotFoundError(_inner) => _inner.name(),
             SampleDatasetError::ThrottlingError(_inner) => _inner.name(),
             SampleDatasetError::ServerError(_inner) => _inner.name(),
         }
@@ -45,6 +53,7 @@ impl ::std::error::Error for SampleDatasetError {
     fn source(&self) -> std::option::Option<&(dyn ::std::error::Error + 'static)> {
         match &self {
             SampleDatasetError::ValidationException(_inner) => Some(_inner),
+            SampleDatasetError::NotFoundError(_inner) => Some(_inner),
             SampleDatasetError::ThrottlingError(_inner) => Some(_inner),
             SampleDatasetError::ServerError(_inner) => Some(_inner),
         }
@@ -53,6 +62,11 @@ impl ::std::error::Error for SampleDatasetError {
 impl ::std::convert::From<crate::error::ValidationException> for crate::error::SampleDatasetError {
     fn from(variant: crate::error::ValidationException) -> crate::error::SampleDatasetError {
         Self::ValidationException(variant)
+    }
+}
+impl ::std::convert::From<crate::error::NotFoundError> for crate::error::SampleDatasetError {
+    fn from(variant: crate::error::NotFoundError) -> crate::error::SampleDatasetError {
+        Self::NotFoundError(variant)
     }
 }
 impl ::std::convert::From<crate::error::ThrottlingError> for crate::error::SampleDatasetError {
@@ -150,6 +164,42 @@ impl ThrottlingError {
     }
 }
 
+/// Not found error.
+#[derive(
+    ::std::clone::Clone, ::std::cmp::Eq, ::std::cmp::PartialEq, ::std::fmt::Debug, ::std::hash::Hash,
+)]
+pub struct NotFoundError {
+    #[allow(missing_docs)] // documentation missing in model
+    pub message: ::std::string::String,
+}
+impl NotFoundError {
+    /// Returns the error message.
+    pub fn message(&self) -> &str {
+        &self.message
+    }
+    #[doc(hidden)]
+    /// Returns the error name.
+    pub fn name(&self) -> &'static str {
+        "NotFoundError"
+    }
+}
+impl ::std::fmt::Display for NotFoundError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        ::std::write!(f, "NotFoundError")?;
+        {
+            ::std::write!(f, ": {}", &self.message)?;
+        }
+        Ok(())
+    }
+}
+impl ::std::error::Error for NotFoundError {}
+impl NotFoundError {
+    /// Creates a new builder-style object to manufacture [`NotFoundError`](crate::error::NotFoundError).
+    pub fn builder() -> crate::error::not_found_error::Builder {
+        crate::error::not_found_error::Builder::default()
+    }
+}
+
 /// A standard error for input validation failures. This should be thrown by services when a member of the input structure falls outside of the modeled or documented constraints.
 #[derive(
     ::std::clone::Clone, ::std::cmp::Eq, ::std::cmp::PartialEq, ::std::fmt::Debug, ::std::hash::Hash,
@@ -200,6 +250,8 @@ impl ValidationException {
 pub enum QueryDatasetError {
     /// A standard error for input validation failures. This should be thrown by services when a member of the input structure falls outside of the modeled or documented constraints.
     ValidationException(crate::error::ValidationException),
+    /// Not found error.
+    NotFoundError(crate::error::NotFoundError),
     #[allow(missing_docs)] // documentation missing in model
     ClickhouseQueryError(crate::error::ClickhouseQueryError),
     /// Throttling error.
@@ -211,6 +263,7 @@ impl ::std::fmt::Display for QueryDatasetError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match &self {
             QueryDatasetError::ValidationException(_inner) => _inner.fmt(f),
+            QueryDatasetError::NotFoundError(_inner) => _inner.fmt(f),
             QueryDatasetError::ClickhouseQueryError(_inner) => _inner.fmt(f),
             QueryDatasetError::ThrottlingError(_inner) => _inner.fmt(f),
             QueryDatasetError::ServerError(_inner) => _inner.fmt(f),
@@ -221,6 +274,10 @@ impl QueryDatasetError {
     /// Returns `true` if the error kind is `QueryDatasetError::ValidationException`.
     pub fn is_validation_exception(&self) -> bool {
         matches!(&self, QueryDatasetError::ValidationException(_))
+    }
+    /// Returns `true` if the error kind is `QueryDatasetError::NotFoundError`.
+    pub fn is_not_found_error(&self) -> bool {
+        matches!(&self, QueryDatasetError::NotFoundError(_))
     }
     /// Returns `true` if the error kind is `QueryDatasetError::ClickhouseQueryError`.
     pub fn is_clickhouse_query_error(&self) -> bool {
@@ -238,6 +295,7 @@ impl QueryDatasetError {
     pub fn name(&self) -> &'static str {
         match &self {
             QueryDatasetError::ValidationException(_inner) => _inner.name(),
+            QueryDatasetError::NotFoundError(_inner) => _inner.name(),
             QueryDatasetError::ClickhouseQueryError(_inner) => _inner.name(),
             QueryDatasetError::ThrottlingError(_inner) => _inner.name(),
             QueryDatasetError::ServerError(_inner) => _inner.name(),
@@ -248,6 +306,7 @@ impl ::std::error::Error for QueryDatasetError {
     fn source(&self) -> std::option::Option<&(dyn ::std::error::Error + 'static)> {
         match &self {
             QueryDatasetError::ValidationException(_inner) => Some(_inner),
+            QueryDatasetError::NotFoundError(_inner) => Some(_inner),
             QueryDatasetError::ClickhouseQueryError(_inner) => Some(_inner),
             QueryDatasetError::ThrottlingError(_inner) => Some(_inner),
             QueryDatasetError::ServerError(_inner) => Some(_inner),
@@ -257,6 +316,11 @@ impl ::std::error::Error for QueryDatasetError {
 impl ::std::convert::From<crate::error::ValidationException> for crate::error::QueryDatasetError {
     fn from(variant: crate::error::ValidationException) -> crate::error::QueryDatasetError {
         Self::ValidationException(variant)
+    }
+}
+impl ::std::convert::From<crate::error::NotFoundError> for crate::error::QueryDatasetError {
+    fn from(variant: crate::error::NotFoundError) -> crate::error::QueryDatasetError {
+        Self::NotFoundError(variant)
     }
 }
 impl ::std::convert::From<crate::error::ClickhouseQueryError> for crate::error::QueryDatasetError {
@@ -389,42 +453,6 @@ impl ::std::convert::From<crate::error::ThrottlingError> for crate::error::GetDa
 impl ::std::convert::From<crate::error::ServerError> for crate::error::GetDatasetError {
     fn from(variant: crate::error::ServerError) -> crate::error::GetDatasetError {
         Self::ServerError(variant)
-    }
-}
-
-/// Not found error.
-#[derive(
-    ::std::clone::Clone, ::std::cmp::Eq, ::std::cmp::PartialEq, ::std::fmt::Debug, ::std::hash::Hash,
-)]
-pub struct NotFoundError {
-    #[allow(missing_docs)] // documentation missing in model
-    pub message: ::std::string::String,
-}
-impl NotFoundError {
-    /// Returns the error message.
-    pub fn message(&self) -> &str {
-        &self.message
-    }
-    #[doc(hidden)]
-    /// Returns the error name.
-    pub fn name(&self) -> &'static str {
-        "NotFoundError"
-    }
-}
-impl ::std::fmt::Display for NotFoundError {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        ::std::write!(f, "NotFoundError")?;
-        {
-            ::std::write!(f, ": {}", &self.message)?;
-        }
-        Ok(())
-    }
-}
-impl ::std::error::Error for NotFoundError {}
-impl NotFoundError {
-    /// Creates a new builder-style object to manufacture [`NotFoundError`](crate::error::NotFoundError).
-    pub fn builder() -> crate::error::not_found_error::Builder {
-        crate::error::not_found_error::Builder::default()
     }
 }
 
@@ -895,6 +923,63 @@ pub mod throttling_error {
         }
     }
 }
+/// See [`NotFoundError`](crate::error::NotFoundError).
+///
+pub mod not_found_error {
+
+    #[derive(::std::cmp::PartialEq, ::std::fmt::Debug)]
+    /// Holds one variant for each of the ways the builder can fail.
+    #[non_exhaustive]
+    #[allow(clippy::enum_variant_names)]
+    pub enum ConstraintViolation {
+        /// `message` was not provided but it is required when building `NotFoundError`.
+        MissingMessage,
+    }
+    impl ::std::fmt::Display for ConstraintViolation {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            match self {
+                ConstraintViolation::MissingMessage => write!(
+                    f,
+                    "`message` was not provided but it is required when building `NotFoundError`"
+                ),
+            }
+        }
+    }
+    impl ::std::error::Error for ConstraintViolation {}
+    impl ::std::convert::TryFrom<Builder> for crate::error::NotFoundError {
+        type Error = ConstraintViolation;
+
+        fn try_from(builder: Builder) -> Result<Self, Self::Error> {
+            builder.build()
+        }
+    }
+    /// A builder for [`NotFoundError`](crate::error::NotFoundError).
+    #[derive(::std::clone::Clone, ::std::default::Default, ::std::fmt::Debug)]
+    pub struct Builder {
+        pub(crate) message: ::std::option::Option<::std::string::String>,
+    }
+    impl Builder {
+        #[allow(missing_docs)] // documentation missing in model
+        pub fn message(mut self, input: ::std::string::String) -> Self {
+            self.message = Some(input);
+            self
+        }
+        /// Consumes the builder and constructs a [`NotFoundError`](crate::error::NotFoundError).
+        ///
+        /// The builder fails to construct a [`NotFoundError`](crate::error::NotFoundError) if a [`ConstraintViolation`] occurs.
+        ///
+        pub fn build(self) -> Result<crate::error::NotFoundError, ConstraintViolation> {
+            self.build_enforcing_all_constraints()
+        }
+        fn build_enforcing_all_constraints(
+            self,
+        ) -> Result<crate::error::NotFoundError, ConstraintViolation> {
+            Ok(crate::error::NotFoundError {
+                message: self.message.ok_or(ConstraintViolation::MissingMessage)?,
+            })
+        }
+    }
+}
 /// See [`ValidationException`](crate::error::ValidationException).
 ///
 pub mod validation_exception {
@@ -1009,63 +1094,6 @@ pub mod clickhouse_query_error {
             self,
         ) -> Result<crate::error::ClickhouseQueryError, ConstraintViolation> {
             Ok(crate::error::ClickhouseQueryError {
-                message: self.message.ok_or(ConstraintViolation::MissingMessage)?,
-            })
-        }
-    }
-}
-/// See [`NotFoundError`](crate::error::NotFoundError).
-///
-pub mod not_found_error {
-
-    #[derive(::std::cmp::PartialEq, ::std::fmt::Debug)]
-    /// Holds one variant for each of the ways the builder can fail.
-    #[non_exhaustive]
-    #[allow(clippy::enum_variant_names)]
-    pub enum ConstraintViolation {
-        /// `message` was not provided but it is required when building `NotFoundError`.
-        MissingMessage,
-    }
-    impl ::std::fmt::Display for ConstraintViolation {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            match self {
-                ConstraintViolation::MissingMessage => write!(
-                    f,
-                    "`message` was not provided but it is required when building `NotFoundError`"
-                ),
-            }
-        }
-    }
-    impl ::std::error::Error for ConstraintViolation {}
-    impl ::std::convert::TryFrom<Builder> for crate::error::NotFoundError {
-        type Error = ConstraintViolation;
-
-        fn try_from(builder: Builder) -> Result<Self, Self::Error> {
-            builder.build()
-        }
-    }
-    /// A builder for [`NotFoundError`](crate::error::NotFoundError).
-    #[derive(::std::clone::Clone, ::std::default::Default, ::std::fmt::Debug)]
-    pub struct Builder {
-        pub(crate) message: ::std::option::Option<::std::string::String>,
-    }
-    impl Builder {
-        #[allow(missing_docs)] // documentation missing in model
-        pub fn message(mut self, input: ::std::string::String) -> Self {
-            self.message = Some(input);
-            self
-        }
-        /// Consumes the builder and constructs a [`NotFoundError`](crate::error::NotFoundError).
-        ///
-        /// The builder fails to construct a [`NotFoundError`](crate::error::NotFoundError) if a [`ConstraintViolation`] occurs.
-        ///
-        pub fn build(self) -> Result<crate::error::NotFoundError, ConstraintViolation> {
-            self.build_enforcing_all_constraints()
-        }
-        fn build_enforcing_all_constraints(
-            self,
-        ) -> Result<crate::error::NotFoundError, ConstraintViolation> {
-            Ok(crate::error::NotFoundError {
                 message: self.message.ok_or(ConstraintViolation::MissingMessage)?,
             })
         }

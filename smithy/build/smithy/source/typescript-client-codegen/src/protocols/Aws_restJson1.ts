@@ -465,6 +465,9 @@ const de_CreateDatasetCommandError = async(
             case "ClickhouseQueryError":
             case "com.minerva#ClickhouseQueryError":
               throw await de_ClickhouseQueryErrorRes(parsedOutput, context);
+            case "NotFoundError":
+            case "com.minerva#NotFoundError":
+              throw await de_NotFoundErrorRes(parsedOutput, context);
             case "ServerError":
             case "com.minerva#ServerError":
               throw await de_ServerErrorRes(parsedOutput, context);
@@ -518,6 +521,9 @@ const de_CreateDatasetCommandError = async(
             };
             const errorCode = loadRestJsonErrorCode(output, parsedOutput.body);
             switch (errorCode) {
+              case "NotFoundError":
+              case "com.minerva#NotFoundError":
+                throw await de_NotFoundErrorRes(parsedOutput, context);
               case "ServerError":
               case "com.minerva#ServerError":
                 throw await de_ServerErrorRes(parsedOutput, context);

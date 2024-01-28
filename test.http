@@ -34,7 +34,7 @@ Authorization: Bearer {{ token }}
 
 ### query dataset
 
-POST http://localhost:3000/api/datasets/players_new.parquet*/query
+POST http://localhost:3000/api/datasets/players_new.parquet/query
 Authorization: Bearer {{ token }}
 
 {

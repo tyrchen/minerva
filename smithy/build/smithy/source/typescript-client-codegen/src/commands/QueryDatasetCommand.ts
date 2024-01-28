@@ -65,6 +65,9 @@ export interface QueryDatasetCommandOutput extends QueryDatasetOutput, __Metadat
  * This should be thrown by services when a member of the input structure
  * falls outside of the modeled or documented constraints.
  *
+ * @throws {@link NotFoundError} (client fault)
+ *  Not found error.
+ *
  * @throws {@link ClickhouseQueryError} (client fault)
  *
  * @throws {@link ThrottlingError} (client fault)

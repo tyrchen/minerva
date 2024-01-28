@@ -39,3 +39,13 @@ Authorization: Bearer {{ token }}
 {
   "sql": "select * from flights limit 10"
 }
+
+
+### query directory dataset
+
+POST http://ds-api.staging.sandbox.tubi.io/api/datasets/players_new.parquet/query
+Authorization: Bearer {{ token }}
+
+{
+  "sql": "select * from players_new limit 10"
+}

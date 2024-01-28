@@ -237,6 +237,16 @@
                             }
                         }
                     },
+                    "404": {
+                        "description": "NotFoundError 404 response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NotFoundErrorResponseContent"
+                                }
+                            }
+                        }
+                    },
                     "429": {
                         "description": "ThrottlingError 429 response",
                         "content": {
@@ -290,6 +300,16 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ValidationExceptionResponseContent"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "NotFoundError 404 response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NotFoundErrorResponseContent"
                                 }
                             }
                         }

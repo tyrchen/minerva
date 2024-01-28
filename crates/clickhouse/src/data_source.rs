@@ -1,6 +1,6 @@
 use std::{env, path::Path};
 
-use crate::get_top_level_key;
+use crate::{get_top_level_key, is_directory_key};
 
 pub enum DataSource {
     S3(S3Bucket),
@@ -11,7 +11,6 @@ pub struct S3Bucket {
     pub name: String,
     pub region: String,
     pub key: String,
-    pub need_expand: bool,
 }
 
 pub struct LocalFile {
@@ -42,25 +41,10 @@ impl DataSource {
 
 impl S3Bucket {
     pub fn new(key: impl Into<String>) -> Self {
+        let key = key.into();
         let name = env::var("DATA_BUCKET").unwrap();
         let region = env::var("DATA_BUCKET_REGION").unwrap_or_else(|_| "us-west-2".to_string());
-        let mut key = key.into();
-        if key.ends_with('*') {
-            key.pop();
-            Self {
-                name,
-                region,
-                key,
-                need_expand: true,
-            }
-        } else {
-            Self {
-                name,
-                region,
-                key,
-                need_expand: false,
-            }
-        }
+        Self { name, region, key }
     }
 
     pub fn key_name(&self) -> &str {
@@ -68,7 +52,7 @@ impl S3Bucket {
     }
 
     pub fn s3url(&self) -> String {
-        if self.need_expand {
+        if is_directory_key(&self.key) {
             let key_name = self.key_name();
             let ext = Path::new(key_name)
                 .extension()
@@ -114,19 +98,6 @@ mod tests {
     fn get_s3_table_name_should_work() {
         let ds: DataSource = S3Bucket::new("flights.parquet").into();
         assert_eq!(ds.table_name(), "flights");
-    }
-
-    #[test]
-    fn get_s3_table_name_should_work_with_wildcard() {
-        let ds: DataSource = S3Bucket::new("flights.parquet*").into();
-        assert_eq!(ds.table_name(), "flights");
-        assert_eq!(
-            ds.as_source(),
-            format!(
-                "s3('s3://{}/flights.parquet/**/*.parquet')",
-                env::var("DATA_BUCKET").unwrap()
-            )
-        );
     }
 
     #[test]

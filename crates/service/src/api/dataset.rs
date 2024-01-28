@@ -1,5 +1,4 @@
 use crate::AppState;
-use aws_sdk_s3::types::ObjectAttributes;
 // use aws_sdk_s3 as s3;
 use aws_smithy_http_server::Extension;
 use dataset_server_sdk::{
@@ -44,9 +43,13 @@ pub async fn get_dataset(
     Extension(state): Extension<Arc<AppState>>,
 ) -> Result<output::GetDatasetOutput, error::GetDatasetError> {
     info!("get_dataset: {:?}", input);
-    let asset = get_asset(&state.config.data_bucket, &input.id, &state.s3)
-        .await
-        .unwrap();
+    let Ok(asset) = get_asset(&state.config.data_bucket, &input.id, &state.s3).await else {
+        return Err(error::GetDatasetError::NotFoundError(
+            error::NotFoundError {
+                message: format!("dataset not found: {}", input.id),
+            },
+        ));
+    };
     let output = output::GetDatasetOutput {
         name: asset.name,
         table_name: asset.table_name,
@@ -59,10 +62,20 @@ pub async fn get_dataset(
 
 pub async fn query_dataset(
     input: input::QueryDatasetInput,
-    Extension(_state): Extension<Arc<AppState>>,
+    Extension(state): Extension<Arc<AppState>>,
 ) -> Result<output::QueryDatasetOutput, error::QueryDatasetError> {
     info!("query_dataset: {:?}", input);
-    let runner = ClickHouseRunner::new_s3(input.id);
+    let Ok(object) =
+        get_one_object_by_prefix(&state.config.data_bucket, &input.id, &state.s3).await
+    else {
+        return Err(error::QueryDatasetError::NotFoundError(
+            error::NotFoundError {
+                message: format!("dataset not found: {}", input.id),
+            },
+        ));
+    };
+
+    let runner = ClickHouseRunner::new_s3(object.key.unwrap());
 
     match runner.query(&input.sql).await {
         Ok(data) => {
@@ -81,10 +94,20 @@ pub async fn query_dataset(
 
 pub async fn sample_dataset(
     input: input::SampleDatasetInput,
-    Extension(_state): Extension<Arc<AppState>>,
+    Extension(state): Extension<Arc<AppState>>,
 ) -> Result<output::SampleDatasetOutput, error::SampleDatasetError> {
     info!("sample_dataset: {:?}", input);
-    let runner = ClickHouseRunner::new_s3(input.id);
+    let Ok(object) =
+        get_one_object_by_prefix(&state.config.data_bucket, &input.id, &state.s3).await
+    else {
+        return Err(error::SampleDatasetError::NotFoundError(
+            error::NotFoundError {
+                message: format!("dataset not found: {}", input.id),
+            },
+        ));
+    };
+
+    let runner = ClickHouseRunner::new_s3(object.key.unwrap());
     let data = runner.sample().await.unwrap();
     let output = output::SampleDatasetOutput {
         data: Blob::new(data),
@@ -152,14 +175,29 @@ async fn get_asset(
     key: &str,
     client: &aws_sdk_s3::Client,
 ) -> anyhow::Result<DatasetInfo> {
-    let object = client
-        .get_object_attributes()
+    let object = get_one_object_by_prefix(bucket, key, client).await?;
+
+    get_asset_by_object(object.key().unwrap(), object.last_modified, object.size).await
+}
+
+async fn get_one_object_by_prefix(
+    bucket: &str,
+    prefix: &str,
+    client: &aws_sdk_s3::Client,
+) -> anyhow::Result<aws_sdk_s3::types::Object> {
+    let objects = client
+        .list_objects_v2()
         .bucket(bucket)
-        .key(key)
-        .object_attributes(ObjectAttributes::ObjectSize)
+        .prefix(prefix)
+        .max_keys(1)
         .send()
-        .await?;
-    get_asset_by_object(key, object.last_modified, object.object_size).await
+        .await?
+        .contents;
+
+    if objects.is_none() || objects.as_ref().unwrap().is_empty() {
+        return Err(anyhow::anyhow!("key: {} not found", prefix));
+    }
+    Ok(objects.unwrap().pop().unwrap())
 }
 
 async fn get_asset_by_object(

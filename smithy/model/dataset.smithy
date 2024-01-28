@@ -72,7 +72,7 @@ operation QueryDataset {
       @required
       data: Blob,
   }
-  errors: [ValidationException, ClickhouseQueryError, ThrottlingError, ServerError]
+  errors: [ValidationException, NotFoundError, ClickhouseQueryError, ThrottlingError, ServerError]
 }
 
 @readonly
@@ -87,5 +87,5 @@ operation SampleDataset {
       @required
       data: Blob,
   }
-  errors: [ValidationException, ThrottlingError, ServerError]
+  errors: [ValidationException, NotFoundError, ThrottlingError, ServerError]
 }

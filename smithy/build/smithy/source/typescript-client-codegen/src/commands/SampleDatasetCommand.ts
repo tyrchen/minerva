@@ -64,6 +64,9 @@ export interface SampleDatasetCommandOutput extends SampleDatasetOutput, __Metad
  * This should be thrown by services when a member of the input structure
  * falls outside of the modeled or documented constraints.
  *
+ * @throws {@link NotFoundError} (client fault)
+ *  Not found error.
+ *
  * @throws {@link ThrottlingError} (client fault)
  *  Throttling error.
  *
