@@ -3,7 +3,7 @@
     <div class="flex flex-1 overflow-y-auto">
       <!-- left column area -->
       <LeftNav :nodes="nodes" v-model:dataset="selectedDataset" />
-      <main class="flex flex-1 overflow-y-auto">
+      <main id="main" class="flex flex-1 overflow-y-auto">
         <!-- Main area -->
 
         <div class="flex flex-col flex-1 p-2 overflow-y-auto">
@@ -43,7 +43,8 @@
 
           <DataTable
             v-show="queryRsult.length > 0"
-            class="my-4 max-w-7xl overflow-x-scroll border"
+            class="my-4 overflow-x-scroll border"
+            :style="{ width: mainWidth + 'px' }"
             paginator
             :rows="50"
             :rowsPerPageOptions="[50, 100, 200]"
@@ -62,7 +63,7 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, onMounted, ref } from 'vue';
+import { computed, nextTick, onMounted, ref } from 'vue';
 
 import { db } from '../../db';
 import { getCurrentDataset, loadDatasets } from '../../api';
@@ -94,7 +95,15 @@ const queryRsult = ref([]);
 const queryColumns = ref([] as TableColumn[]);
 const queryStatus = ref('');
 
+const mainWidth = ref(0);
+const getMainWidth = () => window.innerWidth - 256 - 92;
+
 onMounted(async () => {
+  mainWidth.value = getMainWidth();
+  window.onresize = () => {
+    mainWidth.value = getMainWidth();
+    console.log('mainWidth:', mainWidth.value);
+  };
   let items = await db.datasets.toArray();
   if (items.length === 0) {
     items = await loadDatasets();
