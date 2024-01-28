@@ -31,7 +31,7 @@
               <Column field="nullable" header="Nullable"></Column>
             </DataTable>
           </div>
-          <Textarea v-model="query" class="w-full h-48"> </Textarea>
+          <Textarea v-model="query" class="w-full h-48 text-xl" :disabled="isQuerying"> </Textarea>
           <div class="flex items-center">
             <Button class="w-48 my-4" label="Execute!" raised size="large" @click="executeQuery">
               <IconSearch v-if="!isQuerying" />
@@ -41,21 +41,43 @@
             <span class="inline-block mx-4 text-sm text-gray-500" v-text="queryStatus"></span>
           </div>
 
-          <DataTable
-            v-show="queryRsult.length > 0"
-            class="my-4 overflow-x-scroll border"
-            :style="{ width: mainWidth + 'px' }"
-            paginator
-            :rows="50"
-            :rowsPerPageOptions="[50, 100, 200]"
-            :value="queryRsult"
-            size="small"
-            scrollable
-            scrollHeight="400px"
-            stripedRows
-          >
-            <Column class="min-w-64" v-for="col in queryColumns" :field="col.name" :header="col.label"></Column>
-          </DataTable>
+          <TabView>
+            <TabPanel header="Output">
+              <DataTable
+                v-show="queryRsult.length > 0"
+                class="my-4 overflow-x-scroll border"
+                :style="{ width: mainWidth + 'px' }"
+                paginator
+                :rows="50"
+                :rowsPerPageOptions="[50, 100, 200]"
+                :value="queryRsult"
+                size="small"
+                scrollable
+                scrollHeight="400px"
+                stripedRows
+              >
+                <Column class="min-w-64" v-for="col in queryColumns" :field="col.name" :header="col.label"></Column>
+              </DataTable>
+            </TabPanel>
+            <TabPanel header="Chart">
+              <p class="m-0">
+                Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam
+                rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt
+                explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia
+                consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Consectetur, adipisci velit, sed
+                quia non numquam eius modi.
+              </p>
+            </TabPanel>
+            <TabPanel header="Statistics">
+              <p class="m-0">
+                At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum
+                deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non
+                provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.
+                Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est
+                eligendi optio cumque nihil impedit quo minus.
+              </p>
+            </TabPanel>
+          </TabView>
         </div>
       </main>
     </div>
@@ -78,6 +100,8 @@ import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import Textarea from 'primevue/textarea';
 import Button from 'primevue/button';
+import TabView from 'primevue/tabview';
+import TabPanel from 'primevue/tabpanel';
 
 import { IconCaretRightFilled, IconCaretDownFilled, IconSearch, IconRefresh } from '@tabler/icons-vue';
 
@@ -96,7 +120,7 @@ const queryColumns = ref([] as TableColumn[]);
 const queryStatus = ref('');
 
 const mainWidth = ref(0);
-const getMainWidth = () => window.innerWidth - 256 - 92;
+const getMainWidth = () => window.innerWidth - 256 - 128;
 
 onMounted(async () => {
   mainWidth.value = getMainWidth();

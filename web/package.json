@@ -24,6 +24,7 @@
     "apache-arrow": "^15.0.0",
     "astro": "^4.2.1",
     "astro-icon": "^1.0.2",
+    "chart.js": "^4.4.1",
     "dexie": "^3.2.4",
     "js-cookie": "^3.0.5",
     "limax": "4.1.0",
@@ -33,7 +34,8 @@
     "primevue": "^3.47.2",
     "typescript-esbuild": "^0.3.6",
     "unpic": "^3.16.0",
-    "vue": "^3.4.15"
+    "vue": "^3.4.15",
+    "vue-chartjs": "^5.3.0"
   },
   "devDependencies": {
     "@astrojs/mdx": "^2.0.5",
