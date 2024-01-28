@@ -20,7 +20,7 @@ impl QueryRunner for ClickHouseRunner {
 
     async fn query(&self, sql: &str) -> Result<Vec<u8>, Self::Error> {
         let rx = self.run(sql, false, None)?;
-        Ok(rx.await?)
+        rx.await?
     }
 }
 
@@ -34,7 +34,7 @@ impl DatasetDescriber for ClickHouseRunner {
             true,
             Some("JSONEachRow"),
         )?;
-        let ret = rx.await?;
+        let ret = rx.await??;
         let mut columns = Vec::new();
         for item in ret.split(|c| *c == b'\n') {
             if item.is_empty() {
@@ -70,7 +70,7 @@ impl DatasetDescriber for ClickHouseRunner {
             false,
             None,
         )?;
-        Ok(rx.await?)
+        rx.await?
     }
 }
 
@@ -100,21 +100,22 @@ impl ClickHouseRunner {
         sql: impl AsRef<str>,
         allow_non_query: bool,
         format: Option<&'static str>,
-    ) -> anyhow::Result<oneshot::Receiver<Vec<u8>>> {
+    ) -> anyhow::Result<oneshot::Receiver<anyhow::Result<Vec<u8>>>> {
         let (tx, rx) = oneshot::channel();
 
-        let mut cmd = self
-            .build_command(sql, allow_non_query, format)
-            .context("failed to build command")?;
+        let mut cmd = self.build_command(sql, allow_non_query, format)?;
 
         info!("command: {:?}", cmd);
         thread::spawn(move || {
             let output = cmd.output().context("failed to run command")?;
-            if !output.status.success() {
-                warn!("stderr: {:?}", String::from_utf8_lossy(&output.stderr));
-                return Err(anyhow::anyhow!("failed to execute query"));
-            }
-            if let Err(e) = tx.send(output.stdout) {
+            let msg = if !output.status.success() {
+                let msg = String::from_utf8_lossy(&output.stderr);
+                warn!("stderr: {:?}", msg);
+                Err(anyhow::anyhow!("failed to execute query: {msg}"))
+            } else {
+                Ok(output.stdout)
+            };
+            if let Err(e) = tx.send(msg) {
                 warn!("failed to send execution result: {:?}", e);
             }
             Ok::<(), anyhow::Error>(())

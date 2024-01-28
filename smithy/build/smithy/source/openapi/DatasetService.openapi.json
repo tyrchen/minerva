@@ -228,11 +228,11 @@
                         }
                     },
                     "400": {
-                        "description": "ValidationException 400 response",
+                        "description": "ClickhouseQueryError 400 response",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ValidationExceptionResponseContent"
+                                    "$ref": "#/components/schemas/ClickhouseQueryErrorResponseContent"
                                 }
                             }
                         }
@@ -437,6 +437,17 @@
     },
     "components": {
         "schemas": {
+            "ClickhouseQueryErrorResponseContent": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "message"
+                ]
+            },
             "CreateDatasetRequestContent": {
                 "type": "object",
                 "properties": {

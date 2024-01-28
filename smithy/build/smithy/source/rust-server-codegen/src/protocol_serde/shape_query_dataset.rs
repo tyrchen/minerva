@@ -119,6 +119,30 @@ pub fn ser_query_dataset_http_error(
                     .status(400)
                     .body(::aws_smithy_http_server::body::to_boxed(payload))?
             }
+            crate::error::QueryDatasetError::ClickhouseQueryError(output) => {
+                let payload = crate::protocol_serde::shape_clickhouse_query_error::ser_clickhouse_query_error_error(output)?;
+                #[allow(unused_mut)]
+                let mut builder = ::http::Response::builder();
+                builder = ::aws_smithy_http::header::set_response_header_if_absent(
+                    builder,
+                    ::http::header::CONTENT_TYPE,
+                    "application/json",
+                );
+                builder = ::aws_smithy_http::header::set_response_header_if_absent(
+                    builder,
+                    http::header::HeaderName::from_static("x-amzn-errortype"),
+                    "ClickhouseQueryError",
+                );
+                let content_length = payload.len();
+                builder = ::aws_smithy_http::header::set_response_header_if_absent(
+                    builder,
+                    ::http::header::CONTENT_LENGTH,
+                    content_length,
+                );
+                builder
+                    .status(400)
+                    .body(::aws_smithy_http_server::body::to_boxed(payload))?
+            }
             crate::error::QueryDatasetError::ThrottlingError(output) => {
                 let payload =
                     crate::protocol_serde::shape_throttling_error::ser_throttling_error_error(

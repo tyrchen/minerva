@@ -63,11 +63,20 @@ pub async fn query_dataset(
 ) -> Result<output::QueryDatasetOutput, error::QueryDatasetError> {
     info!("query_dataset: {:?}", input);
     let runner = ClickHouseRunner::new_s3(input.id);
-    let data = runner.query(&input.sql).await.unwrap();
-    let output = output::QueryDatasetOutput {
-        data: Blob::new(data),
-    };
-    Ok(output)
+
+    match runner.query(&input.sql).await {
+        Ok(data) => {
+            let output = output::QueryDatasetOutput {
+                data: Blob::new(data),
+            };
+            Ok(output)
+        }
+        Err(e) => Err(error::QueryDatasetError::ClickhouseQueryError(
+            error::ClickhouseQueryError {
+                message: e.to_string(),
+            },
+        )),
+    }
 }
 
 pub async fn sample_dataset(

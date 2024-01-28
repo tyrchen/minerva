@@ -13,6 +13,8 @@ pub(crate) mod shape_sample_dataset;
 
 pub(crate) mod shape_signin;
 
+pub(crate) mod shape_clickhouse_query_error;
+
 pub(crate) fn or_empty_doc(data: &[u8]) -> &[u8] {
     if data.is_empty() {
         b"{}"

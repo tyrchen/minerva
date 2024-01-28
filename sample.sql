@@ -9,4 +9,4 @@ GROUP BY
   channelId
 ORDER BY
   total DESC
-LIMIT 100;
+LIMIT 5000;

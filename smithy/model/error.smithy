@@ -19,6 +19,13 @@ structure NotFoundError {
     message: String
 }
 
+@error("client")
+@httpError(400)
+structure ClickhouseQueryError {
+    @required
+    message: String
+}
+
 /// Conflict error.
 @error("client")
 @httpError(409)

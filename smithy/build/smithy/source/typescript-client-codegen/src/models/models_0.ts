@@ -5,6 +5,25 @@ import { ExceptionOptionType as __ExceptionOptionType } from "@smithy/smithy-cli
 /**
  * @public
  */
+export class ClickhouseQueryError extends __BaseException {
+  readonly name: "ClickhouseQueryError" = "ClickhouseQueryError";
+  readonly $fault: "client" = "client";
+  /**
+   * @internal
+   */
+  constructor(opts: __ExceptionOptionType<ClickhouseQueryError, __BaseException>) {
+    super({
+      name: "ClickhouseQueryError",
+      $fault: "client",
+      ...opts
+    });
+    Object.setPrototypeOf(this, ClickhouseQueryError.prototype);
+  }
+}
+
+/**
+ * @public
+ */
 export interface CreateDatasetInput {
   name: string | undefined;
   sql: string | undefined;

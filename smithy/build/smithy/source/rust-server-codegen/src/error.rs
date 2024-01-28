@@ -200,6 +200,8 @@ impl ValidationException {
 pub enum QueryDatasetError {
     /// A standard error for input validation failures. This should be thrown by services when a member of the input structure falls outside of the modeled or documented constraints.
     ValidationException(crate::error::ValidationException),
+    #[allow(missing_docs)] // documentation missing in model
+    ClickhouseQueryError(crate::error::ClickhouseQueryError),
     /// Throttling error.
     ThrottlingError(crate::error::ThrottlingError),
     /// Server error.
@@ -209,6 +211,7 @@ impl ::std::fmt::Display for QueryDatasetError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match &self {
             QueryDatasetError::ValidationException(_inner) => _inner.fmt(f),
+            QueryDatasetError::ClickhouseQueryError(_inner) => _inner.fmt(f),
             QueryDatasetError::ThrottlingError(_inner) => _inner.fmt(f),
             QueryDatasetError::ServerError(_inner) => _inner.fmt(f),
         }
@@ -218,6 +221,10 @@ impl QueryDatasetError {
     /// Returns `true` if the error kind is `QueryDatasetError::ValidationException`.
     pub fn is_validation_exception(&self) -> bool {
         matches!(&self, QueryDatasetError::ValidationException(_))
+    }
+    /// Returns `true` if the error kind is `QueryDatasetError::ClickhouseQueryError`.
+    pub fn is_clickhouse_query_error(&self) -> bool {
+        matches!(&self, QueryDatasetError::ClickhouseQueryError(_))
     }
     /// Returns `true` if the error kind is `QueryDatasetError::ThrottlingError`.
     pub fn is_throttling_error(&self) -> bool {
@@ -231,6 +238,7 @@ impl QueryDatasetError {
     pub fn name(&self) -> &'static str {
         match &self {
             QueryDatasetError::ValidationException(_inner) => _inner.name(),
+            QueryDatasetError::ClickhouseQueryError(_inner) => _inner.name(),
             QueryDatasetError::ThrottlingError(_inner) => _inner.name(),
             QueryDatasetError::ServerError(_inner) => _inner.name(),
         }
@@ -240,6 +248,7 @@ impl ::std::error::Error for QueryDatasetError {
     fn source(&self) -> std::option::Option<&(dyn ::std::error::Error + 'static)> {
         match &self {
             QueryDatasetError::ValidationException(_inner) => Some(_inner),
+            QueryDatasetError::ClickhouseQueryError(_inner) => Some(_inner),
             QueryDatasetError::ThrottlingError(_inner) => Some(_inner),
             QueryDatasetError::ServerError(_inner) => Some(_inner),
         }
@@ -250,6 +259,11 @@ impl ::std::convert::From<crate::error::ValidationException> for crate::error::Q
         Self::ValidationException(variant)
     }
 }
+impl ::std::convert::From<crate::error::ClickhouseQueryError> for crate::error::QueryDatasetError {
+    fn from(variant: crate::error::ClickhouseQueryError) -> crate::error::QueryDatasetError {
+        Self::ClickhouseQueryError(variant)
+    }
+}
 impl ::std::convert::From<crate::error::ThrottlingError> for crate::error::QueryDatasetError {
     fn from(variant: crate::error::ThrottlingError) -> crate::error::QueryDatasetError {
         Self::ThrottlingError(variant)
@@ -258,6 +272,42 @@ impl ::std::convert::From<crate::error::ThrottlingError> for crate::error::Query
 impl ::std::convert::From<crate::error::ServerError> for crate::error::QueryDatasetError {
     fn from(variant: crate::error::ServerError) -> crate::error::QueryDatasetError {
         Self::ServerError(variant)
+    }
+}
+
+#[allow(missing_docs)] // documentation missing in model
+#[derive(
+    ::std::clone::Clone, ::std::cmp::Eq, ::std::cmp::PartialEq, ::std::fmt::Debug, ::std::hash::Hash,
+)]
+pub struct ClickhouseQueryError {
+    #[allow(missing_docs)] // documentation missing in model
+    pub message: ::std::string::String,
+}
+impl ClickhouseQueryError {
+    /// Returns the error message.
+    pub fn message(&self) -> &str {
+        &self.message
+    }
+    #[doc(hidden)]
+    /// Returns the error name.
+    pub fn name(&self) -> &'static str {
+        "ClickhouseQueryError"
+    }
+}
+impl ::std::fmt::Display for ClickhouseQueryError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        ::std::write!(f, "ClickhouseQueryError")?;
+        {
+            ::std::write!(f, ": {}", &self.message)?;
+        }
+        Ok(())
+    }
+}
+impl ::std::error::Error for ClickhouseQueryError {}
+impl ClickhouseQueryError {
+    /// Creates a new builder-style object to manufacture [`ClickhouseQueryError`](crate::error::ClickhouseQueryError).
+    pub fn builder() -> crate::error::clickhouse_query_error::Builder {
+        crate::error::clickhouse_query_error::Builder::default()
     }
 }
 
@@ -906,6 +956,60 @@ pub mod validation_exception {
             Ok(crate::error::ValidationException {
                 message: self.message.ok_or(ConstraintViolation::MissingMessage)?,
                 field_list: self.field_list,
+            })
+        }
+    }
+}
+/// See [`ClickhouseQueryError`](crate::error::ClickhouseQueryError).
+///
+pub mod clickhouse_query_error {
+
+    #[derive(::std::cmp::PartialEq, ::std::fmt::Debug)]
+    /// Holds one variant for each of the ways the builder can fail.
+    #[non_exhaustive]
+    #[allow(clippy::enum_variant_names)]
+    pub enum ConstraintViolation {
+        /// `message` was not provided but it is required when building `ClickhouseQueryError`.
+        MissingMessage,
+    }
+    impl ::std::fmt::Display for ConstraintViolation {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            match self {
+                ConstraintViolation::MissingMessage => write!(f, "`message` was not provided but it is required when building `ClickhouseQueryError`"),
+            }
+        }
+    }
+    impl ::std::error::Error for ConstraintViolation {}
+    impl ::std::convert::TryFrom<Builder> for crate::error::ClickhouseQueryError {
+        type Error = ConstraintViolation;
+
+        fn try_from(builder: Builder) -> Result<Self, Self::Error> {
+            builder.build()
+        }
+    }
+    /// A builder for [`ClickhouseQueryError`](crate::error::ClickhouseQueryError).
+    #[derive(::std::clone::Clone, ::std::default::Default, ::std::fmt::Debug)]
+    pub struct Builder {
+        pub(crate) message: ::std::option::Option<::std::string::String>,
+    }
+    impl Builder {
+        #[allow(missing_docs)] // documentation missing in model
+        pub fn message(mut self, input: ::std::string::String) -> Self {
+            self.message = Some(input);
+            self
+        }
+        /// Consumes the builder and constructs a [`ClickhouseQueryError`](crate::error::ClickhouseQueryError).
+        ///
+        /// The builder fails to construct a [`ClickhouseQueryError`](crate::error::ClickhouseQueryError) if a [`ConstraintViolation`] occurs.
+        ///
+        pub fn build(self) -> Result<crate::error::ClickhouseQueryError, ConstraintViolation> {
+            self.build_enforcing_all_constraints()
+        }
+        fn build_enforcing_all_constraints(
+            self,
+        ) -> Result<crate::error::ClickhouseQueryError, ConstraintViolation> {
+            Ok(crate::error::ClickhouseQueryError {
+                message: self.message.ok_or(ConstraintViolation::MissingMessage)?,
             })
         }
     }

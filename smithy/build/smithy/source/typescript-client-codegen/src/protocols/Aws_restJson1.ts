@@ -29,6 +29,7 @@ import {
 } from "../commands/SigninCommand";
 import { DatasetServiceServiceException as __BaseException } from "../models/DatasetServiceServiceException";
 import {
+  ClickhouseQueryError,
   DatasetInfo,
   ForbiddenError,
   NotFoundError,
@@ -461,6 +462,9 @@ const de_CreateDatasetCommandError = async(
           };
           const errorCode = loadRestJsonErrorCode(output, parsedOutput.body);
           switch (errorCode) {
+            case "ClickhouseQueryError":
+            case "com.minerva#ClickhouseQueryError":
+              throw await de_ClickhouseQueryErrorRes(parsedOutput, context);
             case "ServerError":
             case "com.minerva#ServerError":
               throw await de_ServerErrorRes(parsedOutput, context);
@@ -590,6 +594,27 @@ const de_CreateDatasetCommandError = async(
               }
 
               const throwDefaultError = withBaseException(__BaseException);
+              /**
+               * deserializeAws_restJson1ClickhouseQueryErrorRes
+               */
+              const de_ClickhouseQueryErrorRes = async (
+                parsedOutput: any,
+                context: __SerdeContext
+              ): Promise<ClickhouseQueryError> => {
+                const contents: any = map({
+                });
+                const data: any = parsedOutput.body;
+                const doc = take(data, {
+                  'message': __expectString,
+                });
+                Object.assign(contents, doc);
+                const exception = new ClickhouseQueryError({
+                  $metadata: deserializeMetadata(parsedOutput),
+                  ...contents
+                });
+                return __decorateServiceException(exception, parsedOutput.body);
+              };
+
               /**
                * deserializeAws_restJson1ForbiddenErrorRes
                */
