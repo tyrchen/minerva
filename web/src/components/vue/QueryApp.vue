@@ -41,9 +41,20 @@
             <span class="inline-block mx-4 text-sm text-gray-500" v-text="queryStatus"></span>
           </div>
 
-          <div class="max-w-7xl overflow-x-scroll my-4">
-            <LargeTable :columns="queryColumns" :items="queryRsult" />
-          </div>
+          <DataTable
+            v-show="queryRsult.length > 0"
+            class="my-4 max-w-7xl overflow-x-scroll border"
+            paginator
+            :rows="50"
+            :rowsPerPageOptions="[50, 100, 200]"
+            :value="queryRsult"
+            size="small"
+            scrollable
+            scrollHeight="400px"
+            stripedRows
+          >
+            <Column class="min-w-64" v-for="col in queryColumns" :field="col.name" :header="col.label"></Column>
+          </DataTable>
         </div>
       </main>
     </div>
@@ -61,7 +72,6 @@ import type { TableColumn } from '../../types';
 import { queryDataset } from '../../api';
 
 import LeftNav from './LeftNav.vue';
-import LargeTable from './LargeTable.vue';
 
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
@@ -137,9 +147,9 @@ const executeQuery = async () => {
       queryRsult.value = data;
     });
 
-    // setTimeout(() => {
-    //   queryStatus.value = '';
-    // }, 5000);
+    setTimeout(() => {
+      queryStatus.value = '';
+    }, 5000);
     console.log('columns:', queryColumns.value);
   } catch (err) {
     queryStatus.value = err.message;
