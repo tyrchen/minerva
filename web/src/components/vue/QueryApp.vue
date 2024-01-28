@@ -41,6 +41,7 @@
               </Button>
               <span class="inline-block mx-4 text-sm text-gray-500" v-text="queryStatus"></span>
             </div>
+            <span class="inline-block mx-4 text text-red-500" v-text="errorMsg"></span>
           </div>
 
           <TabView>
@@ -105,6 +106,8 @@ const selectedDataset = ref({
   name: '',
   tableName: '',
   fields: [],
+  lastModified: Date.now(),
+  size: 0,
 } as DatasetInfo);
 
 const showFields = ref(false);
@@ -114,6 +117,7 @@ const queryRsult = ref([]);
 const queryColResult = ref({});
 const queryColumns = ref([] as TableColumn[]);
 const queryStatus = ref('');
+const errorMsg = ref('');
 
 const mainWidth = ref(0);
 const getMainWidth = () => window.innerWidth - 256 - 128;
@@ -154,6 +158,7 @@ const executeQuery = async () => {
   try {
     isQuerying.value = true;
     queryStatus.value = 'Querying...';
+    errorMsg.value = '';
     let table = await queryDataset(query.value, selectedDataset.value);
     let data = tableToJson(table);
 
@@ -182,12 +187,9 @@ const executeQuery = async () => {
       }
       queryRsult.value = data;
     });
-
-    setTimeout(() => {
-      queryStatus.value = '';
-    }, 5000);
   } catch (err) {
-    queryStatus.value = err.message;
+    queryStatus.value = '';
+    errorMsg.value = err.message;
     isQuerying.value = false;
   }
 };

@@ -222,9 +222,9 @@
     tslib "^2.3.1"
 
 "@babel/runtime@^7.21.0":
-  version "7.23.8"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.23.8.tgz#8ee6fe1ac47add7122902f257b8ddf55c898f650"
-  integrity sha512-Y7KbAP984rn1VGMbGqKmBLio9V7y5Je9GvU4rQPCPinCyNfUcToxIXl06d59URp/F3LwinvODxab5N/G6qggkw==
+  version "7.23.9"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.23.9.tgz#47791a15e4603bb5f905bc0753801cf21d6345f7"
+  integrity sha512-0CX6F+BI2s9dkUqr08KFrAIZgNFj75rdBU/DjCyYLIaV/quFjkk6T+EJ2LkZHyZTbEV4L5p97mNkUsHl2wLFAw==
   dependencies:
     regenerator-runtime "^0.14.0"
 
@@ -919,9 +919,9 @@ tslib@^2.3.1, tslib@^2.5.0:
   integrity sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==
 
 typescript@next:
-  version "5.4.0-dev.20240124"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.4.0-dev.20240124.tgz#76f7cf309d8186b62c186b3664bc72f7418e45b3"
-  integrity sha512-OAWV1z3s7OoZR1tKuVK8UokiDmv5J8EEjKJu7BtU7veEXBA9cLGQ6LEw4Jt83BidP8lWytDetVuOxmF/VtLQPg==
+  version "5.4.0-dev.20240128"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.4.0-dev.20240128.tgz#d3b4204a4f2ec66eae72d4d969307858c014b24d"
+  integrity sha512-SfSvvhZKrpjP/LSfkjpg/VUFMXElCXEtU7SzfHoPph8e3PBlbjZlQdLczkEr95M7wj8V/iiXWyqAoPuQ6nuI4A==
 
 typescript@~4.9.5:
   version "4.9.5"

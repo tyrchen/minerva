@@ -71,7 +71,8 @@ export const tableToColumns = (table: Table, names: string[]) => {
   const ret = {};
   for (const name of names) {
     const vector = table.getChild(name);
-    const type = typeof vector?.get(0);
+    if (!vector) continue;
+    const type = typeof vector.get(0);
     if (type === 'bigint' || type === 'number') {
       ret[name] = [];
     } else {
