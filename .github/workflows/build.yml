@@ -12,6 +12,11 @@ on:
 permissions:
   contents: write
 
+env:
+  DATA_BUCKET: test
+  DATA_BUCKET_REGION: us-east-1
+  CLICKHOUSE_PATH: ./clickhouse
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -21,6 +26,8 @@ jobs:
         with:
           repo: 'tyrchen/smithy-assets'
           file: 'assets.tar.gz'
+      - name: install clickhouse
+        run: make download-clickhouse-gh
       - name: Install Rust
         run: rustup toolchain install stable
       - name: extract assets to $HOME/.m2

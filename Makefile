@@ -1,6 +1,7 @@
 ASSETS = assets.tar.gz
 LOG_GROUP_NAME = /aws/lambda/ds-api-e1b8926
 CH_VERSION=23.11.4.24
+CH_TGZ=clickhouse-common-static-$(CH_VERSION)-x86_64.tgz
 SMITHY_TS=smithy/build/smithy/source/typescript-client-codegen
 
 ui:
@@ -35,6 +36,13 @@ build-lambda:
 download-clickhouse:
 	@wget https://github.com/ClickHouse/ClickHouse/releases/download/v$(CH_VERSION)-stable/clickhouse-macos-aarch64
 	@mv clickhouse-macos-aarch64 clickhouse && chmod +x clickhouse
+
+download-clickhouse-gh:
+	@curl -LO https://github.com/ClickHouse/ClickHouse/releases/download/v$(CH_VERSION)-stable/$(CH_TGZ)
+	@mkdir -p /tmp/clickhouse_bin
+	@tar xzf $(CH_TGZ) -C /tmp/clickhouse_bin --strip-components=1
+	@mv /tmp/clickhouse_bin/usr/bin/clickhouse ./clickhouse
+	@chmod +x ./clickhouse
 
 lambda-log:
 	@aws logs get-log-events --profile $(SANDBOX_PROFILE) --log-group-name $(LOG_GROUP_NAME) --log-stream-name '$(shell aws logs describe-log-streams --profile $(SANDBOX_PROFILE) --log-group-name $(LOG_GROUP_NAME) | jq -r '.logStreams | sort_by(.creationTime) | .[-1].logStreamName')' | jq -r '.events[] | select(has("message")) | ((.timestamp/1000 | strflocaltime("%Y-%m-%dT%H:%M:%S %Z")) + ": " + .message)'
