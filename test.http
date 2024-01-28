@@ -29,14 +29,14 @@ Authorization: Bearer {{ token }}
 
 ### show one dataset
 
-GET http://localhost:3000/api/datasets/youtube.parquet
+GET http://localhost:3000/api/datasets/players.parquet
 Authorization: Bearer {{ token }}
 
 ### query dataset
 
-POST http://localhost:3000/api/datasets/youtube.parquet/query
+POST http://localhost:3000/api/datasets/players_new.parquet*/query
 Authorization: Bearer {{ token }}
 
 {
-  "sql": "select * from youtube limit 10"
+  "sql": "select * from players_new limit 10"
 }

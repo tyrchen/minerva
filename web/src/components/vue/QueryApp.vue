@@ -102,18 +102,12 @@ import TabPanel from 'primevue/tabpanel';
 import { IconCaretRightFilled, IconCaretDownFilled, IconSearch, IconRefresh } from '@tabler/icons-vue';
 
 const nodes = ref([] as TreeNode[]);
-const selectedDataset = ref({
-  name: '',
-  tableName: '',
-  fields: [],
-  lastModified: Date.now(),
-  size: 0,
-} as DatasetInfo);
+const selectedDataset = ref({} as DatasetInfo);
 
 const showFields = ref(false);
 const query = ref('');
 const isQuerying = ref(false);
-const queryRsult = ref([]);
+const queryRsult = ref([] as Object[]);
 const queryColResult = ref({});
 const queryColumns = ref([] as TableColumn[]);
 const queryStatus = ref('');
@@ -141,9 +135,9 @@ onMounted(async () => {
       label: item.tableName,
       data: item,
 
-      children: item.fields.map((field) => ({
+      children: item.fields?.map((field) => ({
         key: field.name,
-        label: field.name.trim().toLowerCase(),
+        label: field.name?.trim().toLowerCase(),
         selectable: false,
         leaf: true,
       })),

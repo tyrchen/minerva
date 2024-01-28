@@ -8,9 +8,9 @@ use dataset_server_sdk::{
     output,
     types::Blob,
 };
-use minerva_clickhouse::ClickHouseRunner;
+use minerva_clickhouse::{get_top_level_key, ClickHouseRunner};
 use minerva_common::{DatasetDescriber, QueryRunner};
-use std::sync::Arc;
+use std::{collections::HashSet, sync::Arc};
 use tracing::info;
 
 pub async fn create_dataset(
@@ -94,17 +94,19 @@ pub async fn sample_dataset(
 
 async fn get_assets(bucket: &str, client: &aws_sdk_s3::Client) -> anyhow::Result<Vec<DatasetInfo>> {
     let objects = client
-        .list_objects()
+        .list_objects_v2()
+        .max_keys(1000)
         .bucket(bucket)
         .send()
         .await?
         .contents
         .unwrap();
 
+    let unique_objects = get_top_level_objects(objects);
     let mut items = vec![];
     let mut tasks = vec![];
 
-    for object in objects {
+    for object in unique_objects {
         let task = tokio::spawn(async move {
             get_asset_by_object(object.key().unwrap(), object.last_modified, object.size).await
         });
@@ -118,6 +120,31 @@ async fn get_assets(bucket: &str, client: &aws_sdk_s3::Client) -> anyhow::Result
     }
 
     Ok(items)
+}
+
+fn get_top_level_objects(
+    objects: Vec<aws_sdk_s3::types::Object>,
+) -> Vec<aws_sdk_s3::types::Object> {
+    let mut unique_objects = HashSet::new();
+    let mut ret = vec![];
+    for object in objects {
+        let key = object.key().unwrap().to_owned();
+        if key.ends_with(".parquet")
+            || key.ends_with(".csv")
+            || key.ends_with(".json")
+            || key.ends_with(".csv.gz")
+            || key.ends_with(".json.gz")
+        {
+            let key = get_top_level_key(&key);
+
+            if unique_objects.contains(key) {
+                continue;
+            }
+            unique_objects.insert(key.to_owned());
+            ret.push(object);
+        }
+    }
+    ret
 }
 
 async fn get_asset(
@@ -156,7 +183,7 @@ async fn get_asset_by_object(
     let size = size.unwrap();
     let last_modified = last_modified.unwrap();
     let item = DatasetInfo {
-        name: name.to_string(),
+        name: get_top_level_key(name).to_owned(),
         table_name,
         size,
         last_modified,

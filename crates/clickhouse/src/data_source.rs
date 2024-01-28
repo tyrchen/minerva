@@ -1,5 +1,7 @@
 use std::{env, path::Path};
 
+use crate::get_top_level_key;
+
 pub enum DataSource {
     S3(S3Bucket),
     Local(LocalFile),
@@ -9,6 +11,7 @@ pub struct S3Bucket {
     pub name: String,
     pub region: String,
     pub key: String,
+    pub need_expand: bool,
 }
 
 pub struct LocalFile {
@@ -18,7 +21,7 @@ pub struct LocalFile {
 impl DataSource {
     pub fn table_name(&self) -> String {
         let name = match self {
-            DataSource::S3(ref bucket) => &bucket.key,
+            DataSource::S3(ref bucket) => bucket.key_name(),
             DataSource::Local(ref local_file) => &local_file.path,
         };
         Path::new(name)
@@ -41,15 +44,40 @@ impl S3Bucket {
     pub fn new(key: impl Into<String>) -> Self {
         let name = env::var("DATA_BUCKET").unwrap();
         let region = env::var("DATA_BUCKET_REGION").unwrap_or_else(|_| "us-west-2".to_string());
-        Self {
-            name,
-            region,
-            key: key.into(),
+        let mut key = key.into();
+        if key.ends_with('*') {
+            key.pop();
+            Self {
+                name,
+                region,
+                key,
+                need_expand: true,
+            }
+        } else {
+            Self {
+                name,
+                region,
+                key,
+                need_expand: false,
+            }
         }
     }
 
+    pub fn key_name(&self) -> &str {
+        get_top_level_key(&self.key)
+    }
+
     pub fn s3url(&self) -> String {
-        format!("s3://{}/{}", self.name, self.key)
+        if self.need_expand {
+            let key_name = self.key_name();
+            let ext = Path::new(key_name)
+                .extension()
+                .and_then(|s| s.to_str())
+                .unwrap_or("parquet");
+            format!("s3://{}/{}/**/*.{}", self.name, key_name, ext)
+        } else {
+            format!("s3://{}/{}", self.name, self.key)
+        }
     }
 
     pub fn http_url(&self) -> String {
@@ -86,6 +114,19 @@ mod tests {
     fn get_s3_table_name_should_work() {
         let ds: DataSource = S3Bucket::new("flights.parquet").into();
         assert_eq!(ds.table_name(), "flights");
+    }
+
+    #[test]
+    fn get_s3_table_name_should_work_with_wildcard() {
+        let ds: DataSource = S3Bucket::new("flights.parquet*").into();
+        assert_eq!(ds.table_name(), "flights");
+        assert_eq!(
+            ds.as_source(),
+            format!(
+                "s3('s3://{}/flights.parquet/**/*.parquet')",
+                env::var("DATA_BUCKET").unwrap()
+            )
+        );
     }
 
     #[test]
