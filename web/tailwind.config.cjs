@@ -4,6 +4,21 @@ module.exports = {
   content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
   theme: {
     extend: {
+      width: {
+        128: '32rem',
+        192: '48rem',
+        256: '64rem',
+      },
+      height: {
+        128: '32rem',
+        192: '48rem',
+        256: '64rem',
+      },
+      minHeight: {
+        128: '32rem',
+        192: '48rem',
+        256: '64rem',
+      },
       colors: {
         primary: 'var(--aw-color-primary)',
         secondary: 'var(--aw-color-secondary)',

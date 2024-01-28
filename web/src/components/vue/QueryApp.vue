@@ -31,20 +31,18 @@
               <Column field="nullable" header="Nullable"></Column>
             </DataTable>
           </div>
-          <Textarea v-model="query" class="w-full h-48"></Textarea>
-          <Button class="w-48 my-4" icon="pi pi-search" label="Execute!" raised size="large" @click="executeQuery" />
+          <Textarea v-model="query" class="w-full h-48"> </Textarea>
+          <div class="flex items-center">
+            <Button class="w-48 my-4" label="Execute!" raised size="large" @click="executeQuery">
+              <IconSearch v-if="!isQuerying" />
+              <IconRefresh v-if="isQuerying" class="animate-spin" />
+              <span class="px-3">Execute!</span>
+            </Button>
+            <span class="inline-block mx-4 text-sm text-gray-500" v-text="queryStatus"></span>
+          </div>
 
           <div class="max-w-7xl overflow-x-scroll my-4">
-            <DataTable
-              :value="queryRsult"
-              size="small"
-              scrollable
-              scrollHeight="600px"
-              showGridlines
-              tableStyle="min-width: 50rem"
-            >
-              <Column v-for="name in queryColumns" :field="name" :header="name"></Column>
-            </DataTable>
+            <LargeTable :columns="queryColumns" :items="queryRsult" />
           </div>
         </div>
       </main>
@@ -53,19 +51,24 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
-import LeftNav from './LeftNav.vue';
+import { nextTick, onMounted, ref } from 'vue';
+
 import { db } from '../../db';
-import { loadDatasets } from '../../api';
+import { getCurrentDataset, loadDatasets } from '../../api';
 import type { DatasetInfo } from '@minerva/dataset-client';
 import type { TreeNode } from 'primevue/treenode';
-
+import type { TableColumn } from '../../types';
 import { queryDataset } from '../../api';
+
+import LeftNav from './LeftNav.vue';
+import LargeTable from './LargeTable.vue';
+
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import Textarea from 'primevue/textarea';
 import Button from 'primevue/button';
-import { IconCaretRightFilled, IconCaretDownFilled } from '@tabler/icons-vue';
+
+import { IconCaretRightFilled, IconCaretDownFilled, IconSearch, IconRefresh } from '@tabler/icons-vue';
 
 const nodes = ref([] as TreeNode[]);
 const selectedDataset = ref({
@@ -76,15 +79,17 @@ const selectedDataset = ref({
 
 const showFields = ref(false);
 const query = ref('');
+const isQuerying = ref(false);
 const queryRsult = ref([]);
-const queryColumns = ref([]);
+const queryColumns = ref([] as TableColumn[]);
+const queryStatus = ref('');
 
 onMounted(async () => {
   let items = await db.datasets.toArray();
   if (items.length === 0) {
     items = await loadDatasets();
   }
-  selectedDataset.value = items[0];
+  selectedDataset.value = (await getCurrentDataset()) || items[0];
   console.log('selected:', selectedDataset.value);
 
   nodes.value = items.map((item) => {
@@ -92,6 +97,7 @@ onMounted(async () => {
       key: item.name,
       label: item.tableName,
       data: item,
+
       children: item.fields.map((field) => ({
         key: field.name,
         label: field.name.trim().toLowerCase(),
@@ -104,10 +110,40 @@ onMounted(async () => {
 });
 
 const executeQuery = async () => {
+  const start = Date.now();
   console.log('query:', query.value);
-  let data = await queryDataset(query.value);
-  queryRsult.value = data;
-  queryColumns.value = Object.keys(data[0]).map((key) => key);
-  console.log('columns:', queryColumns.value);
+  try {
+    isQuerying.value = true;
+    queryStatus.value = 'Querying...';
+    let data = await queryDataset(query.value, selectedDataset.value);
+    queryStatus.value = `Query returned ${data.length} rows in ${Date.now() - start}ms`;
+    isQuerying.value = false;
+    nextTick(() => {
+      let hasId = false;
+      queryColumns.value = Object.keys(data[0]).map((key) => {
+        if (key === 'id') {
+          hasId = true;
+        }
+        return { name: key, label: key };
+      });
+      if (!hasId) {
+        queryColumns.value.unshift({ name: 'id', label: 'id' });
+        // add id to data
+        data = data.map((item, index) => {
+          item.id = index;
+          return item;
+        });
+      }
+      queryRsult.value = data;
+    });
+
+    // setTimeout(() => {
+    //   queryStatus.value = '';
+    // }, 5000);
+    console.log('columns:', queryColumns.value);
+  } catch (err) {
+    queryStatus.value = err.message;
+    isQuerying.value = false;
+  }
 };
 </script>

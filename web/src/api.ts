@@ -31,6 +31,7 @@ export const loadDatasets = async () => {
   try {
     const command = new ListDatasetCommand({});
     const items = (await client.send(command)).items || [];
+    console.log('loaded datasets:', items.length);
     db.datasets.bulkPut(items);
     return items;
   } catch (e) {
@@ -39,11 +40,7 @@ export const loadDatasets = async () => {
   }
 };
 
-export const queryDataset = async (sql: string) => {
-  const dataset = await getCurrentDataset();
-  if (!dataset) {
-    throw new Error('No dataset selected');
-  }
+export const queryDataset = async (sql: string, dataset: DatasetInfo) => {
   const command = new QueryDatasetCommand({
     id: dataset.name,
     sql,
@@ -61,5 +58,8 @@ export const setCurrentDataset = async (name: string) => {
 
 export const getCurrentDataset = async (): Promise<DatasetInfo | undefined> => {
   const name = Cookie.get('dataset');
+  if (!name) {
+    return undefined;
+  }
   return await db.datasets.get(name);
 };
