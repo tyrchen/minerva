@@ -6,12 +6,18 @@
 pub struct SampleDatasetInput {
     #[allow(missing_docs)] // documentation missing in model
     pub id: ::std::string::String,
+    #[allow(missing_docs)] // documentation missing in model
+    pub size: i32,
 }
 impl SampleDatasetInput {
     #[allow(missing_docs)] // documentation missing in model
     pub fn id(&self) -> &str {
         use std::ops::Deref;
         self.id.deref()
+    }
+    #[allow(missing_docs)] // documentation missing in model
+    pub fn size(&self) -> i32 {
+        self.size
     }
 }
 impl SampleDatasetInput {
@@ -275,6 +281,7 @@ pub mod sample_dataset_input {
     #[derive(::std::clone::Clone, ::std::default::Default, ::std::fmt::Debug)]
     pub struct Builder {
         pub(crate) id: ::std::option::Option<::std::string::String>,
+        pub(crate) size: ::std::option::Option<i32>,
     }
     impl Builder {
         #[allow(missing_docs)] // documentation missing in model
@@ -290,6 +297,16 @@ pub mod sample_dataset_input {
             self.id = Some(input.into());
             self
         }
+        #[allow(missing_docs)] // documentation missing in model
+        pub fn size(mut self, input: i32) -> Self {
+            self.size = Some(input);
+            self
+        }
+        #[allow(missing_docs)] // documentation missing in model
+        pub(crate) fn set_size(mut self, input: impl ::std::convert::Into<i32>) -> Self {
+            self.size = Some(input.into());
+            self
+        }
         /// Consumes the builder and constructs a [`SampleDatasetInput`](crate::input::SampleDatasetInput).
         ///
         /// The builder fails to construct a [`SampleDatasetInput`](crate::input::SampleDatasetInput) if a [`ConstraintViolation`] occurs.
@@ -302,6 +319,7 @@ pub mod sample_dataset_input {
         ) -> Result<crate::input::SampleDatasetInput, ConstraintViolation> {
             Ok(crate::input::SampleDatasetInput {
                 id: self.id.ok_or(ConstraintViolation::MissingId)?,
+                size: self.size.unwrap_or(100i32),
             })
         }
     }

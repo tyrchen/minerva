@@ -281,6 +281,15 @@
                             "type": "string"
                         },
                         "required": true
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "default": 100,
+                            "format": "int32"
+                        }
                     }
                 ],
                 "responses": {

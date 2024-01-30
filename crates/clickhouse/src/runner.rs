@@ -63,10 +63,10 @@ impl DatasetDescriber for ClickHouseRunner {
         })
     }
 
-    async fn sample(&self) -> Result<Vec<u8>, Self::Error> {
+    async fn sample(&self, size: usize) -> Result<Vec<u8>, Self::Error> {
         let table_name = self.table_name();
         let rx = self.run(
-            format!("SELECT * FROM {} LIMIT 100", table_name),
+            format!("SELECT * FROM {} LIMIT {}", table_name, size),
             false,
             None,
         )?;
@@ -194,7 +194,7 @@ mod tests {
     async fn clickhouse_runner_should_sample() -> Result<()> {
         tracing_subscriber::fmt::init();
         let runner = ClickHouseRunner::new_local("fixtures/test.arrow");
-        let sample = runner.sample().await?;
+        let sample = runner.sample(100).await?;
         let json = arrow2json(sample)?;
         let data: Vec<serde_json::Value> = serde_json::from_str(&json)?;
         assert_eq!(

@@ -226,6 +226,7 @@ export interface QueryDatasetOutput {
  */
 export interface SampleDatasetInput {
   id: string | undefined;
+  size?: number;
 }
 
 /**

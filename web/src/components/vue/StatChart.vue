@@ -7,14 +7,12 @@
       <span class="my-2 ml-2 text-xs">mean: {{ jStat.mean(items).toFixed(2) }}</span>
       <span class="my-2 ml-2 text-xs">skewness: {{ jStat.skewness(items).toFixed(2) }}</span>
       <span class="my-2 ml-2 text-xs">coeffvar: {{ jStat.coeffvar(items).toFixed(2) }}</span>
-      <span class="my-2 ml-2 text-xs">coeffvar: {{ jStat.coeffvar(items).toFixed(2) }}</span>
     </template>
   </Card>
 </template>
 
 <script setup lang="ts">
 import jStat from 'jstat';
-import { ref, onMounted } from 'vue';
 
 import { Bar } from 'vue-chartjs';
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js';

@@ -10,3 +10,13 @@ pub fn de_id(
         .into_owned();
     Ok(value)
 }
+
+pub fn de_size(
+    value: &str,
+) -> std::result::Result<
+    i32,
+    ::aws_smithy_http_server::protocol::rest_json_1::rejection::RequestRejection,
+> {
+    let value = <_ as ::aws_smithy_types::primitive::Parse>::parse_smithy_primitive(value)?;
+    Ok(value)
+}

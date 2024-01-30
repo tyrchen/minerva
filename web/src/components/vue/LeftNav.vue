@@ -27,13 +27,14 @@
 </template>
 
 <script setup lang="ts">
-import Tree from 'primevue/tree';
-import { loadDatasets, setCurrentDataset } from '../../api';
-import { onMounted, ref, defineProps } from 'vue';
-import type { TreeNode } from 'primevue/treenode';
-import Button from 'primevue/button';
+import { loadDatasets, setCurrentDataset, db } from '../../lib';
+import { onMounted, ref } from 'vue';
+
 import type { PropType } from 'vue';
-import { db } from '../../db';
+import type { TreeNode } from 'primevue/treenode';
+
+import Tree from 'primevue/tree';
+import Button from 'primevue/button';
 import { IconRefresh } from '@tabler/icons-vue';
 
 defineProps({

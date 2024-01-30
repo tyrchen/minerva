@@ -86,7 +86,10 @@ pub async fn query_dataset(
         }
         Err(e) => Err(error::QueryDatasetError::ClickhouseQueryError(
             error::ClickhouseQueryError {
-                message: e.to_string(),
+                message: e.to_string().replace(
+                    "libc++abi: terminating due to uncaught exception of type DB::Exception:",
+                    "",
+                ),
             },
         )),
     }
@@ -108,7 +111,7 @@ pub async fn sample_dataset(
     };
 
     let runner = ClickHouseRunner::new_s3(object.key.unwrap());
-    let data = runner.sample().await.unwrap();
+    let data = runner.sample(input.size as usize).await.unwrap();
     let output = output::SampleDatasetOutput {
         data: Blob::new(data),
     };

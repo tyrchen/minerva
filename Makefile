@@ -1,7 +1,7 @@
 ASSETS = assets.tar.gz
 LOG_GROUP_NAME = /aws/lambda/ds-api-e1b8926
 CH_VERSION=23.11.4.24
-CH_TGZ=clickhouse-common-static-$(CH_VERSION)-x86_64.tgz
+CH_TGZ=clickhouse-common-static-$(CH_VERSION)-amd64.tgz
 SMITHY_TS=smithy/build/smithy/source/typescript-client-codegen
 
 ui:

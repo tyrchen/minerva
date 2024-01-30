@@ -28,5 +28,5 @@ pub struct ColumnInfo {
 pub trait DatasetDescriber {
     type Error;
     async fn describe(&self) -> Result<TableInfo, Self::Error>;
-    async fn sample(&self) -> Result<Vec<u8>, Self::Error>;
+    async fn sample(&self, size: usize) -> Result<Vec<u8>, Self::Error>;
 }

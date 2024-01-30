@@ -1,4 +1,10 @@
-import { DatasetServiceClient, ListDatasetCommand, SigninCommand, QueryDatasetCommand } from '@minerva/dataset-client';
+import {
+  DatasetServiceClient,
+  ListDatasetCommand,
+  SigninCommand,
+  QueryDatasetCommand,
+  SampleDatasetCommand,
+} from '@minerva/dataset-client';
 import type { DatasetInfo } from '@minerva/dataset-client';
 import Cookie from 'js-cookie';
 import { db } from './db';
@@ -51,13 +57,31 @@ export const queryDataset = async (sql: string, dataset: DatasetInfo) => {
   return tableFromIPC(data);
 };
 
+export const getSampleData = async (dataset: DatasetInfo, size: number) => {
+  const command = new SampleDatasetCommand({
+    id: dataset.name,
+    size,
+  });
+  const data = (await client.send(command)).data || new Uint8Array();
+
+  console.log('data:', data.length);
+  return tableFromIPC(data);
+};
+
 export const tableToJson = (table: Table) => {
   const ret = [] as object[];
   for (const item of table) {
     const row = {};
     for (const key in item) {
       if (item[key] instanceof Uint8Array) {
-        row[key] = btoa(item[key]);
+        try {
+          row[key] = new TextDecoder().decode(item[key]);
+        } catch (e) {
+          console.log('Failed to decode:', e);
+          row[key] = btoa(item[key]);
+        }
+      } else if (typeof item[key] === 'bigint') {
+        row[key] = Number(item[key]);
       } else {
         row[key] = item[key];
       }
@@ -103,4 +127,16 @@ export const getCurrentDataset = async (): Promise<DatasetInfo | undefined> => {
     return undefined;
   }
   return await db.datasets.get(name);
+};
+
+export const datasetTableSql = (dataset: DatasetInfo): string => {
+  // generate create table sql
+  const fields = dataset.fields?.map((f) => {
+    let type = f.type;
+    if (type === 'string') {
+      type = 'varchar';
+    }
+    return `\`${f.name}\` ${type}`;
+  });
+  return `CREATE TABLE ${dataset.tableName} (${fields?.join(', ')})`;
 };

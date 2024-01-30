@@ -31,17 +31,20 @@
               <Column field="nullable" header="Nullable"></Column>
             </DataTable>
           </div>
-          <div>
+          <div class="flex flex-col gap-4">
             <Textarea v-model="query" class="w-full text-xl" :rows="10" autoResize :disabled="isQuerying"> </Textarea>
-            <div class="flex items-center">
-              <Button class="w-48 my-4" label="Execute!" raised size="large" @click="executeQuery">
+            <div>
+              <Button class="w-48" label="Execute!" raised size="large" @click="executeQuery">
                 <IconSearch v-if="!isQuerying" />
                 <IconRefresh v-if="isQuerying" class="animate-spin" />
                 <span class="px-3">Execute!</span>
               </Button>
-              <span class="inline-block mx-4 text-sm text-gray-500" v-text="queryStatus"></span>
             </div>
-            <span class="inline-block mx-4 text text-red-500" v-text="errorMsg"></span>
+            <span
+              class="inline-block mx-4 text-sm"
+              v-text="queryStatus"
+              :class="isError ? 'text-red-500' : 'text-gray-500'"
+            ></span>
           </div>
 
           <TabView>
@@ -55,8 +58,6 @@
                 :rowsPerPageOptions="[50, 100, 200]"
                 :value="queryRsult"
                 size="small"
-                scrollable
-                scrollHeight="400px"
                 stripedRows
               >
                 <Column class="min-w-64" v-for="col in queryColumns" :field="col.name" :header="col.label"></Column>
@@ -80,14 +81,12 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, onMounted, ref } from 'vue';
+import { computed, nextTick, onMounted, ref } from 'vue';
+import { queryDataset, tableToJson, tableToColumns, getCurrentDataset, loadDatasets, db } from '../../lib';
 
-import { db } from '../../db';
-import { getCurrentDataset, loadDatasets } from '../../api';
 import type { DatasetInfo } from '@minerva/dataset-client';
 import type { TreeNode } from 'primevue/treenode';
 import type { TableColumn } from '../../types';
-import { queryDataset, tableToJson, tableToColumns } from '../../api';
 
 import LeftNav from './LeftNav.vue';
 import StatChart from './StatChart.vue';
@@ -111,10 +110,10 @@ const queryRsult = ref([] as Object[]);
 const queryColResult = ref({});
 const queryColumns = ref([] as TableColumn[]);
 const queryStatus = ref('');
-const errorMsg = ref('');
+const isError = ref(false);
 
 const mainWidth = ref(0);
-const getMainWidth = () => window.innerWidth - 256 - 128;
+const getMainWidth = () => window.innerWidth - 256 - 144;
 
 onMounted(async () => {
   mainWidth.value = getMainWidth();
@@ -127,6 +126,7 @@ onMounted(async () => {
     items = await loadDatasets();
   }
   selectedDataset.value = (await getCurrentDataset()) || items[0];
+
   console.log('selected:', selectedDataset.value);
 
   nodes.value = items.map((item) => {
@@ -152,7 +152,7 @@ const executeQuery = async () => {
   try {
     isQuerying.value = true;
     queryStatus.value = 'Querying...';
-    errorMsg.value = '';
+    isError.value = false;
     let table = await queryDataset(query.value, selectedDataset.value);
     let data = tableToJson(table);
 
@@ -182,8 +182,8 @@ const executeQuery = async () => {
       queryRsult.value = data;
     });
   } catch (err) {
-    queryStatus.value = '';
-    errorMsg.value = err.message;
+    queryStatus.value = err.message;
+    isError.value = true;
     isQuerying.value = false;
   }
 };

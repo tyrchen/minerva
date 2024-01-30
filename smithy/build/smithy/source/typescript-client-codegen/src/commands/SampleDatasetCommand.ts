@@ -44,6 +44,7 @@ export interface SampleDatasetCommandOutput extends SampleDatasetOutput, __Metad
  * const client = new DatasetServiceClient(config);
  * const input = { // SampleDatasetInput
  *   id: "STRING_VALUE", // required
+ *   size: Number("int"),
  * };
  * const command = new SampleDatasetCommand(input);
  * const response = await client.send(command);

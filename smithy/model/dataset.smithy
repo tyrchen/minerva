@@ -82,6 +82,8 @@ operation SampleDataset {
     @httpLabel
     @required
     id: String,
+    @httpQuery("limit")
+    size: Integer = 100,
   },
   output := {
       @required

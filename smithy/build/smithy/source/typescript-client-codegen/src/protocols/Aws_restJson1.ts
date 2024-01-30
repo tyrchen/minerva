@@ -184,9 +184,13 @@ export const se_SampleDatasetCommand = async(
   };
   b.bp("/datasets/{id}/sample");
   b.p('id', () => input.id!, '{id}', false)
+  const query: any = map({
+    [_l]: [() => input.size !== void 0, () => (input[_s]!.toString())],
+  });
   let body: any;
   b.m("GET")
   .h(headers)
+  .q(query)
   .b(body);
   return b.build();
 }

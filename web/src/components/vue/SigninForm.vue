@@ -34,7 +34,8 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { signin } from '../../api';
+import { signin } from '../../lib';
+
 const email = ref('');
 const password = ref('');
 

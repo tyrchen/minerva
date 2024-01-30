@@ -42,6 +42,17 @@ where
         input = input.set_id(crate::protocol_serde::shape_sample_dataset_input::de_id(
             m1,
         )?);
+        let query_string = uri.query().unwrap_or("");
+        let pairs = ::form_urlencoded::parse(query_string.as_bytes());
+        let mut size_seen = false;
+        for (k, v) in pairs {
+            if !size_seen && k == "limit" {
+                input = input.set_size(crate::protocol_serde::shape_sample_dataset_input::de_size(
+                    &v,
+                )?);
+                size_seen = true;
+            }
+        }
         input.build()?
     })
 }
