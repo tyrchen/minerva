@@ -10,6 +10,10 @@ Minerva is a proof-of-concept, serverless tool that enables SQL-based analysis a
 
 ![](./docs/images/thoughts.jpg)
 
+## Architecture
+
+![](./docs/images/architecture.jpg)
+
 ## Basic user experience
 
 1. Data Selection: Upon loading the web frontend, users are presented with a list of datasets available for querying in a specified S3 bucket.
@@ -35,17 +39,18 @@ Day 1:
 
 - [x] tchen: init the repo with the initial doc
 - [x] tchen: init the project layout (considering using smithy for APIs)
-- [ ] xinwei: data fusion related work
+- [x] xinwei: data fusion related work
 - [x] tchen: prepare the environment (deployment scripts)
 - [x] tchen: API
 
 Day 2:
 
-- [ ] tchen: web frontend
-- [ ] tchen/xinwei: make a minimal working example
-- [ ] xinwei: databend related work
-- [ ] tchen: clickhouse phase 1 related work
+- [x] tchen: web frontend
+- [x] tchen: make a minimal working example
+- [x] xinwei: databend related work
+- [x] tchen: clickhouse phase 1 related work
 - [ ] tchen/xinwei: clickhouse phase 2 related work
-- [ ] xinwei: slides for the presentation
-- [ ] tchen/xinwei: demo video
-- [ ] tchen/xinwei: improve the code
+- [x] xinwei: slides for the presentation
+- [x] xinwei: demo video
+- [x] tchen: AI assisted query suggestions
+  - [ ] the result is not good so the component is not used in the demo
