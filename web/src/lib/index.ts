@@ -10,9 +10,6 @@ import {
   getCurrentDataset,
   datasetTableSql,
 } from './api';
-import { ChartAsistant } from './ai/chart';
-import { SqlAssistant } from './ai/sql';
-import { SqlSuggestionAssistant } from './ai/suggestion';
 
 export {
   db,
@@ -25,7 +22,4 @@ export {
   setCurrentDataset,
   getCurrentDataset,
   datasetTableSql,
-  ChartAsistant,
-  SqlAssistant,
-  SqlSuggestionAssistant,
 };
